@@ -63,13 +63,13 @@ def download_ticker_daily_record(ticker_index: str):
 
 
 FIELD_MAPPINGS = {
-    "<DTYYYYMMDD>": "Date",
-    "<FIRST>": "Open",
-    "<HIGH>": "High",
-    "<LOW>": "Low",
-    "<LAST>": "Close",
-    "<VOL>": "Volume",
-    "<CLOSE>": "AdjClose",
-    "<OPENINT>": "Count",
-    "<VALUE>": "Value"
+    "<DTYYYYMMDD>": "date",
+    "<FIRST>": "open",
+    "<HIGH>": "high",
+    "<LOW>": "low",
+    "<LAST>": "close",
+    "<VOL>": "volume",
+    "<CLOSE>": "adjClose",
+    "<OPENINT>": "count",
+    "<VALUE>": "value"
 }
