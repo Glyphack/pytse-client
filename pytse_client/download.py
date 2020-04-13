@@ -36,8 +36,8 @@ def download(
                 columns=FIELD_MAPPINGS
             )
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
-            df.Date = pd.to_datetime(df.Date, format="%Y%m%d")
-            df.set_index("Date")
+            df.date = pd.to_datetime(df.date, format="%Y%m%d")
+            df.set_index("date")
             if write_to_csv:
                 Path(path).mkdir(parents=True, exist_ok=True)
                 df.to_csv(
