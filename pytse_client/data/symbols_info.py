@@ -1,6 +1,6 @@
 from typing import List
 
-symbols_index: List = [
+tickers_index: List = [
     "38547060135156069",
     "10024128313803797",
     "10055255678920880",
