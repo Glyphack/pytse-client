@@ -14,9 +14,9 @@ from pytse_client.utils import requests_retry_session
 def download(
         tickers: Union[List, str],
         write_to_csv: bool = False,
-        path: str = None):
+        base_path: str = config.BASE_PATH):
     if tickers == "all":
-        tickers = symbols_info.symbols_index
+        tickers = symbols_info.tickers_index
     elif isinstance(tickers, list):
         tickers = list(set(tickers))
     elif isinstance(tickers, str):
@@ -37,11 +37,11 @@ def download(
             )
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             df.date = pd.to_datetime(df.date, format="%Y%m%d")
-            df.set_index("date")
+            df.set_index("date", inplace=True)
             if write_to_csv:
-                Path(path).mkdir(parents=True, exist_ok=True)
+                Path(base_path).mkdir(parents=True, exist_ok=True)
                 df.to_csv(
-                    f'{path}/{ticker}.csv')
+                    f'{base_path}/{ticker}.csv')
 
             df_list[ticker] = df
     if not len(df_list) == len(tickers):
