@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 
 from pytse_client import config, download
@@ -9,6 +11,10 @@ class Ticker:
     def __init__(self, symbol: str):
         self._history: pd.DataFrame = pd.DataFrame()
         self._symbol = symbol
+        if os.path.exists(f"{config.SYMBOLS_DATA_BASE_PATH}/{self._symbol}.csv"):
+            self.from_file()
+        else:
+            self.from_web()
 
     def from_web(self):
         self._history = download(self._symbol)[self._symbol]
