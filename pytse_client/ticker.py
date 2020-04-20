@@ -16,12 +16,14 @@ class Ticker:
         else:
             self.from_web()
 
+    @property
+    def history(self):
+        return self._history
+
     def from_web(self):
         self._history = download(self._symbol)[self._symbol]
 
     def from_file(self, base_path: str = config.SYMBOLS_DATA_BASE_PATH):
         self._history = pd.read_csv(f"{base_path}/{self._symbol}.csv")
 
-    @property
-    def history(self):
-        return self._history
+
