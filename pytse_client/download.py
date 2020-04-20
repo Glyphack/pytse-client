@@ -6,31 +6,30 @@ from typing import List, Union
 import pandas as pd
 from requests import HTTPError
 
-from pytse_client import config
-from pytse_client.data import symbols_info
+from pytse_client import config, symbols_data
 from pytse_client.utils import requests_retry_session
 
 
 def download(
-        tickers: Union[List, str],
+        symbols: Union[List, str],
         write_to_csv: bool = False,
-        base_path: str = config.BASE_PATH):
-    if tickers == "all":
-        tickers = symbols_info.tickers_index
-    elif isinstance(tickers, list):
-        tickers = list(set(tickers))
-    elif isinstance(tickers, str):
-        tickers = [tickers]
+        base_path: str = config.SYMBOLS_DATA_BASE_PATH):
+    if symbols == "all":
+        symbols = symbols_data.all_symbols()
+    elif isinstance(symbols, str):
+        symbols = [symbols]
 
     df_list = {}
 
     with ThreadPoolExecutor(max_workers=10) as executor:
-        for ticker in tickers:
+        for symbol in symbols:
             future = executor.submit(
                 download_ticker_daily_record,
-                ticker
+                symbols_data.get_ticker_index(symbol)
             )
             df: pd.DataFrame = future.result()
+            if df.shape[0] == 0:
+                continue
             df = df.iloc[::-1]
             df = df.rename(
                 columns=FIELD_MAPPINGS
@@ -38,24 +37,25 @@ def download(
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             df.date = pd.to_datetime(df.date, format="%Y%m%d")
             df.set_index("date", inplace=True)
+            df_list[symbol] = df
+
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
                 df.to_csv(
-                    f'{base_path}/{ticker}.csv')
+                    f'{base_path}/{symbol}.csv')
 
-            df_list[ticker] = df
-    if not len(df_list) == len(tickers):
+    if not len(df_list) == len(symbols):
         print("Warning, download did not complete, re-run the code")
     return df_list
 
 
 def download_ticker_daily_record(ticker_index: str):
     url = config.TSE_TICKER_ADDRESS.format(ticker_index)
+    response = requests_retry_session().get(url, timeout=10)
     try:
-        response = requests_retry_session().get(url, timeout=10)
         response.raise_for_status()
     except HTTPError:
-        download_ticker_daily_record(ticker_index)
+        return download_ticker_daily_record(ticker_index)
 
     data = StringIO(response.text)
     df = pd.read_csv(data)
