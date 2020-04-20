@@ -13,7 +13,7 @@ from pytse_client.utils import requests_retry_session
 def download(
         symbols: Union[List, str],
         write_to_csv: bool = False,
-        base_path: str = config.SYMBOLS_DATA_BASE_PATH):
+        base_path: str = config.DATA_BASE_PATH):
     if symbols == "all":
         symbols = symbols_data.all_symbols()
     elif isinstance(symbols, str):
