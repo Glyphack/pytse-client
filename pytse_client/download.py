@@ -6,6 +6,7 @@ from typing import List, Union
 import pandas as pd
 from requests import HTTPError
 
+import tse_settings
 from pytse_client import config, symbols_data
 from pytse_client.utils import requests_retry_session
 
@@ -50,7 +51,7 @@ def download(
 
 
 def download_ticker_daily_record(ticker_index: str):
-    url = config.TSE_TICKER_ADDRESS.format(ticker_index)
+    url = tse_settings.TSE_TICKER_ADDRESS.format(ticker_index)
     response = requests_retry_session().get(url, timeout=10)
     try:
         response.raise_for_status()
