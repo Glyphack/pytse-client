@@ -1,8 +1,5 @@
 from pytse_client import Ticker, download
 
-download(symbols="all", write_to_csv=True)
+download(symbols="وبملت", write_to_csv=True)  # optional
 ticker = Ticker("وبملت")
-ticker.from_file()
-print(ticker.history)
-ticker.from_web()
 print(ticker.history)
