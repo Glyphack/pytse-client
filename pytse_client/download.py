@@ -6,8 +6,7 @@ from typing import List, Union
 import pandas as pd
 from requests import HTTPError
 
-import tse_settings
-from pytse_client import config, symbols_data
+from pytse_client import config, symbols_data, tse_settings
 from pytse_client.utils import requests_retry_session
 
 
