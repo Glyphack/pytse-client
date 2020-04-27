@@ -50,7 +50,7 @@ def download(
 
 
 def download_ticker_daily_record(ticker_index: str):
-    url = tse_settings.TSE_TICKER_ADDRESS.format(ticker_index)
+    url = tse_settings.TSE_TICKER_EXPORT_DATA_ADDRESS.format(ticker_index)
     response = requests_retry_session().get(url, timeout=10)
     try:
         response.raise_for_status()

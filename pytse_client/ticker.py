@@ -10,7 +10,7 @@ class Ticker:
         self.symbol = symbol
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
         self._index = symbols_data.get_ticker_index(self.symbol)
-        self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
+        self._url = tse_settings.TSE_TICKRER_ADDRESS.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
         if os.path.exists(self.csv_path):
