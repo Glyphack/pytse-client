@@ -59,16 +59,25 @@ import pytse_client as tse
 
 tse.download(symbols="وبملت", write_to_csv=True)  # optional
 ticker = tse.Ticker("وبملت")
-
-# سابقه
-ticker.history
-
-# آدرس سهم
-ticker.url
-
-# آیدی سهم در سایت
-ticker.index
-
+print(ticker.history)  # سابقه قیمت سهم
+print(ticker.title)  # نام شرکت
+بانك ملت (وبملت)
+print(ticker.url)  # آدرس صفحه سهم
+http://tsetmc.com/Loader.aspx?ParTree=151311&i=778253364357513
+print(ticker.group_name)  # نام گروه
+بانكها و موسسات اعتباري
+print(ticker.eps)  # eps
+2725.0
+print(ticker.p_e_ratio)  # P/E
+6.1478899082568805
+print(ticker.group_p_e_ratio)  # group P/E
+18.0
+print(ticker.base_volume)  # حجم مبنا
+7322431.0
+print(ticker.last_price)  # آخرین معامله
+17316
+print(ticker.adj_close)  # قیمت پایانی
+16753
 ```
 برای استفاده لازم نیست حتما تابع دانلود صدا زده بشه.
 اگر این کد رو بدون دانلود کردن سهم  استفاده کنید خودش اطلاعات سهم رو از سایت میگیره،
