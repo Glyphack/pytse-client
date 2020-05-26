@@ -4,8 +4,7 @@ import re
 import functools
 import pandas as pd
 
-from pytse_client import config, download, symbols_data, tse_settings
-from utils import requests_retry_session
+from pytse_client import config, download, symbols_data, tse_settings, utils
 
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo',
@@ -90,10 +89,10 @@ class Ticker:
     @property
     @functools.lru_cache()
     def ticker_page_response(self):
-        return requests_retry_session().get(self._url, timeout=10)
+        return utils.requests_retry_session().get(self._url, timeout=10)
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
-        response = requests_retry_session().get(self._info_url, timeout=5)
+        response = utils.requests_retry_session().get(self._info_url, timeout=5)
         return RealtimeTickerInfo(
             int(response.text.split()[1].split(",")[1]),
             int(response.text.split()[1].split(",")[2])
