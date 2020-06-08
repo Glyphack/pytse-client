@@ -5,6 +5,7 @@ import functools
 import pandas as pd
 
 from pytse_client import config, download, symbols_data, tse_settings, utils
+from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo',
@@ -19,12 +20,19 @@ class Ticker:
         self._index = symbols_data.get_ticker_index(self.symbol)
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
+        self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
         if os.path.exists(self.csv_path):
             self.from_file()
         else:
             self.from_web()
+
+    def from_web(self):
+        self._history = download(self.symbol)[self.symbol]
+
+    def from_file(self):
+        self._history = pd.read_csv(self.csv_path)
 
     @property
     def history(self):
@@ -92,14 +100,41 @@ class Ticker:
         return utils.requests_retry_session().get(self._url, timeout=10)
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
-        response = utils.requests_retry_session().get(self._info_url, timeout=5)
+        response = utils.requests_retry_session().get(
+          self._info_url, timeout=5
+        )
         return RealtimeTickerInfo(
             int(response.text.split()[1].split(",")[1]),
             int(response.text.split()[1].split(",")[2])
         )
 
-    def from_web(self):
-        self._history = download(self.symbol)[self.symbol]
+    @property
+    def client_types(self):
+        response = utils.requests_retry_session().get(
+            self._client_types_url, timeout=10
+        )
+        data = response.text.split(";")
+        data = [row.split(",") for row in data]
+        client_types_data_frame = pd.DataFrame(data, columns=[
+            "date",
+            "individual_buy_count", "corporate_buy_count",
+            "individual_sell_count", "corporate_sell_count",
+            "individual_buy_vol", "corporate_buy_vol",
+            "individual_sell_vol", "corporate_sell_vol",
+            "individual_buy_value", "corporate_buy_value",
+            "individual_sell_value", "corporate_sell_value"
+        ]).set_index("date", inplace=True)
+        for i in [
+            "individual_buy_", "individual_sell_",
+            "corporate_buy_", "corporate_sell_"
+        ]:
+            client_types_data_frame[f"{i}mean_price"] = (
+                    client_types_data_frame[f"{i}value"].astype(float) /
+                    client_types_data_frame[f"{i}vol"].astype(float)
+            )
+        client_types_data_frame["individual_ownership_change"] = (
+                client_types_data_frame["corporate_sell_vol"].astype(float) -
+                client_types_data_frame["corporate_buy_vol"].astype(float)
+        )
 
-    def from_file(self):
-        self._history = pd.read_csv(self.csv_path)
+        return client_types_data_frame

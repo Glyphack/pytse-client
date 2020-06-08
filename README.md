@@ -9,7 +9,7 @@
 
 ## قابلیت ها
  * دریافت اطلاعات روز های معاملاتی هر سهم و قابلیت ذخیره سازی
- * قابلیت گرفتن اطلاعات یک سهام
+ * قابلیت گرفتن اطلاعات یک سهام مانند گروه سهام و اطلاعات معاملات حقیقی و حقوقی
  * دریافت اطلاعات فاندامنتال یک نماد شامل(eps, p/e ,حجم مبنا)
 
 ## نصب 
@@ -52,7 +52,9 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 
 ### Ticker ماژول
 &rlm;
-این ماژول به شما اجازه میده در پایتون به اطلاعات سهام دسترسی داشته باشید.
+این ماژول برای کار با دیتای یک سهم خاص هست و با گرفتن نماد اطلاعات موجود رو میده
+
+
 برای مثال:
 &rlm;
 ```python
@@ -61,6 +63,7 @@ import pytse_client as tse
 tse.download(symbols="وبملت", write_to_csv=True)  # optional
 ticker = tse.Ticker("وبملت")
 print(ticker.history)  # سابقه قیمت سهم
+print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
 بانك ملت (وبملت)
 print(ticker.url)  # آدرس صفحه سهم
@@ -84,11 +87,31 @@ print(ticker.adj_close)  # قیمت پایانی
 اگر این کد رو بدون دانلود کردن سهم  استفاده کنید خودش اطلاعات سهم رو از سایت میگیره،
 اما اگر قبل از اون از دانلود استفاده کرده باشید
 به جای گرفتن از اینترنت اطلاعات رو از روی فایل میخونه که سریع تر هست
-
 ##### نکته
 &rlm;
 طبق تجربه‌ ای که داشتم چون گاهی اوقات سایت بورس مدت زیادی طول میکشه تا اطلاعات رو بفرسته یا بعضی مواقع نمیفرسته بهتر هست که اول تابع دانلود رو استفاده کنید برای سهم هایی که لازم هست و بعد با دیتای اون ها کار کنید.
 &rlm;
+
+#### اطلاعات حقیقی و حقوقی
+اطلاعات خرید و فروش حقیقی و حقوقی سهام رو میشه از طریق `ticker.client_types` گرفت این اطلاعات یه DataFrame شامل اطلاعات موجود در تب حقیقی حقوقی(تب بنفشی که در این [صفحه](http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=778253364357513) هست) سهم هست:
+```
+date : تاریخ 
+individual_buy_count : تعداد معاملات خرید حقیقی
+corporate_buy_count : تعداد معلاملات خرید حقوقی
+individual_sell_count : تعداد معاملات فروش حقیقی
+corporate_sell_count : تعداد معلاملات فروش حقوقی
+individual_buy_vol : حجم خرید حقیقی
+corporate_buy_vol : حجم خرید حقوقی
+individual_sell_vol : حجم فروش حقیقی
+corporate_sell_value : حجم فروش حقوقی
+individual_buy_mean_price : قیمت میانگین خرید حقیقی
+individual_sell_mean_price : قیمت میانگین فروش حقیقی
+corporate_buy_mean_price : قیمت میانگین خرید حقوقی
+corporate_sell_mean_price : قیمت میانگین فروش حقوقی
+individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
+```
+
+
 #### &rlm; پکیج های مورد نیاز: &rlm; 
 * [Pandas](https://github.com/pydata/pandas)
 * [Requests](http://docs.python-requests.org/en/master/)

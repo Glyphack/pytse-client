@@ -7,3 +7,6 @@ TSE_TICKER_ADDRESS = (
 TSE_ISNT_INFO_URL = (
     "http://www.tsetmc.com/tsev2/data/instinfofast.aspx?i={}&c=57+"
 )
+TSE_CLIENT_TYPE_DATA_URL = (
+    "http://www.tsetmc.com/tsev2/data/clienttype.aspx?i={}"
+)
