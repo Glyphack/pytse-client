@@ -100,8 +100,9 @@ class Ticker:
         return utils.requests_retry_session().get(self._url, timeout=10)
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
-        response = utils.requests_retry_session().get(self._info_url,
-                                                      timeout=5)
+        response = utils.requests_retry_session().get(
+          self._info_url, timeout=5
+        )
         return RealtimeTickerInfo(
             int(response.text.split()[1].split(",")[1]),
             int(response.text.split()[1].split(",")[2])
