@@ -123,7 +123,7 @@ class Ticker:
             "individual_sell_vol", "corporate_sell_vol",
             "individual_buy_value", "corporate_buy_value",
             "individual_sell_value", "corporate_sell_value"
-        ]).set_index("date", inplace=True)
+        ])
         for i in [
             "individual_buy_", "individual_sell_",
             "corporate_buy_", "corporate_sell_"
