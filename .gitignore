@@ -1,5 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
 /dist/
-/pytse_client/examples/tickers_data/
+
+# Environments
 /.idea/
 /.vscode/
-*/__pycache__
+
+# Poetry
+poetry.lock
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Project generated files
+/pytse_client/examples/tickers_data/
