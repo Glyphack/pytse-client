@@ -20,3 +20,4 @@ dmypy.json
 
 # Project generated files
 /pytse_client/examples/tickers_data/
+*.csv

@@ -44,7 +44,7 @@ def download(
                 df.to_csv(
                     f'{base_path}/{symbol}.csv')
 
-    if not len(df_list) == len(symbols):
+    if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
     return df_list
 
@@ -58,8 +58,7 @@ def download_ticker_daily_record(ticker_index: str):
         return download_ticker_daily_record(ticker_index)
 
     data = StringIO(response.text)
-    df = pd.read_csv(data)
-    return df
+    return pd.read_csv(data)
 
 
 FIELD_MAPPINGS = {
