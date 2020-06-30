@@ -15,5 +15,6 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.8
-    - name: GitHub Action for pylint
-      uses: cclauss/GitHub-Action-for-pylint@0.7.0
+    - name: Python Style Checker
+      uses: andymckay/pycodestyle-action@0.1.3
+
