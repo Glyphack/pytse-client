@@ -1,7 +1,8 @@
 import collections
+import functools
 import os
 import re
-import functools
+
 import pandas as pd
 
 from pytse_client import config, download, symbols_data, tse_settings, utils
