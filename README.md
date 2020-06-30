@@ -116,5 +116,5 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 * [Pandas](https://github.com/pydata/pandas)
 * [Requests](http://docs.python-requests.org/en/master/)
 #### &rlm; الهام گرفته از: &rlm; 
-* tehran_stocks: https://github.com/ghodsizadeh/tehran-stocks
-* yfinance: https://github.com/ranaroussi/yfinance
+* [tehran_stocks](https://github.com/ghodsizadeh/tehran-stocks) 
+* [yfinance](https://github.com/ranaroussi/yfinance)
