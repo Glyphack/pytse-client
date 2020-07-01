@@ -8,6 +8,17 @@
 هدف حل مشکلات گرفتن اطلاعات بروز از سایت بازار بورس تهران هست.
 &rlm;
 
+## محتویات
+
+- [قابلیت ها](#قابلیت-ها)
+- [نصب](#نصب)
+- [نحوه استفاده](#نحوه-استفاده)
+  - [دانلود سابقه سهم ها](#دانلود-سابقه-سهم-ها)
+  - [ماژول Ticker](#ماژول-Ticker)
+  - [اطلاعات حقیقی و حقوقی](#اطلاعات-حقیقی-و-حقوقی)
+  - [پکیج های مورد نیاز](#required-packages)
+- [الهام گرفته از](#credits)
+
 ## قابلیت ها
 
 - دریافت اطلاعات روز های معاملاتی هر سهم و قابلیت ذخیره سازی
@@ -57,7 +68,7 @@ tse.download(symbols="وبملت", write_to_csv=True)
 tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 ```
 
-### Ticker ماژول
+### ماژول Ticker
 
 &rlm;
 این ماژول برای کار با دیتای یک سهم خاص هست و با گرفتن نماد اطلاعات موجود رو میده
@@ -124,11 +135,13 @@ corporate_sell_mean_price : قیمت میانگین فروش حقوقی
 individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 ```
 
+<div id="required-packages" />
 #### &rlm; پکیج های مورد نیاز: &rlm;
 
 - [Pandas](https://github.com/pydata/pandas)
 - [Requests](http://docs.python-requests.org/en/master/)
 
+<div id="credits" />
 #### &rlm; الهام گرفته از: &rlm;
 
 - [tehran_stocks](https://github.com/ghodsizadeh/tehran-stocks)
