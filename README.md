@@ -1,13 +1,9 @@
 <div dir="rtl">
 
-# (pyTSEClient (python tse client
+# دریافت اطلاعات بازار بورس تهران
 
-&rlm;
-با استفاده از این پکیج میتونید به دیتای بازار بورس تهران در پایتون دسترسی داشته باشید.
-&rlm;
-&rlm;
+با استفاده از pytse client میتونید به دیتای بازار بورس تهران در پایتون دسترسی داشته باشید.
 هدف حل مشکلات گرفتن اطلاعات بروز از سایت بازار بورس تهران هست.
-&rlm;
 
 ## محتویات
 
@@ -83,11 +79,9 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 
 ### ماژول Ticker
 
-&rlm;
 این ماژول برای کار با دیتای یک سهم خاص هست و با گرفتن نماد اطلاعات موجود رو میده
 
 برای مثال:
-&rlm;
 
 <div dir="ltr">
 
@@ -127,9 +121,7 @@ print(ticker.adj_close)  # قیمت پایانی
 
 ##### نکته
 
-&rlm;
 طبق تجربه‌ ای که داشتم چون گاهی اوقات سایت بورس مدت زیادی طول میکشه تا اطلاعات رو بفرسته یا بعضی مواقع نمیفرسته بهتر هست که اول تابع دانلود رو استفاده کنید برای سهم هایی که لازم هست و بعد با دیتای اون ها کار کنید.
-&rlm;
 
 #### اطلاعات حقیقی و حقوقی
 
@@ -158,14 +150,14 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 
 <div id="required-packages" />
 
-#### &rlm; پکیج های مورد نیاز: &rlm;
+#### پکیج های مورد نیاز:
 
 - [Pandas](https://github.com/pydata/pandas)
 - [Requests](http://docs.python-requests.org/en/master/)
 
 <div id="credits" />
 
-#### &rlm; الهام گرفته از: &rlm;
+#### الهام گرفته از:
 
 - [tehran_stocks](https://github.com/ghodsizadeh/tehran-stocks)
 - [yfinance](https://github.com/ranaroussi/yfinance)
