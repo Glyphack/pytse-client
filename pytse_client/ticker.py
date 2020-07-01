@@ -12,7 +12,7 @@ RealtimeTickerInfo = collections.namedtuple(
     ['last_price',
      'adj_close',
      'best_demand_vol',
-     'best_demand_price', 
+     'best_demand_price',
      'best_supply_vol',
      'best_supply_price']
 )
@@ -101,26 +101,31 @@ class Ticker:
 
     @property
     def best_demand_vol(self):
-        return self.get_ticker_real_time_info_response(best_info=True).best_demand_vol
+        return self.get_ticker_real_time_info_response(
+            best_info=True).best_demand_vol
 
     @property
     def best_demand_price(self):
-        return self.get_ticker_real_time_info_response(best_info=True).best_demand_price
+        return self.get_ticker_real_time_info_response(
+            best_info=True).best_demand_price
 
     @property
     def best_supply_vol(self):
-        return self.get_ticker_real_time_info_response(best_info=True).best_supply_vol
+        return self.get_ticker_real_time_info_response(
+            best_info=True).best_supply_vol
 
     @property
     def best_supply_price(self):
-        return self.get_ticker_real_time_info_response(best_info=True).best_supply_price
+        return self.get_ticker_real_time_info_response(
+            best_info=True).best_supply_price
 
     @property
     @functools.lru_cache()
     def ticker_page_response(self):
         return utils.requests_retry_session().get(self._url, timeout=10)
 
-    def get_ticker_real_time_info_response(self, best_info=False) -> RealtimeTickerInfo:
+    def get_ticker_real_time_info_response(
+        self, best_info=False) -> RealtimeTickerInfo:
         response = utils.requests_retry_session().get(
           self._info_url, timeout=5
         )
