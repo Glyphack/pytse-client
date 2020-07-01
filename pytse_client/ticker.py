@@ -96,42 +96,52 @@ class Ticker:
         return self.get_ticker_real_time_info_response().last_price
 
     @property
+    def adj_close(self):
+        return self.get_ticker_real_time_info_response().adj_close
+
+    @property
     def best_demand_vol(self):
-        return self.get_ticker_real_time_info_response().best_demand_vol
+        return self.get_ticker_real_time_info_response(best_info=True).best_demand_vol
 
     @property
     def best_demand_price(self):
-        return self.get_ticker_real_time_info_response().best_demand_price
+        return self.get_ticker_real_time_info_response(best_info=True).best_demand_price
 
     @property
     def best_supply_vol(self):
-        return self.get_ticker_real_time_info_response().best_supply_vol
+        return self.get_ticker_real_time_info_response(best_info=True).best_supply_vol
 
     @property
     def best_supply_price(self):
-        return self.get_ticker_real_time_info_response().best_supply_price
-
-    @property
-    def adj_close(self):
-        return self.get_ticker_real_time_info_response().adj_close
+        return self.get_ticker_real_time_info_response(best_info=True).best_supply_price
 
     @property
     @functools.lru_cache()
     def ticker_page_response(self):
         return utils.requests_retry_session().get(self._url, timeout=10)
 
-    def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
+    def get_ticker_real_time_info_response(self, best_info=False) -> RealtimeTickerInfo:
         response = utils.requests_retry_session().get(
           self._info_url, timeout=5
         )
-        return RealtimeTickerInfo(
-            int(response.text.split()[1].split(",")[1]),
-            int(response.text.split()[1].split(",")[2]),
-            int(response.text.split()[1].split("@")[1]),
-            int(response.text.split()[1].split("@")[2]),
-            int(response.text.split()[1].split("@")[4]),
-            int(response.text.split()[1].split("@")[3]),
-        )
+        if best_info:
+            return RealtimeTickerInfo(
+                int(response.text.split()[1].split(",")[1]),
+                int(response.text.split()[1].split(",")[2]),
+                int(response.text.split()[1].split("@")[1]),
+                int(response.text.split()[1].split("@")[2]),
+                int(response.text.split()[1].split("@")[4]),
+                int(response.text.split()[1].split("@")[3]),
+            )
+        else:
+            return RealtimeTickerInfo(
+                int(response.text.split()[1].split(",")[1]),
+                int(response.text.split()[1].split(",")[2]),
+                0,
+                0,
+                0,
+                0
+            )
 
     @property
     def client_types(self):
