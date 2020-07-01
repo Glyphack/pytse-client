@@ -82,6 +82,14 @@ print(ticker.last_price)  # آخرین معامله
 17316
 print(ticker.adj_close)  # قیمت پایانی
 16753
+print(ticker.best_supply_price)  # قیمت بهترین تقاضا
+26700
+print(ticker.best_supply_vol)  # حجم بهترین تقاضا
+357062
+print(ticker.best_demand_price)  # قیمت بهترین عرضه
+26700
+print(ticker.best_demand_vol)  # حجم بهترین عرضه
+576608
 ```
 برای استفاده لازم نیست حتما تابع دانلود صدا زده بشه.
 اگر این کد رو بدون دانلود کردن سهم  استفاده کنید خودش اطلاعات سهم رو از سایت میگیره،
