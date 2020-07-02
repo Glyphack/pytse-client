@@ -10,7 +10,12 @@ from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo',
-    ['last_price', 'adj_close']
+    ['last_price',
+     'adj_close',
+     'best_demand_vol',
+     'best_demand_price',
+     'best_supply_vol',
+     'best_supply_price']
 )
 
 
@@ -96,6 +101,22 @@ class Ticker:
         return self.get_ticker_real_time_info_response().adj_close
 
     @property
+    def best_demand_vol(self):
+        return self.get_ticker_real_time_info_response().best_demand_vol
+
+    @property
+    def best_demand_price(self):
+        return self.get_ticker_real_time_info_response().best_demand_price
+
+    @property
+    def best_supply_vol(self):
+        return self.get_ticker_real_time_info_response().best_supply_vol
+
+    @property
+    def best_supply_price(self):
+        return self.get_ticker_real_time_info_response().best_supply_price
+
+    @property
     @functools.lru_cache()
     def ticker_page_response(self):
         return utils.requests_retry_session().get(self._url, timeout=10)
@@ -106,7 +127,11 @@ class Ticker:
         )
         return RealtimeTickerInfo(
             int(response.text.split()[1].split(",")[1]),
-            int(response.text.split()[1].split(",")[2])
+            int(response.text.split()[1].split(",")[2]),
+            int(response.text.split(";")[2].split("@")[1]),
+            int(response.text.split(";")[2].split("@")[2]),
+            int(response.text.split(";")[2].split("@")[4]),
+            int(response.text.split(";")[2].split("@")[3]),
         )
 
     @property
