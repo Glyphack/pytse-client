@@ -19,7 +19,10 @@ def tickers_dict() -> Dict:
 
 
 def get_ticker_index(ticker_symbol: str):
-    return tickers_dict()[ticker_symbol]
+    tickers = tickers_dict()
+    if ticker_symbol in tickers:
+        return tickers[ticker_symbol]
+    return None
 
 
 def all_symbols() -> Set:

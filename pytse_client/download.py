@@ -23,9 +23,14 @@ def download(
 
     with ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
+            ticker_index = symbols_data.get_ticker_index(symbol)
+            if ticker_index == None:
+                print("Warning, ticker index not found, I'm trying to download it...")
+                ticker_index = get_symbol_id(symbol)
+                print(ticker_index)
             future = executor.submit(
                 download_ticker_daily_record,
-                symbols_data.get_ticker_index(symbol)
+                ticker_index
             )
             df: pd.DataFrame = future.result()
             if df.shape[0] == 0:
@@ -59,6 +64,18 @@ def download_ticker_daily_record(ticker_index: str):
 
     data = StringIO(response.text)
     return pd.read_csv(data)
+
+
+def get_symbol_id(symbol_name: str):
+    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name + ' ')
+    response = requests_retry_session().get(url, timeout=10)
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        raise Exception("Sorry, tse server did not respond")
+    
+    symbol_id = response.text.split(';')[0].split(',')[2]
+    return symbol_id
 
 
 FIELD_MAPPINGS = {
