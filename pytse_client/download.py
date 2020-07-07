@@ -28,6 +28,8 @@ def download(
                 ticker_index = get_symbol_id(symbol)
                 if not ticker_index :
                     raise Exception("Can not found ticker name")
+                else:
+                    symbols_data.append_symbol_to_file(ticker_index, symbol)
 
             future = executor.submit(
                 download_ticker_daily_record,

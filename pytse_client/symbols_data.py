@@ -24,3 +24,16 @@ def get_ticker_index(ticker_symbol: str):
 
 def all_symbols() -> Set:
     return set(tickers_dict().keys())
+
+
+def append_symbol_to_file(symbol_id: str, symbol_name: str):
+    new_symbol = {symbol_id.strip(): symbol_name.strip()}
+    with open(
+        f"{config.pytse_dir}/data/symbols_name.json",
+        "r+",
+        encoding="utf8"
+    ) as file:
+        data = json.load(file)
+        data.update(new_symbol)
+        file.seek(0)
+        json.dump(data, file, ensure_ascii=False, indent=2)
