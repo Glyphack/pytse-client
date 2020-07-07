@@ -25,9 +25,10 @@ def download(
         for symbol in symbols:
             ticker_index = symbols_data.get_ticker_index(symbol)
             if ticker_index == None:
-                print("Warning, ticker index not found, I'm trying to download it...")
                 ticker_index = get_symbol_id(symbol)
-                print(ticker_index)
+                if not ticker_index :
+                    raise Exception("Can not found ticker name")
+
             future = executor.submit(
                 download_ticker_daily_record,
                 ticker_index
@@ -66,16 +67,22 @@ def download_ticker_daily_record(ticker_index: str):
     return pd.read_csv(data)
 
 
+def to_arabic(string: str):
+    return string.replace('ک', 'ك').replace('ی', 'ي').strip()
+
+
 def get_symbol_id(symbol_name: str):
-    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name + ' ')
+    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
     response = requests_retry_session().get(url, timeout=10)
     try:
         response.raise_for_status()
     except HTTPError:
         raise Exception("Sorry, tse server did not respond")
     
-    symbol_id = response.text.split(';')[0].split(',')[2]
-    return symbol_id
+    symbol_full_info = response.text.split(';')[0].split(',')
+    if(to_arabic(symbol_name) == symbol_full_info[0].strip()):
+        return symbol_full_info[2] # symbol id
+    return None
 
 
 FIELD_MAPPINGS = {
