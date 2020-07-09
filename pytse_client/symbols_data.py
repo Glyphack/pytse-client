@@ -27,7 +27,7 @@ def all_symbols() -> Set:
 
 
 def append_symbol_to_file(symbol_id: str, symbol_name: str):
-    new_symbol = {symbol_id.strip(): symbol_name.strip()}
+    new_symbol = {symbol_name.strip(): symbol_id.strip()}
     with open(
         f"{config.pytse_dir}/data/symbols_name.json",
         "r+",

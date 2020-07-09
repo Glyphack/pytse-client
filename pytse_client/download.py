@@ -24,9 +24,9 @@ def download(
     with ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
             ticker_index = symbols_data.get_ticker_index(symbol)
-            if ticker_index == None:
+            if ticker_index is None:
                 ticker_index = get_symbol_id(symbol)
-                if not ticker_index :
+                if ticker_index is None:
                     raise Exception("Can not found ticker name")
                 else:
                     symbols_data.append_symbol_to_file(ticker_index, symbol)
@@ -80,10 +80,10 @@ def get_symbol_id(symbol_name: str):
         response.raise_for_status()
     except HTTPError:
         raise Exception("Sorry, tse server did not respond")
-    
+
     symbol_full_info = response.text.split(';')[0].split(',')
     if(to_arabic(symbol_name) == symbol_full_info[0].strip()):
-        return symbol_full_info[2] # symbol id
+        return symbol_full_info[2]  # symbol id
     return None
 
 
