@@ -5,6 +5,7 @@ from typing import List, Union
 
 import pandas as pd
 from requests import HTTPError
+import jdatetime
 
 from pytse_client import config, symbols_data, tse_settings
 from pytse_client.utils import requests_retry_session
@@ -44,6 +45,9 @@ def download(
             )
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             df.date = pd.to_datetime(df.date, format="%Y%m%d")
+            df['jdate'] = ""
+            df.jdate = df.date.apply(
+                lambda gorian_date: jdatetime.date.fromgregorian(date=gorian_date))
             df.set_index("date", inplace=True)
             df_list[symbol] = df
 
