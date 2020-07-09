@@ -23,9 +23,17 @@ def download(
 
     with ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
+            ticker_index = symbols_data.get_ticker_index(symbol)
+            if ticker_index is None:
+                ticker_index = get_symbol_id(symbol)
+                if ticker_index is None:
+                    raise Exception("Can not found ticker name")
+                else:
+                    symbols_data.append_symbol_to_file(ticker_index, symbol)
+
             future = executor.submit(
                 download_ticker_daily_record,
-                symbols_data.get_ticker_index(symbol)
+                ticker_index
             )
             df: pd.DataFrame = future.result()
             if df.shape[0] == 0:
@@ -59,6 +67,24 @@ def download_ticker_daily_record(ticker_index: str):
 
     data = StringIO(response.text)
     return pd.read_csv(data)
+
+
+def to_arabic(string: str):
+    return string.replace('ک', 'ك').replace('ی', 'ي').strip()
+
+
+def get_symbol_id(symbol_name: str):
+    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
+    response = requests_retry_session().get(url, timeout=10)
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        raise Exception("Sorry, tse server did not respond")
+
+    symbol_full_info = response.text.split(';')[0].split(',')
+    if(to_arabic(symbol_name) == symbol_full_info[0].strip()):
+        return symbol_full_info[2]  # symbol id
+    return None
 
 
 FIELD_MAPPINGS = {

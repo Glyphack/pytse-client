@@ -10,3 +10,6 @@ TSE_ISNT_INFO_URL = (
 TSE_CLIENT_TYPE_DATA_URL = (
     "http://www.tsetmc.com/tsev2/data/clienttype.aspx?i={}"
 )
+TSE_SYMBOL_ID_URL = (
+    "http://www.tsetmc.com/tsev2/data/search.aspx?skey={}"
+)
