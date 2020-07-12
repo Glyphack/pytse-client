@@ -5,6 +5,7 @@ from typing import List, Union
 
 import pandas as pd
 from requests import HTTPError
+import jdatetime
 
 from pytse_client import config, symbols_data, tse_settings
 from pytse_client.utils import requests_retry_session
@@ -13,6 +14,7 @@ from pytse_client.utils import requests_retry_session
 def download(
         symbols: Union[List, str],
         write_to_csv: bool = False,
+        include_jdate: bool = False,
         base_path: str = config.DATA_BASE_PATH):
     if symbols == "all":
         symbols = symbols_data.all_symbols()
@@ -44,6 +46,11 @@ def download(
             )
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             df.date = pd.to_datetime(df.date, format="%Y%m%d")
+            if include_jdate:
+                df['jdate'] = ""
+                df.jdate = df.date.apply(
+                    lambda gregorian:
+                    jdatetime.date.fromgregorian(date=gregorian))
             df.set_index("date", inplace=True)
             df_list[symbol] = df
 

@@ -61,17 +61,28 @@ tickers["ولملت"] # history
 
 </div>
 
-سابقه سهم توی فایلی با اسم سهم نوشته میشه `write_to_csv=True` همچنین با گذاشتن
-
-است `Dataframe` سابقه سهم در قالب
-
 برای دانلود سابقه یک یا چند سهم کافی هست اسم اون ها به تابع داده بشه:
+
+<div dir="rtl">
+
+همچنین با گذاشتن
+`write_to_csv=True`
+سابقه سهم توی فایلی با اسم سهم نوشته میشه
+
+سابقه سهم در قالب `Dataframe` است
+
+درصورتی که می خواهید تاریخ شمسی به خروجی اضافه شود می توانید با گذاشتن
+`include_jdate=True`
+این امکان را فراهم کنید
+
+</div>
 
 <div dir="ltr">
 
 ```python
 import pytse_client as tse
 tse.download(symbols="وبملت", write_to_csv=True)
+tse.download(symbols="وبملت", write_to_csv=True, include_jdate=True)
 tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 ```
 
@@ -162,6 +173,7 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 
 - [Pandas](https://github.com/pydata/pandas)
 - [Requests](http://docs.python-requests.org/en/master/)
+- [jdatetime](https://github.com/slashmili/python-jalali)
 
 <div id="credits" />
 

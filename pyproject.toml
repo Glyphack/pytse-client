@@ -11,6 +11,7 @@ readme = "README.md"
 python = "^3.6.1"
 pandas = "*"
 requests = "^2.23.0"
+jdatetime = "^3.6.2"
 
 [tool.poetry.dev-dependencies]
 
