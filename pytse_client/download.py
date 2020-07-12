@@ -49,7 +49,8 @@ def download(
             if include_jdate:
                 df['jdate'] = ""
                 df.jdate = df.date.apply(
-                    lambda gregorian: jdatetime.date.fromgregorian(date=gregorian))
+                    lambda gregorian:
+                    jdatetime.date.fromgregorian(date=gregorian))
             df.set_index("date", inplace=True)
             df_list[symbol] = df
 
