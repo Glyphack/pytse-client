@@ -168,9 +168,13 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 </div>
 
 <div id="qa" />
+
 #### کامیونیتی
+
 اگر درباره پکیج یا استفاده از اون سوالی دارید میتونید توی سرور دیسکورد بپرسید.
+
 https://discord.gg/D3txK6
+
 <div id="required-packages" />
 
 #### پکیج های مورد نیاز:
