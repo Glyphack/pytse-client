@@ -1,6 +1,7 @@
 <div dir="rtl">
 
 # دریافت اطلاعات بازار بورس تهران
+![Python application](https://github.com/Glyphack/pytse-client/workflows/Python%20application/badge.svg)
 
 با استفاده از pytse client میتونید به دیتای بازار بورس تهران در پایتون دسترسی داشته باشید.
 هدف حل مشکلات گرفتن اطلاعات بروز از سایت بازار بورس تهران هست.
