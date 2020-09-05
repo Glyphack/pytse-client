@@ -1,11 +1,13 @@
 """
-    This example shows how to download and get tse tickers client types records
-    specifically (as a 'Pandas DataFrame' object), and easily save them in .csv format.
+    This example shows how to download and get tse tickers
+    client types records specifically (as a 'Pandas DataFrame' object),
+    and easily save them in .csv format.
 """
 from pytse_client.download import download_client_types_records
 
 if __name__ == '__main__':
-    # Download all tickers clients types at once.This function returns a dictionary.
+    # Download all tickers clients types at once.
+    # This function returns a dictionary.
     records_1 = download_client_types_records("all")
 
     # Download specific tickers client types records
