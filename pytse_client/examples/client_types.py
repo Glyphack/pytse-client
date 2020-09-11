@@ -3,7 +3,7 @@
     client types records specifically (as a 'Pandas DataFrame' object),
     and easily save them in .csv format.
 """
-from pytse_client.download import download_client_types_records
+from pytse_client import download_client_types_records
 
 if __name__ == '__main__':
     # Download all tickers clients types at once.
