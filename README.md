@@ -96,12 +96,12 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 <div dir="ltr">
 
 ```python
-from pytse_client.download import download_client_types_record  
+from pytse_client import download_client_types_records  
   
 if __name__ == '__main__':  
 
-  records_dict = download_client_types_record("all")
-  print(records["فولاد"])
+  records_dict = download_client_types_records("all")
+  print(records_dict["فولاد"])
   #Output
 date         individual_buy_count  ... individual_ownership_change
                             
@@ -128,6 +128,7 @@ date         individual_buy_count  ... individual_ownership_change
 <div dir="ltr">
 
 ```python
+from pytse_client import download_client_types_records
 if __name__ == '__main__':  
    
   #Records are saved as a .csv file with the same name of ticer's 
