@@ -12,6 +12,7 @@
 - [نصب](#نصب)
 - [نحوه استفاده](#نحوه-استفاده)
   - [دانلود سابقه سهم‌ها](#دانلود-سابقه-سهم‌ها)
+  - [دانلود سابقه معاملات حقیقی و حقوقی](#دانلود-سابقه-معاملات-حقیقی-و-حقوقی-به-صورت-مجزا)
   - [ماژول Ticker](#ماژول-Ticker)
   - [اطلاعات حقیقی و حقوقی](#اطلاعات-حقیقی-و-حقوقی)
   - [پکیج های مورد نیاز](#required-packages)
@@ -85,6 +86,53 @@ import pytse_client as tse
 tse.download(symbols="وبملت", write_to_csv=True)
 tse.download(symbols="وبملت", write_to_csv=True, include_jdate=True)
 tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
+```
+
+</div>
+
+### دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا
+برای دانلود سابقه معاملات حقیقی و حقوقی برای تمامی نمادها  میتوان از تابع زیر استفاده کرد
+
+<div dir="ltr">
+
+```python
+from pytse_client import download_client_types_records  
+  
+if __name__ == '__main__':  
+
+  records_dict = download_client_types_records("all")
+  print(records_dict["فولاد"])
+  #Output
+date         individual_buy_count  ... individual_ownership_change
+                            
+2020-09-01                36298  ...                   -691857.0
+2020-08-31                58185  ...                  83789408.0
+2020-08-26                  461  ...                  21647730.0
+2020-08-25                 1248  ...                  14716846.0
+2020-08-24                38291  ...                -238454702.0
+...                         ...  ...                         ...
+2008-12-02                    7  ...                    -10000.0
+2008-12-01                    8  ...                         0.0
+2008-11-30                   10  ...                    -12781.0
+2008-11-29                  116  ...                   4596856.0
+2008-11-26                   14  ...                    -20000.0
+
+[2518 rows x 17 columns]
+
+```
+
+</div>
+
+مشابه تابع قبلی میتوان نتایج را ذخیره کرد
+
+<div dir="ltr">
+
+```python
+from pytse_client import download_client_types_records
+if __name__ == '__main__':  
+   
+  #Records are saved as a .csv file with the same name of ticer's 
+  records = download_client_types_records("فولاد", write_to_csv=True)
 ```
 
 </div>

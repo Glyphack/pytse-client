@@ -7,6 +7,7 @@ import pandas as pd
 
 from pytse_client import config, download, symbols_data, tse_settings, utils
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client.download import download_ticker_client_types_record
 
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo',
@@ -136,31 +137,4 @@ class Ticker:
 
     @property
     def client_types(self):
-        response = utils.requests_retry_session().get(
-            self._client_types_url, timeout=10
-        )
-        data = response.text.split(";")
-        data = [row.split(",") for row in data]
-        client_types_data_frame = pd.DataFrame(data, columns=[
-            "date",
-            "individual_buy_count", "corporate_buy_count",
-            "individual_sell_count", "corporate_sell_count",
-            "individual_buy_vol", "corporate_buy_vol",
-            "individual_sell_vol", "corporate_sell_vol",
-            "individual_buy_value", "corporate_buy_value",
-            "individual_sell_value", "corporate_sell_value"
-        ])
-        for i in [
-            "individual_buy_", "individual_sell_",
-            "corporate_buy_", "corporate_sell_"
-        ]:
-            client_types_data_frame[f"{i}mean_price"] = (
-                    client_types_data_frame[f"{i}value"].astype(float) /
-                    client_types_data_frame[f"{i}vol"].astype(float)
-            )
-        client_types_data_frame["individual_ownership_change"] = (
-                client_types_data_frame["corporate_sell_vol"].astype(float) -
-                client_types_data_frame["corporate_buy_vol"].astype(float)
-        )
-
-        return client_types_data_frame
+        return download_ticker_client_types_record(self._index)
