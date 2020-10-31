@@ -2,6 +2,7 @@ import collections
 import functools
 import os
 import re
+from typing import Optional
 
 import pandas as pd
 
@@ -66,8 +67,13 @@ class Ticker:
         )[0]
 
     @property
-    def p_e_ratio(self) -> float:
-        if self.get_ticker_real_time_info_response().adj_close is None:
+    def p_e_ratio(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have p/e
+        """
+        adj_close = self.get_ticker_real_time_info_response().adj_close
+        eps = self.eps
+        if adj_close is None or eps is None:
             return None
         return self.get_ticker_real_time_info_response().adj_close / self.eps
 
@@ -80,12 +86,16 @@ class Ticker:
         )
 
     @property
-    def eps(self) -> float:
-        return float(
-            re.findall(
-                r"EstimatedEPS='([-,\d]*)',", self.ticker_page_response.text
-            )[0]
-        )
+    def eps(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have eps
+        """
+        eps = re.findall(
+            r"EstimatedEPS='([-,\d]*)',", self.ticker_page_response.text
+        )[0]
+        if eps == "":
+            return None
+        return float(eps)
 
     @property
     def base_volume(self):
@@ -141,7 +151,7 @@ class Ticker:
             best_demand_price = None
             best_supply_vol = None
             best_supply_price = None
-        
+
         # in some cases last price or adj price is undefined
         try:
             last_price = int(response.text.split()[1].split(",")[1])
