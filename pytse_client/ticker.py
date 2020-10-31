@@ -135,7 +135,9 @@ class Ticker:
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
         """
-        Real time data might not be always available, check for None values before usage
+        notes on usage:
+        - Real time data might not be always available
+        check for None values before usage
         """
         response = utils.requests_retry_session().get(
             self._info_url, timeout=5
