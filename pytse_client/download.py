@@ -33,8 +33,6 @@ def download(
                 ticker_index
             )
             df: pd.DataFrame = future.result()
-            if df.shape[0] == 0:
-                continue
             df = df.iloc[::-1]
             df = df.rename(
                 columns=FIELD_MAPPINGS

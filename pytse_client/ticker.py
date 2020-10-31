@@ -2,6 +2,7 @@ import collections
 import functools
 import os
 import re
+from typing import Optional
 
 import pandas as pd
 
@@ -66,7 +67,14 @@ class Ticker:
         )[0]
 
     @property
-    def p_e_ratio(self) -> float:
+    def p_e_ratio(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have p/e
+        """
+        adj_close = self.get_ticker_real_time_info_response().adj_close
+        eps = self.eps
+        if adj_close is None or eps is None:
+            return None
         return self.get_ticker_real_time_info_response().adj_close / self.eps
 
     @property
@@ -78,19 +86,22 @@ class Ticker:
         )
 
     @property
-    def eps(self) -> float:
-        return float(
-            re.findall(
-                r"EstimatedEPS='([\d]*)',", self.ticker_page_response.text
-            )[0]
-        )
+    def eps(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have eps
+        """
+        eps = re.findall(
+            r"EstimatedEPS='([-,\d]*)',", self.ticker_page_response.text
+        )[0]
+        if eps == "":
+            return None
+        return float(eps)
 
     @property
     def base_volume(self):
         return float(
-            re.findall(
-                r"BaseVol=([\d]*),", self.ticker_page_response.text
-            )[0]
+            re.findall(r"BaseVol=([-,\d]*),",
+                       self.ticker_page_response.text)[0]
         )
 
     @property
@@ -123,16 +134,42 @@ class Ticker:
         return utils.requests_retry_session().get(self._url, timeout=10)
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
+        """
+        notes on usage:
+        - Real time data might not be always available
+        check for None values before usage
+        """
         response = utils.requests_retry_session().get(
-          self._info_url, timeout=5
+            self._info_url, timeout=5
         )
+        # check supply and demand data exists
+        if response.text.split(";")[2] != "":
+            best_demand_vol = int(response.text.split(";")[2].split("@")[1])
+            best_demand_price = int(response.text.split(";")[2].split("@")[2])
+            best_supply_vol = int(response.text.split(";")[2].split("@")[4])
+            best_supply_price = int(response.text.split(";")[2].split("@")[3])
+        else:
+            best_demand_vol = None
+            best_demand_price = None
+            best_supply_vol = None
+            best_supply_price = None
+
+        # in some cases last price or adj price is undefined
+        try:
+            last_price = int(response.text.split()[1].split(",")[1])
+        except (ValueError, IndexError):  # When instead of number value is `F`
+            last_price = None
+        try:
+            adj_close = int(response.text.split()[1].split(",")[2])
+        except (ValueError, IndexError):
+            adj_close = None
         return RealtimeTickerInfo(
-            int(response.text.split()[1].split(",")[1]),
-            int(response.text.split()[1].split(",")[2]),
-            int(response.text.split(";")[2].split("@")[1]),
-            int(response.text.split(";")[2].split("@")[2]),
-            int(response.text.split(";")[2].split("@")[4]),
-            int(response.text.split(";")[2].split("@")[3]),
+            last_price,
+            adj_close,
+            best_demand_vol=best_demand_vol,
+            best_demand_price=best_demand_price,
+            best_supply_vol=best_supply_vol,
+            best_supply_price=best_supply_price,
         )
 
     @property
