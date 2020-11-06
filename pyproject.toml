@@ -4,7 +4,7 @@ version = "0.6.1"
 
 description = "tehran stock exchange(TSE) client in python"
 authors = ["glyphack <sh.hooshyari@gmail.com>"]
-license = "MIT"
+license = "GPLv3"
 readme = "README.md"
 
 [tool.poetry.dependencies]
