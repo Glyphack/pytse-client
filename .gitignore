@@ -9,6 +9,7 @@ __pycache__/
 # Environments
 /.idea/
 /.vscode/
+.venv
 
 # Poetry
 poetry.lock
@@ -20,4 +21,5 @@ dmypy.json
 
 # Project generated files
 /pytse_client/examples/tickers_data/
+/pytse_client/examples/hey/
 *.csv

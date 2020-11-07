@@ -57,7 +57,7 @@ class Ticker:
     @property
     def title(self) -> str:
         return re.findall(
-            r"Title='([\D]*)',", self.ticker_page_response.text
+            r"Title='([\w\D]*)',FaraDesc", self.ticker_page_response.text
         )[0].split("-")[0].strip()
 
     @property
