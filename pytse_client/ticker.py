@@ -57,7 +57,7 @@ class Ticker:
     @property
     def title(self) -> str:
         return re.findall(
-            r"Title='([\D]*)',", self.ticker_page_response.text
+            r"Title='(.*?)',", self.ticker_page_response.text
         )[0].split("-")[0].strip()
 
     @property
@@ -78,12 +78,17 @@ class Ticker:
         return self.get_ticker_real_time_info_response().adj_close / self.eps
 
     @property
-    def group_p_e_ratio(self):
-        return float(
-            re.findall(
-                r"SectorPE='([\d.]*)',", self.ticker_page_response.text
-            )[0]
-        )
+    def group_p_e_ratio(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like وملت does not have group P/E (gpe)
+        """
+        gpe = re.findall(
+            r"SectorPE='([\d.]*)',", self.ticker_page_response.text
+        )[0]
+        if gpe == "":
+            return None
+        return float(gpe)
+        
 
     @property
     def eps(self) -> Optional[float]:
