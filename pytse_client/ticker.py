@@ -88,7 +88,6 @@ class Ticker:
         if gpe == "":
             return None
         return float(gpe)
-        
 
     @property
     def eps(self) -> Optional[float]:
