@@ -3,6 +3,7 @@
 # دریافت اطلاعات بازار بورس تهران
 ![Python application](https://github.com/Glyphack/pytse-client/workflows/Python%20application/badge.svg)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Glyphack/pytse-client.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Glyphack/pytse-client/context:python)
+[![Discord Chat](https://img.shields.io/discord/730808323808559106?label=discord)](https://discord.gg/ampPDKHpVv)
 
 
 با استفاده از pytse client میتونید به دیتای بازار بورس تهران در پایتون دسترسی داشته باشید.
@@ -228,7 +229,7 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 
 اگر درباره پکیج یا استفاده از اون سوالی دارید میتونید توی سرور دیسکورد بپرسید.
 
-https://discord.gg/D3txK6
+https://discord.gg/ampPDKHpVv
 
 <div id="required-packages" />
 
