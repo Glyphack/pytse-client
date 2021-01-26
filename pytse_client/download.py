@@ -1,7 +1,7 @@
 from concurrent.futures.thread import ThreadPoolExecutor
 from io import StringIO
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Union
 
 import pandas as pd
 from requests import HTTPError
@@ -16,7 +16,7 @@ def download(
         symbols: Union[List, str],
         write_to_csv: bool = False,
         include_jdate: bool = False,
-        base_path: str = config.DATA_BASE_PATH):
+        base_path: str = config.DATA_BASE_PATH) -> Dict[str, pd.DataFrame]:
     if symbols == "all":
         symbols = symbols_data.all_symbols()
     elif isinstance(symbols, str):
