@@ -14,6 +14,7 @@ requests = "^2.23.0"
 jdatetime = "^3.6.2"
 
 [tool.poetry.dev-dependencies]
+yapf = "^0.30.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
