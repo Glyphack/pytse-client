@@ -17,4 +17,8 @@ jobs:
         python-version: 3.8
     - name: Python Style Checker
       uses: andymckay/pycodestyle-action@0.1.3
+    - name: Run unit tests
+      run: make unit_test
+    - name: Run e2e test
+      run: make e2e_test
 
