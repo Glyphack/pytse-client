@@ -61,7 +61,8 @@ def _adjust_data_frame(df, include_jdate):
 
 def download_ticker_daily_record(ticker_index: str):
     url = tse_settings.TSE_TICKER_EXPORT_DATA_ADDRESS.format(ticker_index)
-    response = requests_retry_session().get(url, timeout=10)
+    with requests_retry_session() as session:
+        response = session.get(url, timeout=10)
     try:
         response.raise_for_status()
     except HTTPError:
@@ -141,7 +142,8 @@ def download_ticker_client_types_record(ticker_index: str):
 
 def _extract_ticker_client_types_data(ticker_index: str) -> List:
     url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
-    response = requests_retry_session().get(url, timeout=5)
+    with requests_retry_session() as session:
+        response = session.get(url, timeout=5)
     data = response.text.split(";")
     data = [row.split(",") for row in data]
     return data
