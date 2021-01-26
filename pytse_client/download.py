@@ -1,4 +1,4 @@
-from concurrent.futures.thread import ThreadPoolExecutor
+from concurrent import futures
 from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Union
@@ -23,27 +23,26 @@ def download(
         symbols = [symbols]
 
     df_list = {}
-
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    future_to_symbol = {}
+    with futures.ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
             ticker_index = symbols_data.get_ticker_index(symbol)
             _handle_ticker_index(symbol, ticker_index)
             future = executor.submit(
-                download_ticker_daily_record,
-                ticker_index
+                download_ticker_daily_record, ticker_index
             )
+            future_to_symbol[future] = symbol
+        for future in futures.as_completed(future_to_symbol):
+            symbol = future_to_symbol[future]
             df: pd.DataFrame = future.result()
             df = df.iloc[::-1]
-            df = df.rename(
-                columns=FIELD_MAPPINGS
-            )
+            df = df.rename(columns=FIELD_MAPPINGS)
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
             df_list[symbol] = df
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
-                df.to_csv(
-                    f'{base_path}/{symbol}.csv')
+                df.to_csv(f'{base_path}/{symbol}.csv')
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
@@ -62,7 +61,8 @@ def _adjust_data_frame(df, include_jdate):
 
 def download_ticker_daily_record(ticker_index: str):
     url = tse_settings.TSE_TICKER_EXPORT_DATA_ADDRESS.format(ticker_index)
-    response = requests_retry_session().get(url, timeout=10)
+    with requests_retry_session() as session:
+        response = session.get(url, timeout=10)
     try:
         response.raise_for_status()
     except HTTPError:
@@ -84,8 +84,8 @@ def download_client_types_records(
         symbols = [symbols]
 
     df_list = {}
-
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    future_to_symbol = {}
+    with futures.ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
             ticker_index = symbols_data.get_ticker_index(symbol)
             _handle_ticker_index(symbol, ticker_index)
@@ -93,6 +93,9 @@ def download_client_types_records(
                 download_ticker_client_types_record,
                 ticker_index
             )
+            future_to_symbol[future] = symbol
+        for future in futures.as_completed(future_to_symbol):
+            symbol = future_to_symbol[future]
             df: pd.DataFrame = future.result()
             _adjust_data_frame(df, include_jdate)
             df_list[symbol] = df
@@ -139,7 +142,8 @@ def download_ticker_client_types_record(ticker_index: str):
 
 def _extract_ticker_client_types_data(ticker_index: str) -> List:
     url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
-    response = requests_retry_session().get(url, timeout=5)
+    with requests_retry_session() as session:
+        response = session.get(url, timeout=5)
     data = response.text.split(";")
     data = [row.split(",") for row in data]
     return data
