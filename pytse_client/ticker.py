@@ -11,13 +11,25 @@ from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.download import download_ticker_client_types_record
 
 RealtimeTickerInfo = collections.namedtuple(
+
     'RealtimeTickerInfo',
-    ['last_price',
-     'adj_close',
-     'best_demand_vol',
-     'best_demand_price',
-     'best_supply_vol',
-     'best_supply_price']
+    [
+        'last_update_time',
+        'last_price',
+        'adj_close',
+        'best_demand_vol',
+        'best_demand_price',
+        'best_supply_vol',
+        'best_supply_price',
+        'individual_buy_vol',
+        'corporate_buy_vol',
+        'individual_sell_vol',
+        'corporate_sell_vol',
+        'individual_buy_count',
+        'corporate_buy_count',
+        'individual_sell_count',
+        'corporate_sell_count'
+]
 )
 
 
@@ -167,13 +179,46 @@ class Ticker:
             adj_close = int(response.text.split()[1].split(",")[2])
         except (ValueError, IndexError):
             adj_close = None
+        try:
+            last_update_time = str(response.text.split(";")[0].split(",")[0])
+        except:
+            last_update_time = None
+
+        if response.text.split(";")[4] != "":
+            individual_buy_vol = int(response.text.split(";")[4].split(",")[0])
+            corporate_buy_vol = int(response.text.split(";")[4].split(",")[1])
+            individual_sell_vol = int(response.text.split(";")[4].split(",")[3])
+            corporate_sell_vol = int(response.text.split(";")[4].split(",")[4])
+            individual_buy_count = int(response.text.split(";")[4].split(",")[5])
+            corporate_buy_count = int(response.text.split(";")[4].split(",")[6])
+            individual_sell_count = int(response.text.split(";")[4].split(",")[8])
+            corporate_sell_count = int(response.text.split(";")[4].split(",")[9])
+        else:
+            individual_buy_vol = None
+            corporate_buy_vol = None
+            individual_sell_vol = None
+            corporate_sell_vol = None
+            individual_buy_count = None
+            corporate_buy_count = None
+            individual_sell_count = None
+            corporate_sell_count = None
+
         return RealtimeTickerInfo(
+            last_update_time,
             last_price,
             adj_close,
             best_demand_vol=best_demand_vol,
             best_demand_price=best_demand_price,
             best_supply_vol=best_supply_vol,
             best_supply_price=best_supply_price,
+            individual_buy_vol=individual_buy_vol,
+            corporate_buy_vol=corporate_buy_vol,
+            individual_sell_vol=individual_sell_vol,
+            corporate_sell_vol=corporate_sell_vol,
+            individual_buy_count=individual_buy_count,
+            corporate_buy_count=corporate_buy_count,
+            individual_sell_count=individual_sell_count,
+            corporate_sell_count=corporate_sell_count,
         )
 
     @property
