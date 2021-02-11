@@ -4,11 +4,18 @@ import os
 import re
 from typing import Optional
 
+import bs4
 import pandas as pd
-
-from pytse_client import config, download, symbols_data, tse_settings, utils
-from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client import (
+    config,
+    download,
+    symbols_data,
+    translations,
+    tse_settings,
+    utils,
+)
 from pytse_client.download import download_ticker_client_types_record
+from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 
 RealtimeTickerInfo = collections.namedtuple(
 
@@ -67,15 +74,34 @@ class Ticker:
         return self._index
 
     @property
-    def title(self) -> str:
+    def instrument_id(self):
+        """
+        instrument id of a ticker is unique and used for calling
+        some apis from tsetmc
+        """
         return re.findall(
-            r"Title='(.*?)',", self.ticker_page_response.text
-        )[0].split("-")[0].strip()
+            r"InstrumentID='([\w\d]*)|',$", self._ticker_page_response.text
+        )[0]
+
+    @property
+    def ci_sin(self):
+        """
+        instrument id of a ticker is like instrument_id and used for calling
+        some apis from tsetmc
+        """
+        return re.findall(
+            r"CIsin='([\w\d]*)|',$", self._ticker_page_response.text
+        )[0]
+
+    @property
+    def title(self) -> str:
+        return re.findall(r"Title='(.*?)',", self._ticker_page_response.text
+                          )[0].split("-")[0].strip()
 
     @property
     def group_name(self) -> str:
-        return re.findall(
-            r"LSecVal='([\D]*)',", self.ticker_page_response.text
+        return re.fCLIENT_TYindall(
+            r"LSecVal='([\D]*)',", self._ticker_page_response.text
         )[0]
 
     @property
@@ -95,7 +121,7 @@ class Ticker:
         Notes on usage: tickers like وملت does not have group P/E (gpe)
         """
         gpe = re.findall(
-            r"SectorPE='([\d.]*)',", self.ticker_page_response.text
+            r"SectorPE='([\d.]*)',", self._ticker_page_response.text
         )[0]
         if gpe == "":
             return None
@@ -107,18 +133,35 @@ class Ticker:
         Notes on usage: tickers like آسام does not have eps
         """
         eps = re.findall(
-            r"EstimatedEPS='([-,\d]*)',", self.ticker_page_response.text
+            r"EstimatedEPS='([-,\d]*)',", self._ticker_page_response.text
         )[0]
         if eps == "":
             return None
         return float(eps)
 
     @property
-    def base_volume(self):
+    def base_volume(self) -> float:
         return float(
             re.findall(r"BaseVol=([-,\d]*),",
-                       self.ticker_page_response.text)[0]
+                       self._ticker_page_response.text)[0]
         )
+
+    @property
+    def client_types(self):
+        return download_ticker_client_types_record(self._index)
+
+    @property
+    def shareholders(self) -> pd.DataFrame:
+        page = utils.requests_retry_session(
+            retries=1
+        ).get(self._shareholders_url, timeout=5)
+        soup = bs4.BeautifulSoup(page.content, 'html.parser')
+        table: bs4.PageElement = soup.find_all("table")[0]
+        shareholders_df = utils.get_shareholders_html_table_as_csv(table)
+        shareholders_df = shareholders_df.rename(
+            columns=translations.SHAREHOLDERS_FIELD_MAPPINGS
+        )
+        return shareholders_df
 
     @property
     def last_price(self):
@@ -143,11 +186,6 @@ class Ticker:
     @property
     def best_supply_price(self):
         return self.get_ticker_real_time_info_response().best_supply_price
-
-    @property
-    @functools.lru_cache()
-    def ticker_page_response(self):
-        return utils.requests_retry_session().get(self._url, timeout=10)
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
         """
@@ -222,5 +260,10 @@ class Ticker:
         )
 
     @property
-    def client_types(self):
-        return download_ticker_client_types_record(self._index)
+    @functools.lru_cache()
+    def _ticker_page_response(self):
+        return utils.requests_retry_session().get(self._url, timeout=10)
+
+    @property
+    def _shareholders_url(self) -> str:
+        return tse_settings.TSE_SHAREHOLDERS_URL.format(self.ci_sin)

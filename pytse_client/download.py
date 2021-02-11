@@ -7,7 +7,7 @@ import pandas as pd
 from requests import HTTPError
 import jdatetime
 
-from pytse_client import config, symbols_data, tse_settings
+from pytse_client import config, symbols_data, translations, tse_settings
 from pytse_client.utils import requests_retry_session
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 
@@ -36,7 +36,7 @@ def download(
             symbol = future_to_symbol[future]
             df: pd.DataFrame = future.result()
             df = df.iloc[::-1]
-            df = df.rename(columns=FIELD_MAPPINGS)
+            df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
             df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
             df_list[symbol] = df
@@ -165,16 +165,3 @@ def get_symbol_id(symbol_name: str):
     if (to_arabic(symbol_name) == symbol_full_info[0].strip()):
         return symbol_full_info[2]  # symbol id
     return None
-
-
-FIELD_MAPPINGS = {
-    "<DTYYYYMMDD>": "date",
-    "<FIRST>": "open",
-    "<HIGH>": "high",
-    "<LOW>": "low",
-    "<LAST>": "close",
-    "<VOL>": "volume",
-    "<CLOSE>": "adjClose",
-    "<OPENINT>": "count",
-    "<VALUE>": "value"
-}

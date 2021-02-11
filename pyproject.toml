@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytse-client"
-version = "0.6.3"
+version = "0.7.0"
 
 description = "tehran stock exchange(TSE) client in python"
 authors = ["glyphack <sh.hooshyari@gmail.com>"]
@@ -12,6 +12,7 @@ python = "^3.6.1"
 pandas = "*"
 requests = "^2.23.0"
 jdatetime = "^3.6.2"
+beautifulsoup4 = "^4.9.3"
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"
