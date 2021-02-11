@@ -22,3 +22,5 @@ print(ticker.group_p_e_ratio)  # group P/E
 print(ticker.base_volume)  # حجم مبنا
 print(ticker.last_price)  # آخرین معامله
 print(ticker.adj_close)  # قیمت پایانی
+print(ticker.shareholders)  # اطلاعات سهام داران عمده
+print(ticker.shareholders.percentage.sum()) # جمع سهام داران
