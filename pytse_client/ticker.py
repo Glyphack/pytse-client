@@ -69,7 +69,7 @@ class Ticker:
         some apis from tsetmc
         """
         return re.findall(
-            r"InstrumentID='([\w\d]*)|$',", self._ticker_page_response.text
+            r"InstrumentID='([\w\d]*)|',$", self._ticker_page_response.text
         )[0]
 
     @property
@@ -79,7 +79,7 @@ class Ticker:
         some apis from tsetmc
         """
         return re.findall(
-            r"CIsin='([\w\d]*)|$',", self._ticker_page_response.text
+            r"CIsin='([\w\d]*)|',$", self._ticker_page_response.text
         )[0]
 
     @property
