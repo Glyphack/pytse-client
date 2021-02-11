@@ -1,4 +1,5 @@
 # from .requests import requests_retry_session
+from .string import convert_to_number_if_number
 from typing import List, Tuple
 import bs4
 import pandas as pd
@@ -38,8 +39,8 @@ def get_shareholders_html_table_as_csv(table) -> pd.DataFrame:
         for cell in row:
             cell_div = cell.find("div")
             if cell_div and cell_div.get_text() != "":
-                df_row.append(cell_div["title"])
+                df_row.append(convert_to_number_if_number(cell_div["title"]))
             else:
-                df_row.append(cell.get_text())
+                df_row.append(convert_to_number_if_number(cell.get_text().strip()))
         df_rows.append(df_row)
     return pd.DataFrame(data=df_rows, columns=header)
