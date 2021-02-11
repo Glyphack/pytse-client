@@ -1,10 +1,10 @@
 <div dir="rtl">
 
 # دریافت اطلاعات بازار بورس تهران
+
 ![Python application](https://github.com/Glyphack/pytse-client/workflows/Python%20application/badge.svg)
 [![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Glyphack/pytse-client.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Glyphack/pytse-client/context:python)
 [![Discord Chat](https://img.shields.io/discord/730808323808559106?label=discord)](https://discord.gg/ampPDKHpVv)
-
 
 با استفاده از pytse client میتونید به دیتای بازار بورس تهران در پایتون دسترسی داشته باشید.
 هدف حل مشکلات گرفتن اطلاعات بروز از سایت بازار بورس تهران هست.
@@ -94,20 +94,21 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 </div>
 
 ### دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا
-برای دانلود سابقه معاملات حقیقی و حقوقی برای تمامی نمادها  میتوان از تابع زیر استفاده کرد
+
+برای دانلود سابقه معاملات حقیقی و حقوقی برای تمامی نمادها میتوان از تابع زیر استفاده کرد
 
 <div dir="ltr">
 
 ```python
-from pytse_client import download_client_types_records  
-  
-if __name__ == '__main__':  
+from pytse_client import download_client_types_records
+
+if __name__ == '__main__':
 
   records_dict = download_client_types_records("all")
   print(records_dict["فولاد"])
   #Output
 date         individual_buy_count  ... individual_ownership_change
-                            
+
 2020-09-01                36298  ...                   -691857.0
 2020-08-31                58185  ...                  83789408.0
 2020-08-26                  461  ...                  21647730.0
@@ -132,9 +133,9 @@ date         individual_buy_count  ... individual_ownership_change
 
 ```python
 from pytse_client import download_client_types_records
-if __name__ == '__main__':  
-   
-  #Records are saved as a .csv file with the same name of ticer's 
+if __name__ == '__main__':
+
+  #Records are saved as a .csv file with the same name of ticer's
   records = download_client_types_records("فولاد", write_to_csv=True)
 ```
 
@@ -181,6 +182,7 @@ print(ticker.best_demand_price)  # قیمت بهترین عرضه
 26700
 print(ticker.best_demand_vol)  # حجم بهترین عرضه
 576608
+print(ticker.shareholders)  # اطلاعات سهام داران عمده
 ```
 
 </div>
@@ -223,6 +225,53 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 
 </div>
 
+#### سهامداران عمده
+
+سهام داران عمده اطلاعات داخل این [صفحه](http://tsetmc.com/Loader.aspx?Partree=15131T&c=IRO1BMLT0007) هست.
+این اطلاعات رو میشه با `shareholders` گرفت که یک DataFrame هست.
+
+
+<div dir="ltr">
+
+```
+ticker = Ticker("وبملت")
+print(ticker.shareholders) # اطلاعات سهام داران عمده
+
+ change   percentage       share                                 shareholder  
+0   دولت جمهوري اسلامي ايران                    23,114,768,760  11.160     0     
+1   صندوق تامين آتيه كاركنان بانك ملت           13,353,035,330  6.440      0      
+2   صندوق سرمايه گذاري واسطه گري مالي يكم       11,748,764,647  5.670      0      
+3   شركت پتروشيمي فن آوران-سهامي عام-           9,253,327,080   4.460      0      
+4   شركت گروه مالي ملت-سهام عام-                8,933,698,834   4.310      0      
+5   صندوق سرمايه گذاري.ا.بازارگرداني ملت     8,395,500,914   4.050      0   
+6   شركت سرمايه گذاري صباتامين-سهامي عام-       7,659,597,269   3.690      0      
+7   شركت تعاوني معين آتيه خواهان                4,561,801,327   2.200      0      
+8   شركت س اتهران س.خ-م ك م ف ع-                4,278,903,677   2.060      0      
+9   شركت گروه توسعه مالي مهرآيندگان-سهامي عام-  4,161,561,525   2.000      0      
+10  شركت س اخراسان رضوي س.خ-م ك م ف ع-          3,442,236,423   1.660      0      
+11  شركت س افارس س.خ-م ك م ف ع-                 2,593,956,288   1.250      0      
+12  شركت س اخوزستان س.خ-م ك م ف ع-              2,526,080,803   1.220      0      
+13  شركت شيرين عسل-سهامي خاص-                   2,496,936,881   1.200      0      
+14  شركت سرمايه گذاري ملي ايران-سهامي عام-      2,423,674,676   1.170      0      
+15  شركت س ااصفهان س.خ-م ك م ف ع-               2,274,221,331   1.090      0      
+```
+</div>
+
+##### شناور سهم
+برای مثال میشه با استفاده از سهامداران عمده شناور سهم رو حساب کرد:
+
+<div dir="ltr">
+
+```
+ticker.shareholders.percentage.sum() # جمع سهام داران
+53.63
+
+100 - ticker.shareholders.percentage.sum() # شناور سهم 
+46.37
+```
+</div>
+
+
 <div id="qa" />
 
 #### کامیونیتی
@@ -238,6 +287,7 @@ https://discord.gg/ampPDKHpVv
 - [Pandas](https://github.com/pydata/pandas)
 - [Requests](http://docs.python-requests.org/en/master/)
 - [jdatetime](https://github.com/slashmili/python-jalali)
+- [beautifulsoup4](https://pypi.org/project/beautifulsoup4)
 
 <div id="credits" />
 
