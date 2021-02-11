@@ -13,3 +13,8 @@ TSE_CLIENT_TYPE_DATA_URL = (
 TSE_SYMBOL_ID_URL = (
     "http://www.tsetmc.com/tsev2/data/search.aspx?skey={}"
 )
+
+# use instrument id as argument
+TSE_SHAREHOLDERS_URL = (
+    "http://www.tsetmc.com/Loader.aspx?Partree=15131T&c={}"
+)
