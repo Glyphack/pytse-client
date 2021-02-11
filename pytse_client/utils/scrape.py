@@ -29,7 +29,8 @@ def get_html_table_header_and_rows(
 
 def get_shareholders_html_table_as_csv(table) -> pd.DataFrame:
     """
-    given table element from shareholders page returns DatFrame Containing the table
+    given table element from shareholders page returns DatFrame 
+    Containing the table
     """
     header, rows = get_html_table_header_and_rows(table)
     df_rows = []
@@ -41,6 +42,8 @@ def get_shareholders_html_table_as_csv(table) -> pd.DataFrame:
             if cell_div and cell_div.get_text() != "":
                 df_row.append(convert_to_number_if_number(cell_div["title"]))
             else:
-                df_row.append(convert_to_number_if_number(cell.get_text().strip()))
+                df_row.append(
+                    convert_to_number_if_number(cell.get_text().strip())
+                )
         df_rows.append(df_row)
     return pd.DataFrame(data=df_rows, columns=header)

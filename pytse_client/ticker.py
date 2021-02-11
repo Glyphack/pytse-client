@@ -6,7 +6,14 @@ from typing import Optional
 
 import bs4
 import pandas as pd
-from pytse_client import config, download, symbols_data, translations, tse_settings, utils
+from pytse_client import (
+    config,
+    download,
+    symbols_data,
+    translations,
+    tse_settings,
+    utils,
+)
 from pytse_client.download import download_ticker_client_types_record
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 
@@ -58,7 +65,8 @@ class Ticker:
     @property
     def instrument_id(self):
         """
-        instrument id of a ticker is like index and used for calling some apis from tsetmc
+        instrument id of a ticker is unique and used for calling
+        some apis from tsetmc
         """
         return re.findall(
             r"InstrumentID='([\w\d]*)|$',", self._ticker_page_response.text
@@ -67,7 +75,8 @@ class Ticker:
     @property
     def ci_sin(self):
         """
-        instrument id of a ticker is like instrument_id and used for calling some apis from tsetmc
+        instrument id of a ticker is like instrument_id and used for calling
+        some apis from tsetmc
         """
         return re.findall(
             r"CIsin='([\w\d]*)|$',", self._ticker_page_response.text
