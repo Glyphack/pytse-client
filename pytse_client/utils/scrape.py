@@ -29,7 +29,7 @@ def get_html_table_header_and_rows(
 
 def get_shareholders_html_table_as_csv(table) -> pd.DataFrame:
     """
-    given table element from shareholders page returns DatFrame 
+    given table element from shareholders page returns DatFrame
     Containing the table
     """
     header, rows = get_html_table_header_and_rows(table)
