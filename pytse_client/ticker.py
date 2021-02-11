@@ -107,6 +107,18 @@ class Ticker:
             re.findall(r"BaseVol=([-,\d]*),",
                        self.ticker_page_response.text)[0]
         )
+    @property
+    def shareholders(self) -> pd.DataFrame:
+        page = utils.requests_retry_session(
+            retries=1
+        ).get(self._shareholders_url, timeout=5)
+        soup = bs4.BeautifulSoup(page.content, 'html.parser')
+        table: bs4.PageElement = soup.find_all("table")[0]
+        shareholders_df = utils.get_shareholders_html_table_as_csv(table)
+        shareholders_df = shareholders_df.rename(
+            columns=translations.SHAREHOLDERS_FIELD_MAPPINGS
+        )
+        return shareholders_df
 
     @property
     def last_price(self):
@@ -177,5 +189,6 @@ class Ticker:
         )
 
     @property
-    def client_types(self):
-        return download_ticker_client_types_record(self._index)
+    @property
+    def _shareholders_url(self) -> str:
+        return tse_settings.TSE_SHAREHOLDERS_URL.format(self.ci_sin)
