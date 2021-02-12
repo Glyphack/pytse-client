@@ -1,7 +1,5 @@
-import pytest, requests, os.path
-
+import pytest, os.path
 from .scrap import MainPageInfo
-from bs4 import BeautifulSoup
 
 
 @pytest.fixture

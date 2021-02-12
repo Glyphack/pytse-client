@@ -1,5 +1,5 @@
 # from .requests import requests_retry_session
-from .string import convert_to_number_if_number
+from .stringy import convert_to_number_if_number
 from typing import List, Tuple
 import bs4
 import pandas as pd

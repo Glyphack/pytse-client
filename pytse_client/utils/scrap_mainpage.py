@@ -65,7 +65,7 @@ class MainPageInfo:
             data_set = []
             for index, td in enumerate(table.tbody.find_all('td'), start=1):
                 data_set.append(td.text)
-                if index % 3 == 0:                              # For appending distinct rows to a row list,   
+                if index % 3 == 0:         # For appending distinct rows to a row list,   
                     rows.append(data_set)  # we use this way based on number of cells in a row.
                     data_set = []
         return pd.DataFrame(data=rows, columns=headers)
@@ -127,6 +127,3 @@ class MainPageInfo:
         self.chosen_stock_index_csv()
         self.stock_effiency_table_csv()
         self.overall_csv()
-
-        
-    
