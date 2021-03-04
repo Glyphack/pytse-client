@@ -1,20 +1,21 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: اضافه کردن قابلیت
+about: پیشنهادی برای بهتر شدن پروژه دارید؟
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+<p dir="rtl">
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**مشکلی که دارید چی هست؟**
+قابلیت دریافت اطلاعات فلان امکان پذیر نیست
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**راه حل**
+میتونیم از این صفحه این اطلاعات رو دریافت کنیم و به برنامه اضافه کنیم
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**نکات تکمیلی**
+اگر عکس و یا نکته‌ای هست که برای پیاده‌سازی مهم هست اینجا بگید.
+
+</p>
