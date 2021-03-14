@@ -100,7 +100,7 @@ class Ticker:
         """
         adj_close = self.get_ticker_real_time_info_response().adj_close
         eps = self.eps
-        if adj_close is None or eps is None:
+        if adj_close is None or eps is None or eps == 0:
             return None
         return self.get_ticker_real_time_info_response().adj_close / self.eps
 
