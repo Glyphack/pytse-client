@@ -129,6 +129,13 @@ class Ticker:
         return float(eps)
 
     @property
+    def total_shares(self) -> float:
+        return float(
+            re.findall(r"ZTitad=([-,\d]*),",
+                       self._ticker_page_response.text)[0]
+        )
+
+    @property
     def base_volume(self) -> float:
         return float(
             re.findall(r"BaseVol=([-,\d]*),",

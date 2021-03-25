@@ -3,7 +3,7 @@ import unittest
 from os.path import exists
 from pathlib import Path
 
-from pytse_client import config, download, download_client_types_records
+from pytse_client import download, download_client_types_records
 
 
 class TestDownloadSymbolHistory(unittest.TestCase):
