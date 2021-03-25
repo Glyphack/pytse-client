@@ -111,10 +111,10 @@ class Ticker:
         """
         gpe = re.findall(
             r"SectorPE='([\d.]*)',", self._ticker_page_response.text
-        )[0]
-        if gpe == "":
+        )
+        if not gpe:
             return None
-        return float(gpe)
+        return float(gpe[0])
 
     @property
     def eps(self) -> Optional[float]:
