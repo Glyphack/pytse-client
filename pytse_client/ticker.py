@@ -129,7 +129,7 @@ class Ticker:
         return float(eps)
 
     @property
-    def total_share(self) -> float:
+    def total_shares(self) -> float:
         return float(
             re.findall(r"ZTitad=([-,\d]*),",
                        self._ticker_page_response.text)[0]

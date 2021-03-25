@@ -7,7 +7,8 @@ from pytse_client import Ticker, all_symbols
 
 if __name__ == '__main__':
     symbols_errors = defaultdict(list)
-    for symbol in all_symbols():
+    for index, symbol in enumerate(all_symbols()):
+        print(f"{symbol} item {index}/{len(all_symbols())}")
         try:
             ticker = Ticker(symbol)
             ticker.history
@@ -23,8 +24,9 @@ if __name__ == '__main__':
             ticker.adj_close
             ticker.shareholders
             ticker.shareholders.percentage.sum()
-            ticker.total_share
+            ticker.total_shares
         except Exception as e:
+            print(f"error {e}")
             symbols_errors[symbol].append(e)
     # if there is some error test will fail with all erros
     if symbols_errors:
