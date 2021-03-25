@@ -37,7 +37,7 @@ def download(
             df: pd.DataFrame = future.result()
             df = df.iloc[::-1]
             df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
-            df = df.drop(columns=["<PER>", "<OPEN>", "<TICKER>"])
+            df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
             df_list[symbol] = df
             if write_to_csv:

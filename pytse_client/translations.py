@@ -7,7 +7,8 @@ HISTORY_FIELD_MAPPINGS = {
     "<VOL>": "volume",
     "<CLOSE>": "adjClose",
     "<OPENINT>": "count",
-    "<VALUE>": "value"
+    "<VALUE>": "value",
+    "<OPEN>": "yesterday",
 }
 
 SHAREHOLDERS_FIELD_MAPPINGS = {
