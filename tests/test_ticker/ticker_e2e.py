@@ -11,8 +11,6 @@ if __name__ == '__main__':
         print(f"{symbol} item {index}/{len(all_symbols())}")
         try:
             ticker = Ticker(symbol)
-            ticker.history
-            ticker.client_types
             ticker.title
             ticker.url
             ticker.group_name
@@ -23,7 +21,6 @@ if __name__ == '__main__':
             ticker.last_price
             ticker.adj_close
             ticker.shareholders
-            ticker.shareholders.percentage.sum()
             ticker.total_shares
         except Exception as e:
             print(f"error {e}")
