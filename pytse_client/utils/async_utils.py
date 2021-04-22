@@ -1,6 +1,6 @@
 import asyncio
 import time
-from typing import Callable, List, Tuple
+from typing import List
 
 
 async def run_tasks_with_wait(tasks: List, chunk_size: int, wait_between: int):
