@@ -22,6 +22,7 @@ if __name__ == '__main__':
             ticker.adj_close
             ticker.shareholders
             ticker.total_shares
+            ticker.get_shareholders_history()
         except Exception as e:
             print(f"error {e}")
             symbols_errors[symbol].append(e)
