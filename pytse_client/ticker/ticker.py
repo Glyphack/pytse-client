@@ -184,8 +184,8 @@ class Ticker:
         to_when=datetime.datetime.now(),
         only_trade_days=True,
     ):
-        """ 
-            a helper function to use shareholders_history_async 
+        """
+            a helper function to use shareholders_history_async
         """
         asyncio.run(
             self.get_shareholders_history_async(
@@ -223,8 +223,9 @@ class Ticker:
         rows = []
         for page in pages:
             page_date = tsetmc_scraper.scrape_daily_info_page_for_date(page)
-            shareholders_data = tsetmc_scraper.scrape_daily_info_page_for_shareholder_data(
-                page
+            shareholders_data = (
+                tsetmc_scraper.
+                scrape_daily_info_page_for_shareholder_data(page)
             )
             for shareholder_data in shareholders_data:
                 rows.append(

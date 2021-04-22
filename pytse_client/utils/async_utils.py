@@ -5,7 +5,7 @@ from typing import Callable, List, Tuple
 
 async def run_tasks_with_wait(tasks: List, chunk_size: int, wait_between: int):
     """
-    This function runs async tasks chunk by chunk and 
+    This function runs async tasks chunk by chunk and
     wait after completing each chunk
     """
     chunks = chunk_it(tasks, chunk_size)
