@@ -318,7 +318,7 @@ class Ticker:
     @property
     @functools.lru_cache()
     def _ticker_page_response(self):
-        return self._session.get(self._url, timeout=10)
+        return utils.requests_retry_session().get(self._url, timeout=10)
 
     @functools.lru_cache()
     @retry(
