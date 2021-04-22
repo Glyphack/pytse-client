@@ -4,10 +4,11 @@ access properties of Ticker for all symbols
 from collections import defaultdict
 
 from pytse_client import Ticker, all_symbols
+import random
 
 if __name__ == '__main__':
     symbols_errors = defaultdict(list)
-    for index, symbol in enumerate(all_symbols()):
+    for index, symbol in enumerate(random.sample(all_symbols(), 5)):
         print(f"{symbol} item {index}/{len(all_symbols())}")
         try:
             ticker = Ticker(symbol)
