@@ -56,7 +56,6 @@ def _adjust_data_frame(df, include_jdate):
         df.jdate = df.date.apply(
             lambda gregorian:
             jdatetime.date.fromgregorian(date=gregorian))
-    df.set_index("date", inplace=True)
 
 
 def download_ticker_daily_record(ticker_index: str):
