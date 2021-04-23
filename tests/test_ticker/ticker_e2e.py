@@ -25,7 +25,9 @@ if __name__ == '__main__':
             ticker.adj_close
             ticker.shareholders
             ticker.total_shares
-            ticker.get_shareholders_history(from_when=datetime.timedelta(days=20))
+            ticker.get_shareholders_history(
+                from_when=datetime.timedelta(days=20)
+            )
         except Exception as e:
             print(f"error {e}")
             symbols_errors[symbol].append(e)
