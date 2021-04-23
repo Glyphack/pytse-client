@@ -192,7 +192,6 @@ class Ticker:
                 only_trade_days,
                 session,
             ),
-            debug=True
         )
 
     async def get_shareholders_history_async(
@@ -215,7 +214,7 @@ class Ticker:
                     session, date.strftime(tse_settings.DATE_FORMAT)
                 )
             )
-        pages = await async_utils.run_tasks_with_wait(tasks, 50, 2)
+        pages = await async_utils.run_tasks_with_wait(tasks, 30, 2)
         await session.close()
         rows = []
         for page in pages:
