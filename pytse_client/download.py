@@ -25,11 +25,12 @@ def download(
     df_list = {}
     future_to_symbol = {}
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
+        session = requests_retry_session()
         for symbol in symbols:
             ticker_index = symbols_data.get_ticker_index(symbol)
             _handle_ticker_index(symbol, ticker_index)
             future = executor.submit(
-                download_ticker_daily_record, ticker_index
+                download_ticker_daily_record, ticker_index, session
             )
             future_to_symbol[future] = symbol
         for future in futures.as_completed(future_to_symbol):
@@ -46,6 +47,7 @@ def download(
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
+    session.close()
     return df_list
 
 
@@ -56,17 +58,15 @@ def _adjust_data_frame(df, include_jdate):
         df.jdate = df.date.apply(
             lambda gregorian:
             jdatetime.date.fromgregorian(date=gregorian))
-    df.set_index("date", inplace=True)
 
 
-def download_ticker_daily_record(ticker_index: str):
+def download_ticker_daily_record(ticker_index: str, session):
     url = tse_settings.TSE_TICKER_EXPORT_DATA_ADDRESS.format(ticker_index)
-    with requests_retry_session() as session:
-        response = session.get(url, timeout=10)
+    response = session.get(url, timeout=10)
     try:
         response.raise_for_status()
     except HTTPError:
-        return download_ticker_daily_record(ticker_index)
+        return download_ticker_daily_record(ticker_index, session)
 
     data = StringIO(response.text)
     return pd.read_csv(data)

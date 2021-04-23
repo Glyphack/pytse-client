@@ -1,22 +1,32 @@
+import asyncio
 import collections
+import datetime
 import functools
+import logging
 import os
 import re
 from typing import Optional
 
+import aiohttp
 import bs4
 import pandas as pd
+import requests
 from pytse_client import (
     config,
-    download,
     symbols_data,
     translations,
     tse_settings,
     utils,
 )
-from pytse_client.download import download_ticker_client_types_record
+from pytse_client.download import download, download_ticker_client_types_record
+from pytse_client.scraper import tsetmc_scraper
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client.utils import async_utils
+from tenacity import retry, wait_random
+from tenacity.before_sleep import before_sleep_log
 
+logger = logging.getLogger(config.LOGGER_NAME)
+logger.setLevel(logging.WARNING)
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo', [
         'last_price',
@@ -49,6 +59,7 @@ class Ticker:
 
     def from_file(self):
         self._history = pd.read_csv(self.csv_path)
+        self._history["date"] = pd.to_datetime(self._history["date"])
 
     @property
     def history(self):
@@ -147,10 +158,14 @@ class Ticker:
         return download_ticker_client_types_record(self._index)
 
     @property
+    def trade_dates(self):
+        return self._history["date"].to_list()
+
+    @property
     def shareholders(self) -> pd.DataFrame:
-        page = utils.requests_retry_session(
-            retries=1
-        ).get(self._shareholders_url, timeout=5)
+        session = utils.requests_retry_session()
+        page = session.get(self._shareholders_url, timeout=5)
+        session.close()
         soup = bs4.BeautifulSoup(page.content, 'html.parser')
         table: bs4.PageElement = soup.find_all("table")[0]
         shareholders_df = utils.get_shareholders_html_table_as_csv(table)
@@ -158,6 +173,79 @@ class Ticker:
             columns=translations.SHAREHOLDERS_FIELD_MAPPINGS
         )
         return shareholders_df
+
+    def get_shareholders_history(
+        self,
+        from_when=datetime.timedelta(days=90),
+        to_when=datetime.datetime.now(),
+        only_trade_days=True,
+        session=None
+    ) -> pd.DataFrame:
+        """
+            a helper function to use shareholders_history_async
+        """
+        return asyncio.run(
+            self.get_shareholders_history_async(
+                from_when,
+                to_when,
+                only_trade_days,
+                session,
+            ),
+        )
+
+    async def get_shareholders_history_async(
+        self,
+        from_when=datetime.timedelta(days=90),
+        to_when=datetime.datetime.now(),
+        only_trade_days=True,
+        session=None,
+    ) -> pd.DataFrame:
+        requested_dates = utils.datetime_range(to_when - from_when, to_when)
+        if not session:
+            conn = aiohttp.TCPConnector(limit=3)
+            session = aiohttp.ClientSession(connector=conn)
+        tasks = []
+        for date in requested_dates:
+            if only_trade_days and date.date() not in self.trade_dates:
+                continue
+            tasks.append(
+                self._get_ticker_daily_info_page_response(
+                    session, date.strftime(tse_settings.DATE_FORMAT)
+                )
+            )
+        pages = await async_utils.run_tasks_with_wait(tasks, 30, 10)
+        await session.close()
+        rows = []
+        for page in pages:
+            page_date = tsetmc_scraper.scrape_daily_info_page_for_date(page)
+            shareholders_data = (
+                tsetmc_scraper.
+                scrape_daily_info_page_for_shareholder_data(page)
+            )
+            for shareholder_data in shareholders_data:
+                rows.append(
+                    [
+                        datetime.datetime.strptime(
+                            page_date,
+                            tse_settings.DATE_FORMAT,
+                        ),
+                        shareholder_data.shares,
+                        shareholder_data.percentage,
+                        shareholder_data.instrument_id,
+                        shareholder_data.name,
+                    ]
+                )
+
+        return pd.DataFrame(
+            data=rows,
+            columns=[
+                'date',
+                'shares',
+                'percentage',
+                'instrument_id',
+                'shareholder',
+            ]
+        )
 
     @property
     def last_price(self):
@@ -189,9 +277,9 @@ class Ticker:
         - Real time data might not be always available
         check for None values before usage
         """
-        response = utils.requests_retry_session().get(
-            self._info_url, timeout=5
-        )
+        session = utils.requests_retry_session()
+        response = session.get(self._info_url, timeout=5)
+        session.close()
         # check supply and demand data exists
         if response.text.split(";")[2] != "":
             best_demand_vol = int(response.text.split(";")[2].split("@")[1])
@@ -226,6 +314,23 @@ class Ticker:
     @functools.lru_cache()
     def _ticker_page_response(self):
         return utils.requests_retry_session().get(self._url, timeout=10)
+
+    @functools.lru_cache()
+    @retry(
+        wait=wait_random(min=3, max=5),
+        before_sleep=before_sleep_log(logger, logging.ERROR)
+    )
+    async def _get_ticker_daily_info_page_response(
+        self, session, date
+    ) -> requests.Response:
+        async with session.get(
+            tse_settings.INSTRUMENT_DAY_INFO_URL.format(
+                index=self.index, date=date
+            ),
+        ) as response:
+            response.raise_for_status()
+            page = await response.text()
+            return page
 
     @property
     def _shareholders_url(self) -> str:

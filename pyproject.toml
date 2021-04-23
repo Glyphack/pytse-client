@@ -13,6 +13,8 @@ pandas = "*"
 requests = "^2.23.0"
 jdatetime = "^3.6.2"
 beautifulsoup4 = "^4.9.3"
+aiohttp = {extras = ["speedups"], version = "^3.7.4"}
+tenacity = "^7.0.0"
 
 [tool.poetry.dev-dependencies]
 yapf = "^0.30.0"

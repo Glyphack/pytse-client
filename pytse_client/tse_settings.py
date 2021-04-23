@@ -18,3 +18,12 @@ TSE_SYMBOL_ID_URL = (
 TSE_SHAREHOLDERS_URL = (
     "http://www.tsetmc.com/Loader.aspx?Partree=15131T&c={}"
 )
+
+# returns all the instrument data for a specific date
+# date should be formatted like YYYYMMDD
+INSTRUMENT_DAY_INFO_URL = (
+    "http://cdn.tsetmc.com/Loader.aspx?ParTree=15131P&i={index}&d={date}"
+)
+
+DATE_FORMAT = "%Y%m%d"
+MIN_DATE = 20010321
