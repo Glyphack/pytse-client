@@ -11,7 +11,6 @@ import aiohttp
 import bs4
 import pandas as pd
 import requests
-from pandas.core.tools.datetimes import to_datetime
 from pytse_client import (
     config,
     symbols_data,
