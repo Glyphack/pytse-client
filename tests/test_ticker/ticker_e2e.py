@@ -1,15 +1,17 @@
 """
 access properties of Ticker for all symbols
 """
+import datetime
+import random
 from collections import defaultdict
 
 from pytse_client import Ticker, all_symbols
-import random
 
 if __name__ == '__main__':
     symbols_errors = defaultdict(list)
-    for index, symbol in enumerate(random.sample(all_symbols(), 5)):
-        print(f"{symbol} item {index}/{len(all_symbols())}")
+    random_symbols = random.sample(all_symbols(), 2)
+    for index, symbol in enumerate(random_symbols):
+        print(f"{symbol} item {index}/{len(random_symbols)}")
         try:
             ticker = Ticker(symbol)
             ticker.title
@@ -23,7 +25,7 @@ if __name__ == '__main__':
             ticker.adj_close
             ticker.shareholders
             ticker.total_shares
-            ticker.get_shareholders_history()
+            ticker.get_shareholders_history(from_when=datetime.timedelta(days=20))
         except Exception as e:
             print(f"error {e}")
             symbols_errors[symbol].append(e)
