@@ -181,11 +181,11 @@ class Ticker:
         to_when=datetime.datetime.now(),
         only_trade_days=True,
         session=None
-    ):
+    ) -> pd.DataFrame:
         """
             a helper function to use shareholders_history_async
         """
-        asyncio.run(
+        return asyncio.run(
             self.get_shareholders_history_async(
                 from_when,
                 to_when,
@@ -203,7 +203,7 @@ class Ticker:
     ) -> pd.DataFrame:
         requested_dates = utils.datetime_range(to_when - from_when, to_when)
         if not session:
-            conn = aiohttp.TCPConnector(limit=3, ttl_dns_cache=5000)
+            conn = aiohttp.TCPConnector(limit=3)
             session = aiohttp.ClientSession(connector=conn)
         tasks = []
         for date in requested_dates:
@@ -214,7 +214,7 @@ class Ticker:
                     session, date.strftime(tse_settings.DATE_FORMAT)
                 )
             )
-        pages = await async_utils.run_tasks_with_wait(tasks, 30, 2)
+        pages = await async_utils.run_tasks_with_wait(tasks, 30, 10)
         await session.close()
         rows = []
         for page in pages:
@@ -318,7 +318,7 @@ class Ticker:
 
     @functools.lru_cache()
     @retry(
-        wait=wait_random(min=1, max=2),
+        wait=wait_random(min=3, max=5),
         before_sleep=before_sleep_log(logger, logging.ERROR)
     )
     async def _get_ticker_daily_info_page_response(
