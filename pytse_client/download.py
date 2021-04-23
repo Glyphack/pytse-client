@@ -66,7 +66,7 @@ def download_ticker_daily_record(ticker_index: str, session):
     try:
         response.raise_for_status()
     except HTTPError:
-        return download_ticker_daily_record(ticker_index)
+        return download_ticker_daily_record(ticker_index, session)
 
     data = StringIO(response.text)
     return pd.read_csv(data)
