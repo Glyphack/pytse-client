@@ -27,8 +27,11 @@ def download(
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         session = requests_retry_session()
         for symbol in symbols:
-            ticker_index = symbols_data.get_ticker_index(symbol)
-            _handle_ticker_index(symbol, ticker_index)
+            if symbol.isnumeric():
+                ticker_index = symbol
+            else:
+                ticker_index = symbols_data.get_ticker_index(symbol)
+                _handle_ticker_index(symbol, ticker_index)
             future = executor.submit(
                 download_ticker_daily_record, ticker_index, session
             )
