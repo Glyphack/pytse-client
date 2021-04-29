@@ -13,7 +13,7 @@ from_times = [
 ]
 for symbol in symbols:
     print(f"downloading {symbol}")
-    Ticker(symbol).get_shareholders_history().to_csv(f"str(symbol).csv")
+    Ticker(symbol).get_shareholders_history().to_csv(f"{symbol}.csv")
     print(f"downloaded {symbol} complete")
     # sleep between to avoid getting blocked
     sleep(50)
