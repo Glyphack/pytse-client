@@ -40,10 +40,10 @@ RealtimeTickerInfo = collections.namedtuple(
 
 
 class Ticker:
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str, index: Optional[str] = None):
         self.symbol = symbol
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
-        self._index = symbols_data.get_ticker_index(self.symbol)
+        self._index = index or symbols_data.get_ticker_index(self.symbol)
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
@@ -55,7 +55,7 @@ class Ticker:
             self.from_web()
 
     def from_web(self):
-        self._history = download(self.symbol)[self.symbol]
+        self._history = download(self._index)[self._index]
 
     def from_file(self):
         self._history = pd.read_csv(self.csv_path)
