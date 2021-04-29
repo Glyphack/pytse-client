@@ -26,7 +26,7 @@ from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
 logger = logging.getLogger(config.LOGGER_NAME)
-logger.setLevel(logging.WARNING)
+logger.addHandler(logging.NullHandler())
 RealtimeTickerInfo = collections.namedtuple(
     'RealtimeTickerInfo', [
         'last_price',
@@ -201,7 +201,9 @@ class Ticker:
         session=None,
     ) -> pd.DataFrame:
         requested_dates = utils.datetime_range(to_when - from_when, to_when)
+        session_created = False
         if not session:
+            session_created = True
             conn = aiohttp.TCPConnector(limit=3)
             session = aiohttp.ClientSession(connector=conn)
         tasks = []
@@ -214,7 +216,8 @@ class Ticker:
                 )
             )
         pages = await async_utils.run_tasks_with_wait(tasks, 30, 10)
-        await session.close()
+        if session_created is True:
+            await session.close()
         rows = []
         for page in pages:
             page_date = tsetmc_scraper.scrape_daily_info_page_for_date(page)
@@ -330,6 +333,7 @@ class Ticker:
         ) as response:
             response.raise_for_status()
             page = await response.text()
+            logger.info(f"fetched date {date}")
             return page
 
     @property
