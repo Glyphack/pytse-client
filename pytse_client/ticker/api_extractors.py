@@ -12,7 +12,7 @@ def get_orders(orders_raw_text: str) -> Tuple[List[Order], List[Order]]:
     buy_orders_set = []
     sell_orders_set = []
     orders = orders_raw_text.split(',')
-    orders.pop() # last item is empty string
+    orders.pop()  # last item is empty string
     for order_text in orders:
         order_numbers = order_text.split("@")
         print(order_numbers)
