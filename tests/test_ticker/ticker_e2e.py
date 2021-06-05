@@ -28,6 +28,7 @@ if __name__ == '__main__':
             ticker.get_shareholders_history(
                 from_when=datetime.timedelta(days=20)
             )
+            ticker.get_ticker_real_time_info_response()
         except Exception as e:
             print(f"error {e}")
             symbols_errors[symbol].append(e)
