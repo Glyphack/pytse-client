@@ -185,6 +185,9 @@ print(ticker.best_demand_vol)  # حجم بهترین عرضه
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 
 print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام داران عمده
+print(ticker.get_ticker_real_time_info_response()) # اطلاعات لحظه‌ای مانند قیمت و پیشنهادات خرید و فروش
+
+
 ```
 
 </div>
@@ -327,6 +330,32 @@ only_trade_days=True, فقط روز‌های معاملاتی پیش فرض بل
 
 ```
 Retrying pytse_client.ticker.ticker.Ticker._get_ticker_daily_info_page_response in 1.3127419515957892 seconds as it raised ClientResponseError: 500, message='Internal Server Error', url=URL('http://cdn.tsetmc.com/Loader.aspx?ParTree=15131P&i=56574323121551263&d=20210220').
+```
+</div>
+
+##### اطلاعات لحظه‌ای سهام
+از طریق تابع `get_ticker_real_time_info_response` میشه اطلاعات لحظه‌ای سهام رو گرفت.
+نمونه‌ی استفاده
+
+<div dir="ltr">
+
+```python
+real_time_data = ticker.get_ticker_real_time_info_response()
+
+print(real_time_data.buy_orders) # پیشنهادات خرید
+print(real_time_data.sell_orders) # پیشنهادات فروش
+print(real_time_data.best_supply_price)  # قیمت بهترین تقاضا
+print(real_time_data.best_supply_vol)  # حجم بهترین تقاضا
+print(real_time_data.best_demand_price)  # قیمت بهترین عرضه
+print(real_time_data.best_demand_vol)  # حجم بهترین عرضه
+print(real_time_data.adj_close) # آخرین معامله
+print(real_time_data.last_price) # قیمت پایانی
+
+for sell_order in real_time_data.sell_orders:
+    print(sell_order.volume, sell_order.count, sell_order.price)
+
+for buy_order in real_time_data.buy_orders:
+    print(buy_order.volume, buy_order.count, buy_order.price)
 ```
 </div>
 
