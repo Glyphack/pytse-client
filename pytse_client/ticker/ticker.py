@@ -1,11 +1,10 @@
 import asyncio
-import collections
 import datetime
 import functools
 import logging
 import os
 import re
-from typing import Optional
+from typing import List, NamedTuple, Optional
 
 import aiohttp
 import bs4
@@ -20,7 +19,7 @@ from pytse_client import (
 )
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.scraper import tsetmc_scraper
-from pytse_client.ticker.api_extractors import get_orders
+from pytse_client.ticker.api_extractors import Order, get_orders
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils import async_utils
 from tenacity import retry, wait_random
@@ -28,18 +27,17 @@ from tenacity.before_sleep import before_sleep_log
 
 logger = logging.getLogger(config.LOGGER_NAME)
 logger.addHandler(logging.NullHandler())
-RealtimeTickerInfo = collections.namedtuple(
-    'RealtimeTickerInfo', [
-        'last_price',
-        'adj_close',
-        'best_demand_vol',
-        'best_demand_price',
-        'best_supply_vol',
-        'best_supply_price',
-        'sell_orders',
-        'buy_orders',
-    ]
-)
+
+
+class RealtimeTickerInfo(NamedTuple):
+    last_price: float
+    adj_close: float
+    best_demand_vol: int
+    best_demand_price: float
+    best_supply_vol: int
+    best_supply_price: float
+    sell_orders: List[Order]
+    buy_orders: List[Order]
 
 
 class Ticker:
