@@ -20,6 +20,7 @@ from pytse_client import (
 )
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.scraper import tsetmc_scraper
+from pytse_client.ticker.api_extractors import get_orders
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils import async_utils
 from tenacity import retry, wait_random
@@ -35,6 +36,8 @@ RealtimeTickerInfo = collections.namedtuple(
         'best_demand_price',
         'best_supply_vol',
         'best_supply_price',
+        'sell_orders',
+        'buy_orders',
     ]
 )
 
@@ -283,17 +286,6 @@ class Ticker:
         session = utils.requests_retry_session()
         response = session.get(self._info_url, timeout=5)
         session.close()
-        # check supply and demand data exists
-        if response.text.split(";")[2] != "":
-            best_demand_vol = int(response.text.split(";")[2].split("@")[1])
-            best_demand_price = int(response.text.split(";")[2].split("@")[2])
-            best_supply_vol = int(response.text.split(";")[2].split("@")[4])
-            best_supply_price = int(response.text.split(";")[2].split("@")[3])
-        else:
-            best_demand_vol = None
-            best_demand_price = None
-            best_supply_vol = None
-            best_supply_price = None
 
         # in some cases last price or adj price is undefined
         try:
@@ -304,13 +296,19 @@ class Ticker:
             adj_close = int(response.text.split()[1].split(",")[2])
         except (ValueError, IndexError):
             adj_close = None
+
+        orders_data = response.text.split(";")[2]
+        buy_orders, sell_orders = get_orders(orders_data)
+
         return RealtimeTickerInfo(
             last_price,
             adj_close,
-            best_demand_vol=best_demand_vol,
-            best_demand_price=best_demand_price,
-            best_supply_vol=best_supply_vol,
-            best_supply_price=best_supply_price,
+            best_demand_vol=buy_orders[0].volume,
+            best_demand_price=buy_orders[0].price,
+            best_supply_vol=sell_orders[0].volume,
+            best_supply_price=sell_orders[0].price,
+            buy_orders=buy_orders,
+            sell_orders=sell_orders,
         )
 
     @property
