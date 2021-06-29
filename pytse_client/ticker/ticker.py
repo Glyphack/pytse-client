@@ -298,13 +298,26 @@ class Ticker:
         orders_data = response.text.split(";")[2]
         buy_orders, sell_orders = get_orders(orders_data)
 
+        best_demand_vol = (
+            buy_orders[0].volume if 0 < len(buy_orders) else None
+        )
+        best_demand_price = (
+            buy_orders[0].price if 0 < len(buy_orders) else None
+        )
+        best_supply_vol = (
+            sell_orders[0].volume if 0 < len(sell_orders) else None
+        )
+        best_supply_price = (
+            sell_orders[0].price if 0 < len(sell_orders) else None
+        )
+
         return RealtimeTickerInfo(
             last_price,
             adj_close,
-            best_demand_vol=buy_orders[0].volume,
-            best_demand_price=buy_orders[0].price,
-            best_supply_vol=sell_orders[0].volume,
-            best_supply_price=sell_orders[0].price,
+            best_demand_vol=best_demand_vol,
+            best_demand_price=best_demand_price,
+            best_supply_vol=best_supply_vol,
+            best_supply_price=best_supply_price,
             buy_orders=buy_orders,
             sell_orders=sell_orders,
         )
