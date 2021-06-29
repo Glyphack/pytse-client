@@ -124,7 +124,7 @@ class Ticker:
         gpe = re.findall(
             r"SectorPE='([\d.]*)',", self._ticker_page_response.text
         )
-        if not gpe:
+        if not gpe or not gpe[0]:
             return None
         return float(gpe[0])
 
