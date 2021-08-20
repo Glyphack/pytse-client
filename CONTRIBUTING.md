@@ -4,23 +4,22 @@
 ممنون بابت وقتی که میزارید برای بهتر کردن PyTse Client. این صفحه شامل راهنمای بهبود پروژه برای کسانی که می‌خواهند در پروژه مشارکت داشته باشند.
 
 #### فهرست
-[اصول پروژه](#اصول-پروژه)
+- [مشارکت در PyTse Client](#مشارکت-در-pytse-client)
+      - [فهرست](#فهرست)
+- [اصول پروژه](#اصول-پروژه)
+- [چطور میشه کمک کرد؟](#چطور-میشه-کمک-کرد)
+  - [گزارش باگ](#گزارش-باگ)
+    - [ساختن ایشوی جدید](#ساختن-ایشوی-جدید)
+  - [پیشنهاد بهبود](#پیشنهاد-بهبود)
+  - [مشارکت در کد نویسی](#مشارکت-در-کد-نویسی)
+    - [پول ریکوئست](#پول-ریکوئست)
+    - [ساختار کدها](#ساختار-کدها)
+    - [کمک میخواید؟](#کمک-میخواید)
 
-[How Can I Contribute?](#how-can-i-contribute)
-  * [Reporting Bugs](#reporting-bugs)
-  * [Suggesting Enhancements](#suggesting-enhancements)
-  * [Your First Code Contribution](#your-first-code-contribution)
-  * [Pull Requests](#pull-requests)
-    * [Commit Message Guidelines](#commit-message-guidelines)
-    * [Squash Commits](#squash-commits)
-  * [Things You Should Know Before Getting Started](#things-you-should-know-before-getting-started)
-    * [Vulnerability Tests](#vulnerability-tests)
-    * [Writing Tests](#writing-tests)
-    * [Extending Bandit](#extending-bandit)
-
-## اصول پروژه
+# اصول پروژه
 ما تلاش می‌کنیم در این پروژه در کنار هم بدون آزرده کردن کسی کار کنیم. هرکس حق مشارکت در پروژه رو دارد و هرکس باید در رفتار احترام داشته باشد و انتقادات سازنده را بپذیرد. هرگونه بی احترامی یا آزار دیگران منجر به حذف شما از شراکت در این نرم افزار می‌شود.
 
+# چطور میشه کمک کرد؟
 ## گزارش باگ
 .اگر در هنگام کار با پروژه به مشکلی خوردید لطفا از طریق گیت‌هاب اون رو گزارش کنید
 می‌توانید آموزش این کار رو در اینجا ببینید [GitHub issues](https://guides.github.com/features/issues/).
