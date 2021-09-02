@@ -8,7 +8,7 @@ def requests_retry_session(
         backoff_factor=0.3,
         status_forcelist=(500, 502, 504, 503),
         session=None,
-):
+) -> requests.Session:
     session = session or requests.Session()
     retry = Retry(
         total=retries,
