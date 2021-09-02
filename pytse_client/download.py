@@ -8,7 +8,7 @@ import jdatetime
 import pandas as pd
 from pytse_client import config, symbols_data, translations, tse_settings
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils import requests_retry_session, persian
+from pytse_client.utils import persian, requests_retry_session
 from requests import HTTPError
 from requests.sessions import Session
 from tenacity import retry, retry_if_exception_type, wait_random
@@ -135,7 +135,7 @@ def download_client_types_records(
 
     if len(df_list) != len(symbols):
         print(
-            """could not download client types for all the symbols make 
+            """could not download client types for all the symbols make
         sure you have what you need or re-run the function"""
         )
     return df_list
@@ -159,7 +159,8 @@ def download_ticker_client_types_record(ticker_index: Optional[str]):
     data = _extract_ticker_client_types_data(ticker_index)
     if len(data) == "":
         logger.warning(
-            f"Cannot create client types data for ticker {ticker_index} from data: {data}",
+            f"""Cannot create client types data for ticker{ticker_index}
+             from data: {data}""",
             extra={"ticker_index": ticker_index}
         )
         return None

@@ -4,7 +4,9 @@ from os.path import exists
 from pathlib import Path
 
 from pytse_client import symbols_data
-from pytse_client.scraper.symbol_scraper import get_market_symbols_from_symbols_list_page
+from pytse_client.scraper.symbol_scraper import (
+    get_market_symbols_from_symbols_list_page,
+)
 from pytse_client.scripts.update_symbols_json import write_symbols_to_json
 
 

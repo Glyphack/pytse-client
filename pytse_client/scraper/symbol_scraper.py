@@ -24,6 +24,7 @@ class MarketSymbol:
         """
         return int(self.index)
 
+
 def get_market_symbols_from_symbols_list_page() -> List[MarketSymbol]:
     """uses SYMBOLS_LIST_URL and scrapes symbols information from the page
 
