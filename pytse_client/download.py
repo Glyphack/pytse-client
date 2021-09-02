@@ -157,7 +157,7 @@ def _handle_ticker_index(symbol, ticker_index):
 )
 def download_ticker_client_types_record(ticker_index: Optional[str]):
     data = _extract_ticker_client_types_data(ticker_index)
-    if len(data) == "":
+    if len(data) == 1:
         logger.warning(
             f"""Cannot create client types data for ticker{ticker_index}
              from data: {data}""",
