@@ -8,7 +8,7 @@ import jdatetime
 import pandas as pd
 from pytse_client import config, symbols_data, translations, tse_settings
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils import requests_retry_session
+from pytse_client.utils import requests_retry_session, persian
 from requests import HTTPError
 from requests.sessions import Session
 from tenacity import retry, retry_if_exception_type, wait_random
@@ -198,10 +198,6 @@ def _extract_ticker_client_types_data(ticker_index: str) -> List:
     return data
 
 
-def to_arabic(string: str):
-    return string.replace('ک', 'ك').replace('ی', 'ي').strip()
-
-
 def get_symbol_id(symbol_name: str):
     url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
     response = requests_retry_session().get(url, timeout=10)
@@ -211,6 +207,6 @@ def get_symbol_id(symbol_name: str):
         raise Exception("Sorry, tse server did not respond")
 
     symbol_full_info = response.text.split(';')[0].split(',')
-    if (to_arabic(symbol_name) == symbol_full_info[0].strip()):
+    if (persian.replace_arabic(symbol_name) == symbol_full_info[0].strip()):
         return symbol_full_info[2]  # symbol id
     return None
