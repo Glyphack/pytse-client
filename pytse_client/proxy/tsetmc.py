@@ -30,13 +30,14 @@ async def get_day_shareholders_history(
         response.raise_for_status()
         response_json = await response.json()
         logger.info(
-            f"fetched shareholders data for {ticker_index} date: {formatted_date}"
+            f"""fetched shareholders data for
+             {ticker_index} date: {formatted_date}"""
         )
         result = []
         for shareholders_raw_data in response_json["shareShareholder"]:
             # api returns data for today and tomorrow so we skip tomorrow
             # sometimes when we request data for a day it returns it with
-            # tomorrow date instead(bug) so we only check that the 
+            # tomorrow date instead(bug) so we only check that the
             # date is greater than requested date
             if shareholders_raw_data["dEven"] > int(formatted_date):
                 continue
