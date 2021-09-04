@@ -29,5 +29,10 @@ MARKET_WATCH_INIT_URL = (
     "http://www.tsetmc.com/tsev2/data/MarketWatchInit.aspx?h=0&r=0"
 )
 
+# get day share holder data
+SYMBOL_DAY_INFO_SHAREHOLDERS_DATA = (
+    "http://cdn.tsetmc.com/api/Shareholder/{index}/{date}"
+)
+
 DATE_FORMAT = "%Y%m%d"
 MIN_DATE = 20010321

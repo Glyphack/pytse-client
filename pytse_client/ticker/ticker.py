@@ -18,10 +18,10 @@ from pytse_client import (
     utils,
 )
 from pytse_client.download import download, download_ticker_client_types_record
-from pytse_client.scraper import tsetmc_scraper
+from pytse_client.proxy.dto import ShareholderData
+from pytse_client.proxy.tsetmc import get_day_shareholders_history
 from pytse_client.ticker.api_extractors import Order, get_orders
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils import async_utils
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
@@ -205,49 +205,51 @@ class Ticker:
         session_created = False
         if not session:
             session_created = True
-            conn = aiohttp.TCPConnector(limit=3)
+            conn = aiohttp.TCPConnector(limit=25)
             session = aiohttp.ClientSession(connector=conn)
         tasks = []
-        for date in requested_dates:
-            if only_trade_days and date.date() not in self.trade_dates:
-                continue
-            tasks.append(
-                self._get_ticker_daily_info_page_response(
-                    session, date.strftime(tse_settings.DATE_FORMAT)
-                )
+        filtered_dates = list(
+            filter(
+                lambda date: not only_trade_days or
+                (only_trade_days and date.date() in self.trade_dates),
+                requested_dates,
             )
-        pages = await async_utils.run_tasks_with_wait(tasks, 30, 10)
+        )
+        for date in filtered_dates:
+            tasks.append(
+                get_day_shareholders_history(self._index, date, session)
+            )
+        all_tickers_shareholders: List[List[ShareholderData]
+                                       ] = await asyncio.gather(*tasks)
         if session_created is True:
             await session.close()
+
         rows = []
-        for page in pages:
-            page_date = tsetmc_scraper.scrape_daily_info_page_for_date(page)
-            shareholders_data = (
-                tsetmc_scraper.
-                scrape_daily_info_page_for_shareholder_data(page)
-            )
-            for shareholder_data in shareholders_data:
+        for ticker_shareholders, info_date in zip(
+            all_tickers_shareholders, filtered_dates
+        ):
+            for shareholder_data in ticker_shareholders:
                 rows.append(
                     [
-                        datetime.datetime.strptime(
-                            page_date,
-                            tse_settings.DATE_FORMAT,
-                        ),
+                        info_date,
+                        shareholder_data.id,
                         shareholder_data.shares,
                         shareholder_data.percentage,
                         shareholder_data.instrument_id,
                         shareholder_data.name,
+                        shareholder_data.change,
                     ]
                 )
-
         return pd.DataFrame(
             data=rows,
             columns=[
                 'date',
-                'shares',
-                'percentage',
-                'instrument_id',
-                'shareholder',
+                'shareholder_id',
+                'shareholder_shares',
+                'shareholder_percentage',
+                'shareholder_instrument_id',
+                'shareholder_name',
+                'change',
             ]
         )
 
