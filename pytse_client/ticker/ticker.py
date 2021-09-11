@@ -41,8 +41,9 @@ class RealtimeTickerInfo(NamedTuple):
 
 
 class Ticker:
-    def __init__(self, symbol: str, index: Optional[str] = None):
+    def __init__(self, symbol: str, index: Optional[str] = None, adjust: bool = False):
         self.symbol = symbol
+        self.adjust = adjust
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
         self._index = index or symbols_data.get_ticker_index(self.symbol)
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
@@ -57,10 +58,34 @@ class Ticker:
 
     def from_web(self):
         self._history = download(self._index)[self._index]
-
+        if(self.adjust):
+            self.adjust_price()
+            
     def from_file(self):
         self._history = pd.read_csv(self.csv_path)
         self._history["date"] = pd.to_datetime(self._history["date"])
+        if(self.adjust):
+            self.adjust_price()
+
+    def adjust_price(self):
+        ratio = 1;
+        for i in reversed(self._history.index):
+            
+            yesterday = self._history.loc[i, 'yesterday']
+            adjClose = self._history.loc[i, 'adjClose']
+            self._history.loc[i, 'open']        = round(ratio * self._history.loc[i, 'open']);
+            self._history.loc[i, 'high']        = round(ratio * self._history.loc[i, 'high']);
+            self._history.loc[i, 'low']         = round(ratio * self._history.loc[i, 'low']);
+            self._history.loc[i, 'close']       = round(ratio * self._history.loc[i, 'close']);
+            self._history.loc[i, 'adjClose']    = round(ratio * self._history.loc[i, 'adjClose']);
+            self._history.loc[i, 'yesterday']   = round(ratio * self._history.loc[i, 'yesterday']);
+            
+            if((self._history.index == i+1).any()):
+                self._history.loc[i+1, 'yesterday'] = self._history.loc[i, 'adjClose'];
+                
+            if((self._history.index == i-1).any() and yesterday != self._history.loc[i-1, 'adjClose']):
+                ratio = ratio * yesterday / self._history.loc[i-1, 'adjClose']
+
 
     @property
     def history(self):
