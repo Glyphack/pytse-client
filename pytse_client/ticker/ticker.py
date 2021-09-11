@@ -72,7 +72,6 @@ class Ticker:
         for i in reversed(self._history.index):
             
             yesterday = self._history.loc[i, 'yesterday']
-            adjClose = self._history.loc[i, 'adjClose']
             self._history.loc[i, 'open']        = round(ratio * self._history.loc[i, 'open']);
             self._history.loc[i, 'high']        = round(ratio * self._history.loc[i, 'high']);
             self._history.loc[i, 'low']         = round(ratio * self._history.loc[i, 'low']);
