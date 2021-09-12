@@ -68,23 +68,20 @@ class Ticker:
             self.adjust_price()
 
     def adjust_price(self):
-        ratio = 1;
-        for i in reversed(self._history.index):
-            
-            yesterday = self._history.loc[i, 'yesterday']
-            self._history.loc[i, 'open']        = round(ratio * self._history.loc[i, 'open']);
-            self._history.loc[i, 'high']        = round(ratio * self._history.loc[i, 'high']);
-            self._history.loc[i, 'low']         = round(ratio * self._history.loc[i, 'low']);
-            self._history.loc[i, 'close']       = round(ratio * self._history.loc[i, 'close']);
-            self._history.loc[i, 'adjClose']    = round(ratio * self._history.loc[i, 'adjClose']);
-            self._history.loc[i, 'yesterday']   = round(ratio * self._history.loc[i, 'yesterday']);
-            
-            if((self._history.index == i+1).any()):
-                self._history.loc[i+1, 'yesterday'] = self._history.loc[i, 'adjClose'];
-                
-            if((self._history.index == i-1).any() and yesterday != self._history.loc[i-1, 'adjClose']):
-                ratio = ratio * yesterday / self._history.loc[i-1, 'adjClose']
-
+        if(self._history.empty == False and isinstance(self._history.index, pd.core.indexes.range.RangeIndex)):
+            diff = list(self._history.index[self._history.shift(1).adjClose != self._history.yesterday])
+            if(len(diff)>0):
+                diff.pop(0)
+            ratio = 1
+            ratio_list = []
+            for i in diff[::-1]:
+                ratio *= self._history.loc[i, 'yesterday'] / self._history.shift(1).loc[i, 'adjClose']
+                ratio_list.append( ratio )
+            for i,k in enumerate(diff):
+                if(i==0):
+                    self._history.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(self._history.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
+                else:
+                    self._history.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(self._history.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
 
     @property
     def history(self):
