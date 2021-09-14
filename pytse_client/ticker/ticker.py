@@ -69,9 +69,9 @@ class Ticker:
             
     def from_file(self):
         if(self.adjust):
-            self._history = pd.read_csv(self.adjust_csv_path)
+            self._history = pd.read_csv(self.adjust_csv_path, index_col=0)
         else:
-            self._history = pd.read_csv(self.csv_path)            
+            self._history = pd.read_csv(self.csv_path, index_col=0)            
         self._history["date"] = pd.to_datetime(self._history["date"])
 
     @property
