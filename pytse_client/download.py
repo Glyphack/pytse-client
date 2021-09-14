@@ -19,6 +19,7 @@ logger = logging.getLogger(config.LOGGER_NAME)
 
 def download(
     symbols: Union[List, str],
+    adjust: bool = False,
     write_to_csv: bool = False,
     include_jdate: bool = False,
     base_path: str = config.DATA_BASE_PATH
@@ -57,16 +58,39 @@ def download(
             df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
             df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
-            df_list[symbol] = df
+            if(adjust):
+                df_adjust = adjust_price(df)
+                df_list[symbol] = df_adjust
+            else:
+                df_list[symbol] = df
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
                 df.to_csv(f'{base_path}/{symbol}.csv')
+                if(adjust):
+                    df_adjust.to_csv(f'{base_path}/{symbol}-ت.csv')
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
     session.close()
     return df_list
 
+def adjust_price(df: pd.DataFrame):
+    df_adjust = df.copy();
+    if(df_adjust.empty == False and isinstance(df_adjust.index, pd.core.indexes.range.RangeIndex)):
+        diff = list(df_adjust.index[df_adjust.shift(1).adjClose != df_adjust.yesterday])
+        if(len(diff)>0):
+            diff.pop(0)
+        ratio = 1
+        ratio_list = []
+        for i in diff[::-1]:
+            ratio *= df_adjust.loc[i, 'yesterday'] / df_adjust.shift(1).loc[i, 'adjClose']
+            ratio_list.append( ratio )
+        for i,k in enumerate(diff):
+            if(i==0):
+                df_adjust.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(df_adjust.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
+            else:
+                df_adjust.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(df_adjust.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
+    return df_adjust
 
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
