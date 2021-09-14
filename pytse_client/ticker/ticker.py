@@ -41,9 +41,10 @@ class RealtimeTickerInfo(NamedTuple):
 
 
 class Ticker:
-    def __init__(self, symbol: str, index: Optional[str] = None, adjust: bool = False):
+    def __init__(self, symbol: str, index: Optional[str] = None, adjust: bool = False, write_to_csv: bool = False,):
         self.symbol = symbol
         self.adjust = adjust
+        self.write_to_csv = write_to_csv
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
         self.adjust_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         self._index = index or symbols_data.get_ticker_index(self.symbol)
@@ -64,7 +65,7 @@ class Ticker:
                 self.from_web()
 
     def from_web(self):
-        self._history = download(self._index, adjust=self.adjust)[self._index]
+        self._history = download(self._index, adjust=self.adjust, write_to_csv=self.write_to_csv)[self._index]
             
     def from_file(self):
         if(self.adjust):
