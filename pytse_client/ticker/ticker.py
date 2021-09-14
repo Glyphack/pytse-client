@@ -45,43 +45,33 @@ class Ticker:
         self.symbol = symbol
         self.adjust = adjust
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
+        self.adjust_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         self._index = index or symbols_data.get_ticker_index(self.symbol)
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
-        if os.path.exists(self.csv_path):
-            self.from_file()
+        if(self.adjust):
+            if os.path.exists(self.adjust_csv_path):
+                self.from_file()
+            else:
+                self.from_web()
         else:
-            self.from_web()
+            if os.path.exists(self.csv_path):
+                self.from_file()
+            else:
+                self.from_web()
 
     def from_web(self):
-        self._history = download(self._index)[self._index]
-        if(self.adjust):
-            self.adjust_price()
+        self._history = download(self._index, adjust=self.adjust)[self._index]
             
     def from_file(self):
-        self._history = pd.read_csv(self.csv_path)
-        self._history["date"] = pd.to_datetime(self._history["date"])
         if(self.adjust):
-            self.adjust_price()
-
-    def adjust_price(self):
-        if(self._history.empty == False and isinstance(self._history.index, pd.core.indexes.range.RangeIndex)):
-            diff = list(self._history.index[self._history.shift(1).adjClose != self._history.yesterday])
-            if(len(diff)>0):
-                diff.pop(0)
-            ratio = 1
-            ratio_list = []
-            for i in diff[::-1]:
-                ratio *= self._history.loc[i, 'yesterday'] / self._history.shift(1).loc[i, 'adjClose']
-                ratio_list.append( ratio )
-            for i,k in enumerate(diff):
-                if(i==0):
-                    self._history.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(self._history.loc[:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
-                else:
-                    self._history.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] = round(self._history.loc[diff[i-1]:diff[i]-1, ['open','high','low','close','adjClose','yesterday']] * ratio_list[len(diff)-i-1])
+            self._history = pd.read_csv(self.adjust_csv_path)
+        else:
+            self._history = pd.read_csv(self.csv_path)            
+        self._history["date"] = pd.to_datetime(self._history["date"])
 
     @property
     def history(self):
