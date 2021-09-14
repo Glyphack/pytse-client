@@ -61,11 +61,11 @@ def download(
             
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
-                df.to_csv(f'{base_path}/{symbol}.csv')
+                df.to_csv(f'{base_path}/{symbol}.csv', index=False)
             if(adjust):
                 adjust_price(df)
                 if write_to_csv:
-                    df.to_csv(f'{base_path}/{symbol}-ت.csv')
+                    df.to_csv(f'{base_path}/{symbol}-ت.csv', index=False)
 
             df_list[symbol] = df
 
