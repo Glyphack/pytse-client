@@ -42,12 +42,12 @@ class RealtimeTickerInfo(NamedTuple):
 
 class Ticker:
     def __init__(self, symbol: str, index: Optional[str] = None, adjust: bool = False, write_to_csv: bool = False,):
-        self.symbol = symbol
+        self._index = index or symbols_data.get_ticker_index(symbol)
+        self.symbol = symbol if index is None else self._index
         self.adjust = adjust
         self.write_to_csv = write_to_csv
         self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
         self.adjust_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
-        self._index = index or symbols_data.get_ticker_index(self.symbol)
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
