@@ -46,20 +46,20 @@ class Ticker:
         self.symbol = symbol if index is None else self._index
         self.adjust = adjust
         self.write_to_csv = write_to_csv
-        self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
-        self.adjust_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
+        self.daily_records_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
+        self.adjusted_daily_records_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
         if(self.adjust):
-            if os.path.exists(self.adjust_csv_path):
+            if os.path.exists(self.adjusted_daily_records_csv_path):
                 self.from_file()
             else:
                 self.from_web()
         else:
-            if os.path.exists(self.csv_path):
+            if os.path.exists(self.daily_records_csv_path):
                 self.from_file()
             else:
                 self.from_web()
@@ -69,9 +69,9 @@ class Ticker:
             
     def from_file(self):
         if(self.adjust):
-            self._history = pd.read_csv(self.adjust_csv_path)
+            self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
         else:
-            self._history = pd.read_csv(self.csv_path)            
+            self._history = pd.read_csv(self.daily_records_csv_path)
         self._history["date"] = pd.to_datetime(self._history["date"])
 
     @property
