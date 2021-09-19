@@ -58,7 +58,7 @@ def download(
             df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
             df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
-            
+
             if adjust:
                 adjust_price(df)
 
@@ -76,25 +76,27 @@ def download(
     session.close()
     return df_list
 
+
 def adjust_price(df):
     if df.empty or not isinstance(df.index, pd.core.indexes.range.RangeIndex):
         return
     step = df.index.step
     diff = list(df.index[df.shift(1).adjClose != df.yesterday])
-    if(len(diff)>0):
+    if len(diff) > 0:
         diff.pop(0)
     ratio = 1
     ratio_list = []
     for i in diff[::-1]:
         ratio *= df.loc[i, 'yesterday'] / df.shift(1).loc[i, 'adjClose']
-        ratio_list.insert(0, ratio )
-    for i,k in enumerate(diff):
-        if(i==0):
+        ratio_list.insert(0, ratio)
+    for i, k in enumerate(diff):
+        if i == 0:
             start = df.index.start
         else:
             start = diff[i-1]
         end = diff[i]-step
-        df.loc[start:end, ['open','high','low','close','adjClose','yesterday']] = round(df.loc[start:end, ['open','high','low','close','adjClose','yesterday']] * ratio_list[i])
+        df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] = round(df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] * ratio_list[i])
+
 
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")

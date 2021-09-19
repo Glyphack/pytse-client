@@ -65,7 +65,7 @@ class Ticker:
 
     def from_web(self):
         self._history = download(symbols=self.symbol, adjust=self.adjust)[self.symbol]
-            
+
     def from_file(self):
         if(self.adjust):
             self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
