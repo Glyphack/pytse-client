@@ -144,6 +144,7 @@ def adjust_price(
 
     return new_df
 
+
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
     if include_jdate:
