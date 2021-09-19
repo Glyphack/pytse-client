@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import List
 
 import requests
+from requests import HTTPError
 from bs4 import BeautifulSoup
 from pytse_client import config, tse_settings
 from pytse_client.utils.persian import replace_arabic
