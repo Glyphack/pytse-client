@@ -60,7 +60,7 @@ def download(
             _adjust_data_frame(df, include_jdate)
 
             if adjust:
-                adjust_price(df)
+                df = adjust_price(df)
 
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
@@ -79,24 +79,27 @@ def download(
 
 def adjust_price(df):
     if df.empty or not isinstance(df.index, pd.core.indexes.range.RangeIndex):
-        return
-    step = df.index.step
-    diff = list(df.index[df.shift(1).adjClose != df.yesterday])
+        return df
+
+    new_df = df.copy()
+    step = new_df.index.step
+    diff = list(new_df.index[new_df.shift(1).adjClose != new_df.yesterday])
     if len(diff) > 0:
         diff.pop(0)
     ratio = 1
     ratio_list = []
     for i in diff[::-1]:
-        ratio *= df.loc[i, 'yesterday'] / df.shift(1).loc[i, 'adjClose']
+        ratio *= new_df.loc[i, 'yesterday'] / new_df.shift(1).loc[i, 'adjClose']
         ratio_list.insert(0, ratio)
     for i, k in enumerate(diff):
         if i == 0:
-            start = df.index.start
+            start = new_df.index.start
         else:
             start = diff[i-1]
         end = diff[i]-step
-        df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] = round(df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] * ratio_list[i])
+        new_df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] = round(new_df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] * ratio_list[i])
 
+    return new_df
 
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
