@@ -41,25 +41,48 @@ class RealtimeTickerInfo(NamedTuple):
 
 
 class Ticker:
-    def __init__(self, symbol: str, index: Optional[str] = None):
-        self.symbol = symbol
-        self.csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
-        self._index = index or symbols_data.get_ticker_index(self.symbol)
+    def __init__(
+        self,
+        symbol: str,
+        index: Optional[str] = None,
+        adjust: bool = False,
+    ):
+        self._index = index or symbols_data.get_ticker_index(symbol)
+        self.symbol = symbol if index is None else self._index
+        self.adjust = adjust
+        self.daily_records_csv_path = (
+            f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
+        )
+        self.adjusted_daily_records_csv_path = (
+            f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
+        )
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
-        if os.path.exists(self.csv_path):
-            self.from_file()
+        if(self.adjust):
+            if os.path.exists(self.adjusted_daily_records_csv_path):
+                self.from_file()
+            else:
+                self.from_web()
         else:
-            self.from_web()
+            if os.path.exists(self.daily_records_csv_path):
+                self.from_file()
+            else:
+                self.from_web()
 
     def from_web(self):
-        self._history = download(self._index)[self._index]
+        self._history = download(
+            symbols=self.symbol,
+            adjust=self.adjust,
+        )[self.symbol]
 
     def from_file(self):
-        self._history = pd.read_csv(self.csv_path)
+        if(self.adjust):
+            self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
+        else:
+            self._history = pd.read_csv(self.daily_records_csv_path)
         self._history["date"] = pd.to_datetime(self._history["date"])
 
     @property

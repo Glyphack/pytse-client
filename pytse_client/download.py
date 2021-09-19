@@ -21,7 +21,8 @@ def download(
     symbols: Union[List, str],
     write_to_csv: bool = False,
     include_jdate: bool = False,
-    base_path: str = config.DATA_BASE_PATH
+    base_path: str = config.DATA_BASE_PATH,
+    adjust: bool = False
 ) -> Dict[str, pd.DataFrame]:
     if symbols == "all":
         symbols = symbols_data.all_symbols()
@@ -53,19 +54,114 @@ def download(
                 )
                 continue
 
-            df = df.iloc[::-1]
+            df = df.iloc[::-1].reset_index(drop=True)
             df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
             df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
-            df_list[symbol] = df
+
+            if adjust:
+                df = adjust_price(df)
+
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
-                df.to_csv(f'{base_path}/{symbol}.csv')
+                if adjust:
+                    df.to_csv(f'{base_path}/{symbol}-ت.csv', index=False)
+                else:
+                    df.to_csv(f'{base_path}/{symbol}.csv', index=False)
+
+            df_list[symbol] = df
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
     session.close()
     return df_list
+
+
+def adjust_price(
+    df: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Adjust historical records of stock
+
+    There is a capital increase/profit sharing,
+    if today "Final Close Price" is not equal to next day
+    "Yesterday Final Close Price" by using this ratio,
+    performance adjustment of stocks is achieved
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with historical records.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with adjusted historical records.
+
+    Notes
+    -----
+    DataFrame can not be empty or else it makes runtime error
+    Type of DataFrame must be RangeIndex to make proper range of records
+    that need to be modified
+
+    diff: list
+        list of indexs of the day after capital increase/profit sharing
+    ratio_list: List
+        List of ratios to adjust historical data of stock
+    ratio: Float
+        ratio = df.loc[i].adjClose / df.loc[i+1].yesterday
+
+    Description
+    -----------
+    #Note: adjustment does not include Tenth and twentieth days
+    df.index = range(0,101,1)
+    #step is 1
+    step = df.index.step
+    diff = [10,20]
+    ratio_list = [0.5, 0.8]
+    df.loc[0:10-step, [open,...]] * ratio[0]
+    df.loc[10:20-step, [open,...]] * ratio[1]
+    """
+    if df.empty or not isinstance(df.index, pd.core.indexes.range.RangeIndex):
+        return df
+
+    new_df = df.copy()
+    step = new_df.index.step
+    diff = list(new_df.index[new_df.shift(1).adjClose != new_df.yesterday])
+    if len(diff) > 0:
+        diff.pop(0)
+    ratio = 1
+    ratio_list = []
+    for i in diff[::-1]:
+        ratio *= (
+            new_df.loc[i, 'yesterday'] / new_df.shift(1).loc[i, 'adjClose']
+        )
+        ratio_list.insert(0, ratio)
+    for i, k in enumerate(diff):
+        if i == 0:
+            start = new_df.index.start
+        else:
+            start = diff[i-1]
+        end = diff[i]-step
+        new_df.loc[start:end, [
+            'open',
+            'high',
+            'low',
+            'close',
+            'adjClose',
+            'yesterday',
+        ]] = round(
+            new_df.loc[start:end, [
+                'open',
+                'high',
+                'low',
+                'close',
+                'adjClose',
+                'yesterday',
+            ]] * ratio_list[i]
+        )
+
+    return new_df
 
 
 def _adjust_data_frame(df, include_jdate):
