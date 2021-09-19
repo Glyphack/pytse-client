@@ -36,7 +36,9 @@ if __name__ == "__main__":
     )
     deduplicated_market_symbols = list(OrderedDict.fromkeys(market_symbols))
     # fetch old indexes of symbols
-    deduplicated_market_symbols = get_old_index_of_market_symbols(deduplicated_market_symbols)
+    deduplicated_market_symbols = get_old_index_of_market_symbols(
+        deduplicated_market_symbols
+    )
     write_symbols_to_json(
         deduplicated_market_symbols, "symbols_name.json",
         f"{config.pytse_dir}/data"

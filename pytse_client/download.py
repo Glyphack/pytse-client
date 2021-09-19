@@ -345,8 +345,12 @@ def get_symbol_data(symbol_name: str):
         symbol_full_info = symbol_full_info.split(',')
         if persian.replace_arabic(symbol_full_info[0].strip()) == symbol_name:
             if(symbol_full_info[7] == '1'):
-                market_symbol.symbol = persian.replace_arabic(symbol_full_info[0]).replace('\u200c', '')
-                market_symbol.name = persian.replace_arabic(symbol_full_info[1])
+                market_symbol.symbol = persian.replace_arabic(
+                    symbol_full_info[0]
+                ).replace('\u200c', '')
+                market_symbol.name = persian.replace_arabic(
+                    symbol_full_info[1]
+                )
                 market_symbol.index = symbol_full_info[2]  # active symbol id
             else:
                 market_symbol.old.append(symbol_full_info[2])  # old symbol id
