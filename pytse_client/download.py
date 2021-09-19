@@ -84,8 +84,9 @@ def adjust_price(
     Adjust historical records of stock
 
     There is a capital increase/profit sharing,
-    if today "Final Close Price" is not equal to next day "Yesterday Final Close Price"
-    by using this ratio, performance adjustment of stocks is achieved
+    if today "Final Close Price" is not equal to next day
+    "Yesterday Final Close Price" by using this ratio,
+    performance adjustment of stocks is achieved
 
     Parameters
     ----------
@@ -132,7 +133,9 @@ def adjust_price(
     ratio = 1
     ratio_list = []
     for i in diff[::-1]:
-        ratio *= new_df.loc[i, 'yesterday'] / new_df.shift(1).loc[i, 'adjClose']
+        ratio *= (
+            new_df.loc[i, 'yesterday'] / new_df.shift(1).loc[i, 'adjClose']
+        )
         ratio_list.insert(0, ratio)
     for i, k in enumerate(diff):
         if i == 0:
@@ -140,7 +143,23 @@ def adjust_price(
         else:
             start = diff[i-1]
         end = diff[i]-step
-        new_df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] = round(new_df.loc[start:end, ['open', 'high', 'low', 'close', 'adjClose', 'yesterday']] * ratio_list[i])
+        new_df.loc[start:end, [
+            'open',
+            'high',
+            'low',
+            'close',
+            'adjClose',
+            'yesterday',
+        ]] = round(
+            new_df.loc[start:end, [
+                'open',
+                'high',
+                'low',
+                'close',
+                'adjClose',
+                'yesterday',
+            ]] * ratio_list[i]
+        )
 
     return new_df
 
