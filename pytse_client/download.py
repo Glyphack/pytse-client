@@ -77,7 +77,50 @@ def download(
     return df_list
 
 
-def adjust_price(df):
+def adjust_price(
+    df: pd.DataFrame
+) -> pd.DataFrame:
+    """
+    Adjust historical records of stock
+
+    There is a capital increase/profit sharing,
+    if today "Final Close Price" is not equal to next day "Yesterday Final Close Price"
+    by using this ratio, performance adjustment of stocks is achieved
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame with historical records.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame with adjusted historical records.
+
+    Notes
+    -----
+    DataFrame can not be empty or else it makes runtime error
+    Type of DataFrame must be RangeIndex to make proper range of records
+    that need to be modified
+
+    diff: list
+        list of indexs of the day after capital increase/profit sharing
+    ratio_list: List
+        List of ratios to adjust historical data of stock
+    ratio: Float
+        ratio = df.loc[i].adjClose / df.loc[i+1].yesterday
+
+    Description
+    -----------
+    #Note: adjustment does not include Tenth and twentieth days
+    df.index = range(0,101,1)
+    #step is 1
+    step = df.index.step
+    diff = [10,20]
+    ratio_list = [0.5, 0.8]
+    df.loc[0:10-step, [open,...]] * ratio[0]
+    df.loc[10:20-step, [open,...]] * ratio[1]
+    """
     if df.empty or not isinstance(df.index, pd.core.indexes.range.RangeIndex):
         return df
 
