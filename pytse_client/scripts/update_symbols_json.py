@@ -8,6 +8,7 @@ from pytse_client.scraper.symbol_scraper import (
     MarketSymbol,
     get_market_symbols_from_market_watch_page,
     get_market_symbols_from_symbols_list_page,
+    get_old_index_of_market_symbols,
 )
 
 
@@ -21,6 +22,7 @@ def write_symbols_to_json(
                 "index": obj.index,
                 "code": obj.code,
                 "name": obj.name,
+                "old": obj.old
             }
             for obj in market_symbols
         }
@@ -33,6 +35,8 @@ if __name__ == "__main__":
         get_market_symbols_from_market_watch_page()
     )
     deduplicated_market_symbols = list(OrderedDict.fromkeys(market_symbols))
+    # fetch old indexes of symbols
+    deduplicated_market_symbols = get_old_index_of_market_symbols(deduplicated_market_symbols)
     write_symbols_to_json(
         deduplicated_market_symbols, "symbols_name.json",
         f"{config.pytse_dir}/data"
