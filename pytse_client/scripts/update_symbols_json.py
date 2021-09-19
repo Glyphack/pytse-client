@@ -28,12 +28,16 @@ def write_symbols_to_json(
 
 
 if __name__ == "__main__":
-    market_symbols = (
-        get_market_symbols_from_symbols_list_page() +
-        get_market_symbols_from_market_watch_page()
-    )
-    deduplicated_market_symbols = list(OrderedDict.fromkeys(market_symbols))
+    market_watch_symbols = get_market_symbols_from_market_watch_page()
+    symbols_list_page_symbols = get_market_symbols_from_symbols_list_page()
+    market_symbols = market_watch_symbols
+    # only add symbols from symbols list page if not already present in
+    # symbols scraped from market watch
+    for market_symbol in symbols_list_page_symbols:
+        if market_symbol not in market_symbols:
+            print(market_symbol)
+            market_symbols.append(market_symbol)
+    sorted_market_symbols = sorted(market_symbols, key=lambda x: x.symbol)
     write_symbols_to_json(
-        deduplicated_market_symbols, "symbols_name.json",
-        f"{config.pytse_dir}/data"
+        sorted_market_symbols, "symbols_name.json", f"{config.pytse_dir}/data"
     )
