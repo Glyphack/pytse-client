@@ -17,7 +17,9 @@ def symbols_information() -> Dict[str, Dict]:
 
 
 def get_ticker_index(ticker_symbol: str):
-    return symbols_information().get(ticker_symbol)["index"]
+    if ticker_symbol in symbols_information():
+        return symbols_information().get(ticker_symbol)["index"]
+    return None
 
 
 def all_symbols() -> Set:
