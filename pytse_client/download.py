@@ -69,7 +69,13 @@ def download(
             _adjust_data_frame(df, include_jdate)
 
             if symbol in df_list:
-                df_list[symbol] = df_list[symbol].append(df, ignore_index=True, sort=False).sort_values('date').reset_index(drop=True)
+                df_list[symbol] = (
+                    df_list[symbol].append(
+                        df,
+                        ignore_index=True,
+                        sort=False
+                    ).sort_values('date').reset_index(drop=True)
+                )
             else:
                 df_list[symbol] = df
 
@@ -79,9 +85,15 @@ def download(
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
                 if adjust:
-                    df_list[symbol].to_csv(f'{base_path}/{symbol}-ت.csv', index=False)
+                    df_list[symbol].to_csv(
+                        f'{base_path}/{symbol}-ت.csv',
+                        index=False
+                    )
                 else:
-                    df_list[symbol].to_csv(f'{base_path}/{symbol}.csv', index=False)
+                    df_list[symbol].to_csv(
+                        f'{base_path}/{symbol}.csv',
+                        index=False
+                    )
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
