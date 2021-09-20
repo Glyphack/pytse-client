@@ -36,7 +36,7 @@ def download(
         session = requests_retry_session()
         for symbol in symbols:
             if symbol.isnumeric():
-                ticker_index = symbol
+                ticker_indexes = [symbol]
             else:
                 ticker_index = symbols_data.get_ticker_index(symbol)
                 ticker_index = _handle_ticker_index(symbol, ticker_index)
