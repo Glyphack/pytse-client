@@ -2,6 +2,7 @@ import json
 from collections import OrderedDict
 from pathlib import Path
 from typing import List
+import locale
 
 from pytse_client import config
 from pytse_client.scraper.symbol_scraper import (
@@ -38,6 +39,12 @@ if __name__ == "__main__":
     # fetch old indexes of symbols
     deduplicated_market_symbols = get_old_index_of_market_symbols(
         deduplicated_market_symbols
+    )
+    # sort by sybmol
+    locale.setlocale(locale.LC_COLLATE, "fa_IR.UTF-8")
+    deduplicated_market_symbols = sorted(
+        deduplicated_market_symbols,
+        key=lambda i: locale.strxfrm(i.symbol)
     )
     write_symbols_to_json(
         deduplicated_market_symbols, "symbols_name.json",
