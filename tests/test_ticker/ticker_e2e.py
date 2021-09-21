@@ -1,6 +1,7 @@
 """
 access properties of Ticker for all symbols
 """
+import traceback
 import datetime
 import random
 from collections import defaultdict
@@ -31,6 +32,7 @@ if __name__ == '__main__':
             ticker.get_ticker_real_time_info_response()
         except Exception as e:
             print(f"error {e}")
+            print(traceback.format_exc())
             symbols_errors[symbol].append(e)
     # if there is some error test will fail with all erros
     if symbols_errors:
