@@ -320,8 +320,12 @@ class Ticker:
         except (ValueError, IndexError):
             adj_close = None
 
-        orders_data = response.text.split(";")[2]
-        buy_orders, sell_orders = get_orders(orders_data)
+        try:
+            orders_data = response.text.split(";")[2]
+            buy_orders, sell_orders = get_orders(orders_data)
+        except (IndexError):
+            buy_orders = []
+            sell_orders = []
 
         best_demand_vol = (
             buy_orders[0].volume if 0 < len(buy_orders) else None
