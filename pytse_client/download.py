@@ -361,7 +361,7 @@ def get_symbol_data(symbol_name: str):
             if(symbol_full_info[7] == '1'):
                 market_symbol.symbol = persian.replace_arabic(
                     symbol_full_info[0]
-                ).replace('\u200c', '')
+                )
                 market_symbol.name = persian.replace_arabic(
                     symbol_full_info[1]
                 )
