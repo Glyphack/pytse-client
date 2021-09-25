@@ -232,8 +232,9 @@ def download_client_types_records(
     future_to_symbol = {}
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
-            ticker_index = symbols_data.get_ticker_index(symbol)
-            _handle_ticker_index(symbol, ticker_index)
+            ticker_index = _handle_ticker_index(symbol)
+            if ticker_index is None:
+                raise Exception(f"Cannot find symbol: {symbol}")
             future = executor.submit(
                 download_ticker_client_types_record, ticker_index
             )
