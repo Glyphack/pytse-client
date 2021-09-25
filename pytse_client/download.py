@@ -45,7 +45,8 @@ def download(
                         f"Cannot find symbol: {symbol}",
                     )
                     continue
-                ticker_indexes = symbols_data.get_ticker_indexes(symbol)
+                ticker_indexes = symbols_data.get_ticker_old_index(symbol)
+                ticker_indexes.insert(0, ticker_index)
             for index in ticker_indexes:
                 future = executor.submit(
                     download_ticker_daily_record, index, session
@@ -355,7 +356,8 @@ def get_symbol_data(symbol_name: str):
         if(symbol_full_info.strip() == ""):
             continue
         symbol_full_info = symbol_full_info.split(',')
-        if persian.replace_arabic(symbol_full_info[0].strip()) == symbol_name:
+        if persian.replace_arabic(symbol_full_info[0]) == symbol_name:
+            # if symbol id is active
             if(symbol_full_info[7] == '1'):
                 market_symbol.symbol = persian.replace_arabic(
                     symbol_full_info[0]

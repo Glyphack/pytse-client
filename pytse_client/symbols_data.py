@@ -18,23 +18,11 @@ def symbols_information() -> Dict[str, Dict]:
 
 
 def get_ticker_index(ticker_symbol: str):
-    if ticker_symbol in symbols_information():
-        return symbols_information().get(ticker_symbol)["index"]
-    return None
+    return symbols_information().get(ticker_symbol, {}).get("index")
 
 
 def get_ticker_old_index(ticker_symbol: str):
-    if ticker_symbol in symbols_information():
-        return symbols_information().get(ticker_symbol)["old"].copy()
-    return []
-
-
-def get_ticker_indexes(ticker_symbol: str):
-    indexes = []
-    if ticker_symbol in symbols_information():
-        indexes.append(symbols_information().get(ticker_symbol)["index"])
-        indexes = indexes + symbols_information().get(ticker_symbol)["old"]
-    return indexes
+    return symbols_information().get(ticker_symbol, {}).get("old", []).copy()
 
 
 def all_symbols() -> Set:

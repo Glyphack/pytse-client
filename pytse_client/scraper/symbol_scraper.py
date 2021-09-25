@@ -19,7 +19,7 @@ class MarketSymbol:
     symbol: str
     name: str
     index: int
-    old: list
+    old: List[int]
 
     def __hash__(self) -> int:
         """
@@ -100,7 +100,7 @@ def get_market_symbols_from_market_watch_page() -> List[MarketSymbol]:
     return market_symbols
 
 
-def get_old_index_of_market_symbols(
+def add_old_indexes_to_market_symbols(
     symbols: List[MarketSymbol]
 ) -> List[MarketSymbol]:
     """
@@ -151,7 +151,7 @@ def get_symbol_ids(symbol_name: str):
         if(symbol_full_info.strip() == ""):
             continue
         symbol_full_info = symbol_full_info.split(',')
-        if replace_arabic(symbol_full_info[0].strip()) == symbol_name:
+        if replace_arabic(symbol_full_info[0]) == symbol_name:
             if(symbol_full_info[7] == '1'):
                 index = symbol_full_info[2]  # active symbol id
             else:

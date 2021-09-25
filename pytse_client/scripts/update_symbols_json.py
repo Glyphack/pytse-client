@@ -9,7 +9,7 @@ from pytse_client.scraper.symbol_scraper import (
     MarketSymbol,
     get_market_symbols_from_market_watch_page,
     get_market_symbols_from_symbols_list_page,
-    get_old_index_of_market_symbols,
+    add_old_indexes_to_market_symbols,
 )
 
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     )
     deduplicated_market_symbols = list(OrderedDict.fromkeys(market_symbols))
     # fetch old indexes of symbols
-    deduplicated_market_symbols = get_old_index_of_market_symbols(
+    deduplicated_market_symbols = add_old_indexes_to_market_symbols(
         deduplicated_market_symbols
     )
     # sort by sybmol
