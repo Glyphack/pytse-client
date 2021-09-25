@@ -148,11 +148,11 @@ def get_symbol_ids(symbol_name: str):
     index = None
     old_ids = []
     for symbol_full_info in symbols:
-        if(symbol_full_info.strip() == ""):
+        if symbol_full_info.strip() == "":
             continue
         symbol_full_info = symbol_full_info.split(',')
         if replace_arabic(symbol_full_info[0]) == symbol_name:
-            if(symbol_full_info[7] == '1'):
+            if symbol_full_info[7] == '1':
                 index = symbol_full_info[2]  # active symbol id
             else:
                 old_ids.append(symbol_full_info[2])  # old symbol id

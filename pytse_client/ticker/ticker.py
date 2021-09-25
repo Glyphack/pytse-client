@@ -61,7 +61,7 @@ class Ticker:
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
-        if(self.adjust):
+        if self.adjust:
             if os.path.exists(self.adjusted_daily_records_csv_path):
                 self.from_file()
             else:
@@ -79,7 +79,7 @@ class Ticker:
         )[self.symbol]
 
     def from_file(self):
-        if(self.adjust):
+        if self.adjust:
             self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
         else:
             self._history = pd.read_csv(self.daily_records_csv_path)

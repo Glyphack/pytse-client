@@ -327,7 +327,7 @@ def get_symbol_id(symbol_name: str):
         raise Exception("Sorry, tse server did not respond")
 
     symbol_full_info = response.text.split(';')[0].split(',')
-    if (persian.replace_arabic(symbol_name) == symbol_full_info[0].strip()):
+    if persian.replace_arabic(symbol_name) == symbol_full_info[0].strip():
         return symbol_full_info[2]  # symbol id
     return None
 
@@ -349,12 +349,12 @@ def get_symbol_data(symbol_name: str):
                 old=[],
             )
     for symbol_full_info in symbols:
-        if(symbol_full_info.strip() == ""):
+        if symbol_full_info.strip() == "":
             continue
         symbol_full_info = symbol_full_info.split(',')
         if persian.replace_arabic(symbol_full_info[0]) == symbol_name:
             # if symbol id is active
-            if(symbol_full_info[7] == '1'):
+            if symbol_full_info[7] == '1':
                 market_symbol.symbol = persian.replace_arabic(
                     symbol_full_info[0]
                 )
