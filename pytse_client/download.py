@@ -38,13 +38,9 @@ def download(
             if symbol.isnumeric():
                 ticker_indexes = [symbol]
             else:
-                ticker_index = symbols_data.get_ticker_index(symbol)
-                ticker_index = _handle_ticker_index(symbol, ticker_index)
+                ticker_index = _handle_ticker_index(symbol)
                 if ticker_index is None:
-                    logger.error(
-                        f"Cannot find symbol: {symbol}",
-                    )
-                    continue
+                    raise Exception(f"Cannot find symbol: {symbol}")
                 ticker_indexes = symbols_data.get_ticker_old_index(symbol)
                 ticker_indexes.insert(0, ticker_index)
             for index in ticker_indexes:
@@ -262,12 +258,11 @@ def download_client_types_records(
     return df_list
 
 
-def _handle_ticker_index(symbol, ticker_index):
+def _handle_ticker_index(symbol):
+    ticker_index = symbols_data.get_ticker_index(symbol)
     if ticker_index is None:
         market_symbol = get_symbol_data(symbol)
-        if market_symbol is None:
-            raise Exception("Can not found ticker name")
-        else:
+        if market_symbol is not None:
             symbols_data.append_symbol_to_file(market_symbol)
             ticker_index = market_symbol.index
     return ticker_index
