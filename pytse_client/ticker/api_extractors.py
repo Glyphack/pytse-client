@@ -47,7 +47,7 @@ def get_individual_trade_summary(
     splitted_fields = individual_trade_summary_section.split(",")
     if len(splitted_fields) < 9:
         return None
-    
+
     individual_buy_vol = float(splitted_fields[0])
     individual_sell_vol = float(splitted_fields[3])
     individual_buy_count = float(splitted_fields[5])
@@ -65,7 +65,7 @@ def get_corporate_trade_summary(corporate_trade_summary_section):
     splitted_fields = corporate_trade_summary_section.split(",")
     if len(splitted_fields) < 9:
         return None
-    
+
     corporate_buy_vol = float(splitted_fields[1])
     corporate_sell_vol = float(splitted_fields[4])
     corporate_buy_count = float(splitted_fields[6])

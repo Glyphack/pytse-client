@@ -21,8 +21,13 @@ from pytse_client import (
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.proxy.dto import ShareholderData
 from pytse_client.proxy.tsetmc import get_day_shareholders_history
-from pytse_client.ticker import api_extractors
-from pytse_client.ticker.api_extractors import Order, TradeSummary, get_individual_trade_summary, get_orders
+from pytse_client.ticker.api_extractors import (
+    Order,
+    TradeSummary,
+    get_corporate_trade_summary,
+    get_individual_trade_summary,
+    get_orders,
+)
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
@@ -318,7 +323,8 @@ class Ticker:
         # in some cases last price or adj price is undefined
         try:
             last_price = int(response.text.split()[1].split(",")[1])
-        except (ValueError, IndexError):  # When instead of number value is `F`
+        # when instead of number value is `F`
+        except (ValueError, IndexError):
             last_price = None
         try:
             adj_close = int(response.text.split()[1].split(",")[2])
@@ -358,10 +364,10 @@ class Ticker:
 
         if len(response_sections_list) >= 4:
             trade_summary_section = response_sections_list[4]
-            individual_trade_summary = api_extractors.get_individual_trade_summary(
+            individual_trade_summary = get_individual_trade_summary(
                 trade_summary_section
             )
-            corporate_trade_summary = api_extractors.get_corporate_trade_summary(
+            corporate_trade_summary = get_corporate_trade_summary(
                 trade_summary_section
             )
         else:
