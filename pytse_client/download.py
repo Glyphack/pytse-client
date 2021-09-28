@@ -262,7 +262,7 @@ def download_client_types_records(
 def _handle_ticker_index(symbol):
     ticker_index = symbols_data.get_ticker_index(symbol)
     if ticker_index is None:
-        market_symbol = get_symbol_data(symbol)
+        market_symbol = get_symbol_info(symbol)
         if market_symbol is not None:
             symbols_data.append_symbol_to_file(market_symbol)
             ticker_index = market_symbol.index
@@ -332,7 +332,7 @@ def get_symbol_id(symbol_name: str):
     return None
 
 
-def get_symbol_data(symbol_name: str):
+def get_symbol_info(symbol_name: str):
     url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
     response = requests_retry_session().get(url, timeout=10)
     try:
