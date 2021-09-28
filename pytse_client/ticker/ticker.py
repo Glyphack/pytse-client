@@ -61,7 +61,7 @@ class Ticker:
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         self._history: pd.DataFrame = pd.DataFrame()
 
-        if(self.adjust):
+        if self.adjust:
             if os.path.exists(self.adjusted_daily_records_csv_path):
                 self.from_file()
             else:
@@ -79,7 +79,7 @@ class Ticker:
         )[self.symbol]
 
     def from_file(self):
-        if(self.adjust):
+        if self.adjust:
             self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
         else:
             self._history = pd.read_csv(self.daily_records_csv_path)
@@ -320,8 +320,12 @@ class Ticker:
         except (ValueError, IndexError):
             adj_close = None
 
-        orders_data = response.text.split(";")[2]
-        buy_orders, sell_orders = get_orders(orders_data)
+        try:
+            orders_data = response.text.split(";")[2]
+            buy_orders, sell_orders = get_orders(orders_data)
+        except (IndexError):
+            buy_orders = []
+            sell_orders = []
 
         best_demand_vol = (
             buy_orders[0].volume if 0 < len(buy_orders) else None

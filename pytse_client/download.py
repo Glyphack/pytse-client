@@ -9,6 +9,7 @@ import pandas as pd
 from pytse_client import config, symbols_data, translations, tse_settings
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils import persian, requests_retry_session
+from pytse_client.scraper.symbol_scraper import MarketSymbol
 from requests import HTTPError
 from requests.sessions import Session
 from tenacity import retry, retry_if_exception_type, wait_random
@@ -35,14 +36,19 @@ def download(
         session = requests_retry_session()
         for symbol in symbols:
             if symbol.isnumeric():
-                ticker_index = symbol
+                ticker_indexes = [symbol]
             else:
-                ticker_index = symbols_data.get_ticker_index(symbol)
-                _handle_ticker_index(symbol, ticker_index)
-            future = executor.submit(
-                download_ticker_daily_record, ticker_index, session
-            )
-            future_to_symbol[future] = symbol
+                ticker_index = _handle_ticker_index(symbol)
+                if ticker_index is None:
+                    raise Exception(f"Cannot find symbol: {symbol}")
+                ticker_indexes = symbols_data.get_ticker_old_index(symbol)
+                ticker_indexes.insert(0, ticker_index)
+            for index in ticker_indexes:
+                future = executor.submit(
+                    download_ticker_daily_record, index, session
+                )
+                future_to_symbol[future] = symbol
+
         for future in futures.as_completed(future_to_symbol):
             symbol = future_to_symbol[future]
             try:
@@ -59,17 +65,32 @@ def download(
             df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
 
+            if symbol in df_list:
+                df_list[symbol] = (
+                    df_list[symbol].append(
+                        df,
+                        ignore_index=True,
+                        sort=False
+                    ).sort_values('date').reset_index(drop=True)
+                )
+            else:
+                df_list[symbol] = df
+
             if adjust:
-                df = adjust_price(df)
+                df_list[symbol] = adjust_price(df_list[symbol])
 
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
                 if adjust:
-                    df.to_csv(f'{base_path}/{symbol}-ت.csv', index=False)
+                    df_list[symbol].to_csv(
+                        f'{base_path}/{symbol}-ت.csv',
+                        index=False
+                    )
                 else:
-                    df.to_csv(f'{base_path}/{symbol}.csv', index=False)
-
-            df_list[symbol] = df
+                    df_list[symbol].to_csv(
+                        f'{base_path}/{symbol}.csv',
+                        index=False
+                    )
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
@@ -211,8 +232,9 @@ def download_client_types_records(
     future_to_symbol = {}
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         for symbol in symbols:
-            ticker_index = symbols_data.get_ticker_index(symbol)
-            _handle_ticker_index(symbol, ticker_index)
+            ticker_index = _handle_ticker_index(symbol)
+            if ticker_index is None:
+                raise Exception(f"Cannot find symbol: {symbol}")
             future = executor.submit(
                 download_ticker_client_types_record, ticker_index
             )
@@ -237,13 +259,14 @@ def download_client_types_records(
     return df_list
 
 
-def _handle_ticker_index(symbol, ticker_index):
+def _handle_ticker_index(symbol):
+    ticker_index = symbols_data.get_ticker_index(symbol)
     if ticker_index is None:
-        ticker_index = get_symbol_id(symbol)
-        if ticker_index is None:
-            raise Exception("Can not found ticker name")
-        else:
-            symbols_data.append_symbol_to_file(ticker_index, symbol)
+        market_symbol = get_symbol_info(symbol)
+        if market_symbol is not None:
+            symbols_data.append_symbol_to_file(market_symbol)
+            ticker_index = market_symbol.index
+    return ticker_index
 
 
 @retry(
@@ -304,6 +327,44 @@ def get_symbol_id(symbol_name: str):
         raise Exception("Sorry, tse server did not respond")
 
     symbol_full_info = response.text.split(';')[0].split(',')
-    if (persian.replace_arabic(symbol_name) == symbol_full_info[0].strip()):
+    if persian.replace_arabic(symbol_name) == symbol_full_info[0].strip():
         return symbol_full_info[2]  # symbol id
     return None
+
+
+def get_symbol_info(symbol_name: str):
+    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
+    response = requests_retry_session().get(url, timeout=10)
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        raise Exception(f"{symbol_name}: Sorry, tse server did not respond")
+
+    symbols = response.text.split(';')
+    market_symbol = MarketSymbol(
+                code=None,
+                symbol=None,
+                index=None,
+                name=None,
+                old=[],
+            )
+    for symbol_full_info in symbols:
+        if symbol_full_info.strip() == "":
+            continue
+        symbol_full_info = symbol_full_info.split(',')
+        if persian.replace_arabic(symbol_full_info[0]) == symbol_name:
+            # if symbol id is active
+            if symbol_full_info[7] == '1':
+                market_symbol.symbol = persian.replace_arabic(
+                    symbol_full_info[0]
+                )
+                market_symbol.name = persian.replace_arabic(
+                    symbol_full_info[1]
+                )
+                market_symbol.index = symbol_full_info[2]  # active symbol id
+            else:
+                market_symbol.old.append(symbol_full_info[2])  # old symbol id
+
+    if market_symbol.index is None:
+        return None
+    return market_symbol
