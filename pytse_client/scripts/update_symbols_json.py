@@ -30,9 +30,10 @@ def write_symbols_to_json(
 
 
 if __name__ == "__main__":
+    # the sum order is important
+    # https://github.com/Glyphack/pytse-client/issues/123
     market_symbols = (
-        get_market_symbols_from_market_watch_page()
-        +  # the sum order is important https://github.com/Glyphack/pytse-client/issues/123
+        get_market_symbols_from_market_watch_page() +
         get_market_symbols_from_symbols_list_page()
     )
     deduplicated_market_symbols = list(set(market_symbols))
