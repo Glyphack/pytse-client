@@ -22,6 +22,7 @@ class MarketSymbol:
     old: List[int]
 
     def __hash__(self):
+        """Hash function is used for deduplication"""
         return hash(self.symbol)
 
 
