@@ -3,16 +3,21 @@ access properties of Ticker for all symbols
 """
 import traceback
 import datetime
+import logging
 import random
 from collections import defaultdict
 
 from pytse_client import Ticker, all_symbols
 
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
 if __name__ == '__main__':
     symbols_errors = defaultdict(list)
-    random_symbols = random.sample(all_symbols(), 2)
+    random_symbols = random.sample(list(all_symbols()), 50)
     for index, symbol in enumerate(random_symbols):
-        print(f"{symbol} item {index}/{len(random_symbols)}")
+        logger.info(f"{symbol} item {index+1}/{len(random_symbols)}")
         try:
             ticker = Ticker(symbol)
             ticker.title
@@ -31,9 +36,8 @@ if __name__ == '__main__':
             )
             ticker.get_ticker_real_time_info_response()
         except Exception as e:
-            print(f"error {e}")
-            print(traceback.format_exc())
+            logger.exception(f"Exception testing {symbol}")
             symbols_errors[symbol].append(e)
-    # if there is some error test will fail with all erros
+    # if there is some error test will fail with all errors
     if symbols_errors:
         raise Exception(symbols_errors)

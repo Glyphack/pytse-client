@@ -363,11 +363,23 @@ print(real_time_data.best_demand_vol)  # حجم بهترین عرضه
 print(real_time_data.adj_close) # آخرین معامله
 print(real_time_data.last_price) # قیمت پایانی
 
+# پیشنهادات فروش
 for sell_order in real_time_data.sell_orders:
     print(sell_order.volume, sell_order.count, sell_order.price)
 
+# پشنهادات فروش
 for buy_order in real_time_data.buy_orders:
     print(buy_order.volume, buy_order.count, buy_order.price)
+
+# اطلاعات خرید و فروش حقیقی و حقوقی
+print(real_time_data.individual_trade_summary.buy_count)
+print(real_time_data.individual_trade_summary.buy_vol)
+print(real_time_data.individual_trade_summary.sell_count)
+print(real_time_data.individual_trade_summary.sell_vol)
+print(real_time_data.corporate_trade_summary.buy_count)
+print(real_time_data.corporate_trade_summary.buy_vol)
+print(real_time_data.corporate_trade_summary.sell_count)
+print(real_time_data.corporate_trade_summary.sell_vol)
 ```
 </div>
 

@@ -4,7 +4,8 @@ import functools
 import logging
 import os
 import re
-from typing import List, NamedTuple, Optional
+from dataclasses import dataclass
+from typing import List, Optional
 
 import aiohttp
 import bs4
@@ -20,7 +21,13 @@ from pytse_client import (
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.proxy.dto import ShareholderData
 from pytse_client.proxy.tsetmc import get_day_shareholders_history
-from pytse_client.ticker.api_extractors import Order, get_orders
+from pytse_client.ticker.api_extractors import (
+    Order,
+    TradeSummary,
+    get_corporate_trade_summary,
+    get_individual_trade_summary,
+    get_orders,
+)
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
@@ -29,15 +36,18 @@ logger = logging.getLogger(config.LOGGER_NAME)
 logger.addHandler(logging.NullHandler())
 
 
-class RealtimeTickerInfo(NamedTuple):
-    last_price: float
-    adj_close: float
-    best_demand_vol: int
-    best_demand_price: float
-    best_supply_vol: int
-    best_supply_price: float
-    sell_orders: List[Order]
-    buy_orders: List[Order]
+@dataclass
+class RealtimeTickerInfo:
+    last_price: Optional[float]
+    adj_close: Optional[float]
+    best_demand_vol: Optional[int]
+    best_demand_price: Optional[float]
+    best_supply_vol: Optional[int]
+    best_supply_price: Optional[float]
+    sell_orders: Optional[List[Order]]
+    buy_orders: Optional[List[Order]]
+    individual_trade_summary: Optional[TradeSummary]
+    corporate_trade_summary: Optional[TradeSummary]
 
 
 class Ticker:
@@ -313,32 +323,60 @@ class Ticker:
         # in some cases last price or adj price is undefined
         try:
             last_price = int(response.text.split()[1].split(",")[1])
-        except (ValueError, IndexError):  # When instead of number value is `F`
+        # when instead of number value is `F`
+        except (ValueError, IndexError):
             last_price = None
         try:
             adj_close = int(response.text.split()[1].split(",")[2])
         except (ValueError, IndexError):
             adj_close = None
 
+        response_sections_list = response.text.split(";")
+
         try:
-            orders_data = response.text.split(";")[2]
-            buy_orders, sell_orders = get_orders(orders_data)
+            orders_section = response_sections_list[2]
+            buy_orders, sell_orders = get_orders(orders_section)
+            best_demand_vol = (
+                buy_orders[0].volume if 0 < len(buy_orders) else None
+            )
+            best_demand_price = (
+                buy_orders[0].price if 0 < len(buy_orders) else None
+            )
+            best_supply_vol = (
+                sell_orders[0].volume if 0 < len(sell_orders) else None
+            )
+            best_supply_price = (
+                sell_orders[0].price if 0 < len(sell_orders) else None
+            )
         except (IndexError):
             buy_orders = []
             sell_orders = []
+            logger.warning(
+                f"""not enough sections in response to demand
+                and supply information resp: {response_sections_list}"""
+            )
+            best_demand_vol = None
+            best_demand_price = None
+            best_supply_vol = None
+            best_supply_price = None
+            buy_orders = None
+            sell_orders = None
 
-        best_demand_vol = (
-            buy_orders[0].volume if 0 < len(buy_orders) else None
-        )
-        best_demand_price = (
-            buy_orders[0].price if 0 < len(buy_orders) else None
-        )
-        best_supply_vol = (
-            sell_orders[0].volume if 0 < len(sell_orders) else None
-        )
-        best_supply_price = (
-            sell_orders[0].price if 0 < len(sell_orders) else None
-        )
+        if len(response_sections_list) >= 4:
+            trade_summary_section = response_sections_list[4]
+            individual_trade_summary = get_individual_trade_summary(
+                trade_summary_section
+            )
+            corporate_trade_summary = get_corporate_trade_summary(
+                trade_summary_section
+            )
+        else:
+            logger.warning(
+                f"""not enough sections in response to extract trade summaries
+                resp: {response_sections_list}"""
+            )
+            individual_trade_summary = None
+            corporate_trade_summary = None
 
         return RealtimeTickerInfo(
             last_price,
@@ -349,6 +387,8 @@ class Ticker:
             best_supply_price=best_supply_price,
             buy_orders=buy_orders,
             sell_orders=sell_orders,
+            individual_trade_summary=individual_trade_summary,
+            corporate_trade_summary=corporate_trade_summary,
         )
 
     @property
