@@ -31,10 +31,11 @@ def write_symbols_to_json(
 
 if __name__ == "__main__":
     market_symbols = (
-        get_market_symbols_from_symbols_list_page() +
         get_market_symbols_from_market_watch_page()
+        +  # the sum order is important https://github.com/Glyphack/pytse-client/issues/123
+        get_market_symbols_from_symbols_list_page()
     )
-    deduplicated_market_symbols = list(OrderedDict.fromkeys(market_symbols))
+    deduplicated_market_symbols = list(set(market_symbols))
     # fetch old indexes of symbols
     deduplicated_market_symbols = add_old_indexes_to_market_symbols(
         deduplicated_market_symbols

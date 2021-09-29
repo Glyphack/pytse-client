@@ -21,11 +21,8 @@ class MarketSymbol:
     index: int
     old: List[int]
 
-    def __eq__(self, val: "MarketSymbol"):
-        return self.symbol == val.symbol
-
-    def __ne__(self, val: "MarketSymbol"):
-        return self.symbol != val.symbol
+    def __hash__(self):
+        return hash(self.symbol)
 
 
 def get_market_symbols_from_symbols_list_page() -> List[MarketSymbol]:
