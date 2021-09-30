@@ -1,14 +1,15 @@
+import locale
 import logging
 import re
 from dataclasses import dataclass
 from typing import List
 
 import requests
-from requests import HTTPError
 from bs4 import BeautifulSoup
 from pytse_client import config, tse_settings
-from pytse_client.utils.persian import replace_arabic
 from pytse_client.utils import requests_retry_session
+from pytse_client.utils.persian import replace_arabic
+from requests import HTTPError
 
 logger = logging.getLogger(config.LOGGER_NAME)
 
@@ -24,6 +25,12 @@ class MarketSymbol:
     def __hash__(self):
         """Hash function is used for deduplication"""
         return hash(self.symbol)
+
+    def __lt__(self, other):
+        return not locale.strcoll(other.symbol, self.symbol) < 0
+
+    def __eq__(self, other):
+        return locale.strcoll(other.symbol, self.symbol) == 0
 
 
 def get_market_symbols_from_symbols_list_page() -> List[MarketSymbol]:

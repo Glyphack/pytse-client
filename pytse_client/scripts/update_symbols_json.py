@@ -43,9 +43,7 @@ if __name__ == "__main__":
     )
     # sort by sybmol
     locale.setlocale(locale.LC_COLLATE, "fa_IR.UTF-8")
-    sorted_market_symbols = sorted(
-        deduplicated_market_symbols, key=lambda i: locale.strxfrm(i.symbol)
-    )
+    sorted_market_symbols = sorted(deduplicated_market_symbols)
     write_symbols_to_json(
         sorted_market_symbols, "symbols_name.json", f"{config.pytse_dir}/data"
     )
