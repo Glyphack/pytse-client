@@ -196,7 +196,7 @@ class Ticker:
         )
 
     @property
-    def fiscal_year(self) -> str:
+    def fiscal_year(self) -> Optional[str]:
         fiscal_year = re.findall(
             r"سال مالی :<\/td>.*?>(.*?)<",
             self._ticker_introduction_page_response.text,
