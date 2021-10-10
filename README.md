@@ -177,6 +177,8 @@ print(ticker.url)  # آدرس صفحه سهم
 http://tsetmc.com/Loader.aspx?ParTree=151311&i=778253364357513
 print(ticker.group_name)  # نام گروه
 بانكها و موسسات اعتباري
+print(ticker.fiscal_year)  # سال مالی
+12/29
 print(ticker.eps)  # eps
 2725.0
 print(ticker.p_e_ratio)  # P/E
