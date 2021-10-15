@@ -182,6 +182,29 @@ class Ticker:
         return float(eps)
 
     @property
+    def p_s_ratio(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have p/s
+        """
+        adj_close = self.get_ticker_real_time_info_response().adj_close
+        psr = self.psr
+        if adj_close is None or psr is None or psr == 0:
+            return None
+        return adj_close / psr
+
+    @property
+    def psr(self) -> Optional[float]:
+        """
+        Notes on usage: tickers like آسام does not have psr
+        """
+        psr = re.findall(
+            r"PSR='([+-]?[\.\d]*)'", self._ticker_page_response.text
+        )
+        if not psr or psr[0] == "":
+            return None
+        return float(psr[0])
+
+    @property
     def total_shares(self) -> float:
         return float(
             re.findall(r"ZTitad=([-,\d]*),",

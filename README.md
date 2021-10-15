@@ -20,7 +20,7 @@
     - [دانلود سابقه سهم‌ها](#دانلود-سابقه-سهمها)
     - [دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا](#دانلود-سابقه-معاملات-حقیقی-و-حقوقی-به-صورت-مجزا)
     - [ماژول Ticker](#ماژول-ticker)
-        - [۱نکته](#۱نکته)
+        - [نکته۱](#نکته۱)
         - [نکته۲](#نکته۲)
       - [اطلاعات نماد‌های حذف شده](#اطلاعات-نمادهای-حذف-شده)
       - [اطلاعات حقیقی و حقوقی](#اطلاعات-حقیقی-و-حقوقی)
@@ -167,38 +167,42 @@ if __name__ == '__main__':
 ```python
 import pytse_client as tse
 
-tse.download(symbols="وبملت", write_to_csv=True)  # optional
-ticker = tse.Ticker("وبملت")
+tse.download(symbols="نوری", write_to_csv=True)  # optional
+ticker = tse.Ticker("نوری")
 print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
-بانك ملت (وبملت)
+پتروشيمي نوري (نوري)
 print(ticker.url)  # آدرس صفحه سهم
-http://tsetmc.com/Loader.aspx?ParTree=151311&i=778253364357513
+http://tsetmc.com/Loader.aspx?ParTree=151311&i=19040514831923530
 print(ticker.group_name)  # نام گروه
-بانكها و موسسات اعتباري
+محصولات شيميايي
 print(ticker.fiscal_year)  # سال مالی
 12/29
-print(ticker.eps)  # eps
-2725.0
+print(ticker.eps)  # EPS
+15377.0
 print(ticker.p_e_ratio)  # P/E
-6.1478899082568805
+6.994212135006828
 print(ticker.group_p_e_ratio)  # group P/E
-18.0
+9.39
+print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
+66639.9822222222
+print(ticker.p_s_ratio)  # P/S این نسبت ویژه شرکت‌های تولیدی است
+1.6138959887677713
 print(ticker.base_volume)  # حجم مبنا
-7322431.0
+896459.0
 print(ticker.last_price)  # آخرین معامله
-17316
+108800
 print(ticker.adj_close)  # قیمت پایانی
-16753
+107550
 print(ticker.best_supply_price)  # قیمت بهترین تقاضا
-26700
+108800
 print(ticker.best_supply_vol)  # حجم بهترین تقاضا
-357062
+35461
 print(ticker.best_demand_price)  # قیمت بهترین عرضه
-26700
+108800
 print(ticker.best_demand_vol)  # حجم بهترین عرضه
-576608
+50
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 
 print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام داران عمده
@@ -218,7 +222,7 @@ ticker = tse.Ticker(symbol="بركت", adjust=True)
 اما اگر قبل از اون از دانلود استفاده کرده باشید
 به جای گرفتن از اینترنت اطلاعات رو از روی فایل میخونه که سریع تر هست
 
-##### ۱نکته
+##### نکته۱
 
 طبق تجربه‌ ای که داشتم چون گاهی اوقات سایت بورس مدت زیادی طول میکشه تا اطلاعات رو بفرسته یا بعضی مواقع نمیفرسته بهتر هست که اول تابع دانلود رو استفاده کنید برای سهم‌هایی که لازم هست و بعد با دیتای اون ها کار کنید.
 

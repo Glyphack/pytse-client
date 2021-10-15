@@ -9,8 +9,8 @@ import pandas as pd
 # to be able to see whole DataFrame columns
 pd.set_option('display.max_columns', 20)
 
-download(symbols="وبملت", write_to_csv=True)  # optional
-ticker = Ticker("وبملت")
+download(symbols="نوری", write_to_csv=True)  # optional
+ticker = Ticker("نوری")
 print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
@@ -20,6 +20,8 @@ print(ticker.fiscal_year)  # سال مالی
 print(ticker.eps)  # eps
 print(ticker.p_e_ratio)  # P/E
 print(ticker.group_p_e_ratio)  # group P/E
+print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
+print(ticker.p_s_ratio)  # P/S این نسبت ویژه شرکت‌های تولیدی است
 print(ticker.base_volume)  # حجم مبنا
 print(ticker.last_price)  # آخرین معامله
 print(ticker.adj_close)  # قیمت پایانی
