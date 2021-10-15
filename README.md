@@ -177,6 +177,8 @@ print(ticker.url)  # آدرس صفحه سهم
 http://tsetmc.com/Loader.aspx?ParTree=151311&i=19040514831923530
 print(ticker.group_name)  # نام گروه
 محصولات شيميايي
+print(ticker.fiscal_year)  # سال مالی
+12/29
 print(ticker.eps)  # EPS
 15377.0
 print(ticker.p_e_ratio)  # P/E

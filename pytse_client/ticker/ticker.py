@@ -29,6 +29,7 @@ from pytse_client.ticker.api_extractors import (
     get_orders,
 )
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client.utils.persian import replace_persian
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
@@ -69,6 +70,13 @@ class Ticker:
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
+        # FIXME: if symbol equals instrument id, it cannot fetch introduction
+        # page. it occurrs when Ticker called with index id not symbol
+        self._introduction_url = (
+            tse_settings.TSE_TICKER_INTRODUCTION_URL.format(
+                replace_persian(self.symbol)
+            )
+        )
         self._history: pd.DataFrame = pd.DataFrame()
 
         if self.adjust:
@@ -209,6 +217,15 @@ class Ticker:
             re.findall(r"BaseVol=([-,\d]*),",
                        self._ticker_page_response.text)[0]
         )
+
+    @property
+    def fiscal_year(self) -> Optional[str]:
+        fiscal_year = re.findall(
+            r"سال مالی :<\/td>.*?>(.*?)<",
+            self._ticker_introduction_page_response.text,
+            re.DOTALL
+        )
+        return fiscal_year[0] if fiscal_year else None
 
     @property
     def client_types(self):
@@ -418,6 +435,12 @@ class Ticker:
     @functools.lru_cache()
     def _ticker_page_response(self):
         return utils.requests_retry_session().get(self._url, timeout=10)
+
+    @functools.cached_property
+    def _ticker_introduction_page_response(self):
+        return utils.requests_retry_session().get(
+            self._introduction_url, timeout=10
+        )
 
     @functools.lru_cache()
     @retry(

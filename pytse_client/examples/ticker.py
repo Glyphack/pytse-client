@@ -16,6 +16,7 @@ print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
 print(ticker.url)  # آدرس صفحه سهم
 print(ticker.group_name)  # نام گروه
+print(ticker.fiscal_year)  # سال مالی
 print(ticker.eps)  # eps
 print(ticker.p_e_ratio)  # P/E
 print(ticker.group_p_e_ratio)  # group P/E
