@@ -10,6 +10,7 @@ __pycache__/
 /.idea/
 */.vscode/
 */.venv/
+/.spyproject/
 
 # Poetry
 poetry.lock
@@ -23,3 +24,4 @@ dmypy.json
 /pytse_client/examples/tickers_data/
 *.csv
 .vscode/settings.json
+
