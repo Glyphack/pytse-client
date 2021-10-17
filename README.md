@@ -183,6 +183,10 @@ print(ticker.p_e_ratio)  # P/E
 6.1478899082568805
 print(ticker.group_p_e_ratio)  # group P/E
 18.0
+print(ticker.nav)  # NAV خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
+112,881
+print(ticker.nav_date)  # last date of NAV تاریخ بروزرسانی خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
+1400/7/25 13:58:00
 print(ticker.base_volume)  # حجم مبنا
 7322431.0
 print(ticker.last_price)  # آخرین معامله
