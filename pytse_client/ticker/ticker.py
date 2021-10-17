@@ -41,6 +41,14 @@ logger.addHandler(logging.NullHandler())
 class RealtimeTickerInfo:
     last_price: Optional[float]
     adj_close: Optional[float]
+    yesterday_price: Optional[float]
+    open_price: Optional[float]
+    high_price: Optional[float]
+    low_price: Optional[float]
+    count: Optional[int]
+    volume: Optional[int]
+    value: Optional[int]
+    last_date: Optional[datetime.datetime]
     best_demand_vol: Optional[int]
     best_demand_price: Optional[float]
     best_supply_vol: Optional[int]
@@ -360,18 +368,42 @@ class Ticker:
         response = session.get(self._info_url, timeout=5)
         session.close()
 
-        # in some cases last price or adj price is undefined
-        try:
-            last_price = int(response.text.split()[1].split(",")[1])
-        # when instead of number value is `F`
-        except (ValueError, IndexError):
-            last_price = None
-        try:
-            adj_close = int(response.text.split()[1].split(",")[2])
-        except (ValueError, IndexError):
-            adj_close = None
-
         response_sections_list = response.text.split(";")
+
+        if len(response_sections_list) >= 1:
+            price_section = response_sections_list[0].split(",")
+            try:
+                yesterday_price = int(price_section[5])
+                open_price = int(price_section[4])
+                high_price = int(price_section[6])
+                low_price = int(price_section[7])
+                count = int(price_section[8])
+                volume = int(price_section[9])
+                value = int(price_section[10])
+                last_date = datetime.datetime.strptime(
+                    price_section[12] + price_section[13],
+                    '%Y%m%d%H%M%S'
+                )
+            except (ValueError, IndexError):
+                yesterday_price = None
+                open_price = None
+                high_price = None
+                low_price = None
+                count = None
+                volume = None
+                value = None
+                last_date = None
+
+            # in some cases last price or adj price is undefined
+            try:
+                last_price = int(price_section[2])
+            # when instead of number value is `F`
+            except (ValueError, IndexError):
+                last_price = None
+            try:
+                adj_close = int(price_section[3])
+            except (ValueError, IndexError):
+                adj_close = None
 
         try:
             orders_section = response_sections_list[2]
@@ -421,6 +453,14 @@ class Ticker:
         return RealtimeTickerInfo(
             last_price,
             adj_close,
+            yesterday_price,
+            open_price,
+            high_price,
+            low_price,
+            count,
+            volume,
+            value,
+            last_date,
             best_demand_vol=best_demand_vol,
             best_demand_price=best_demand_price,
             best_supply_vol=best_supply_vol,
