@@ -39,6 +39,7 @@ logger.addHandler(logging.NullHandler())
 
 @dataclass
 class RealtimeTickerInfo:
+    state: Optional[str]
     last_price: Optional[float]
     adj_close: Optional[float]
     yesterday_price: Optional[float]
@@ -373,6 +374,7 @@ class Ticker:
         if len(response_sections_list) >= 1:
             price_section = response_sections_list[0].split(",")
             try:
+                state = self._instrument_state(price_section[1])
                 yesterday_price = int(price_section[5])
                 open_price = int(price_section[4])
                 high_price = int(price_section[6])
@@ -385,6 +387,7 @@ class Ticker:
                     '%Y%m%d%H%M%S'
                 )
             except (ValueError, IndexError):
+                state = None
                 yesterday_price = None
                 open_price = None
                 high_price = None
@@ -451,6 +454,7 @@ class Ticker:
             corporate_trade_summary = None
 
         return RealtimeTickerInfo(
+            state,
             last_price,
             adj_close,
             yesterday_price,
@@ -503,3 +507,16 @@ class Ticker:
     @property
     def _shareholders_url(self) -> str:
         return tse_settings.TSE_SHAREHOLDERS_URL.format(self.ci_sin)
+
+    def _instrument_state(self, state_code) -> str:
+        states = {
+            "I ": "ممنوع",
+            "A ": "مجاز",
+            "AG": "مجاز-مسدود",
+            "AS": "مجاز-متوقف",
+            "AR": "مجاز-محفوظ",
+            "IG": "ممنوع-مسدود",
+            "IS": "ممنوع-متوقف",
+            "IR": "ممنوع-محفوظ",
+        }
+        return states.get(state_code, "")
