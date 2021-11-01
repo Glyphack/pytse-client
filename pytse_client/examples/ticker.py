@@ -23,8 +23,17 @@ print(ticker.group_p_e_ratio)  # group P/E
 print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
 print(ticker.p_s_ratio)  # P/S این نسبت ویژه شرکت‌های تولیدی است
 print(ticker.base_volume)  # حجم مبنا
-print(ticker.last_price)  # آخرین معامله
+print(ticker.state)  # وضعیت نماد
+print(ticker.last_price)  # قیمت آخرین معامله
 print(ticker.adj_close)  # قیمت پایانی
+print(ticker.yesterday_price)  # قیمت دیروز
+print(ticker.open_price)  # قیمت اولین معامله
+print(ticker.high_price)  # قیمت حداکثر
+print(ticker.low_price)  # قیمت حداقل
+print(ticker.count)  # تعداد معاملات
+print(ticker.volume)  # حجم معاملات
+print(ticker.value)  # ارزش معاملات
+print(ticker.last_date)  # آخرین اطلاعات قیمت ناشی از تغییرات شرکتی و معاملات
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.shareholders.percentage.sum())  # جمع سهام داران
 print(ticker.total_shares)
