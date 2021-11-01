@@ -391,8 +391,17 @@ print(real_time_data.best_supply_price)  # قیمت بهترین تقاضا
 print(real_time_data.best_supply_vol)  # حجم بهترین تقاضا
 print(real_time_data.best_demand_price)  # قیمت بهترین عرضه
 print(real_time_data.best_demand_vol)  # حجم بهترین عرضه
-print(real_time_data.adj_close) # آخرین معامله
-print(real_time_data.last_price) # قیمت پایانی
+print(real_time_data.state)  # وضعیت نماد
+print(real_time_data.last_price)  # قیمت آخرین معامله
+print(real_time_data.adj_close)  # قیمت پایانی
+print(real_time_data.yesterday_price)  # قیمت دیروز
+print(real_time_data.open_price)  # قیمت اولین معامله
+print(real_time_data.high_price)  # قیمت حداکثر
+print(real_time_data.low_price)  # قیمت حداقل
+print(real_time_data.count)  # تعداد معاملات
+print(real_time_data.volume)  # حجم معاملات
+print(real_time_data.value)  # ارزش معاملات
+print(real_time_data.last_date)  # آخرین اطلاعات قیمت ناشی از تغییرات شرکتی و معاملات
 
 # پیشنهادات فروش
 for sell_order in real_time_data.sell_orders:
