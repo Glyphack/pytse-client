@@ -336,12 +336,48 @@ class Ticker:
         )
 
     @property
+    def state(self):
+        return self.get_ticker_real_time_info_response().state
+
+    @property
     def last_price(self):
         return self.get_ticker_real_time_info_response().last_price
 
     @property
     def adj_close(self):
         return self.get_ticker_real_time_info_response().adj_close
+
+    @property
+    def yesterday_price(self):
+        return self.get_ticker_real_time_info_response().yesterday_price
+
+    @property
+    def open_price(self):
+        return self.get_ticker_real_time_info_response().open_price
+
+    @property
+    def high_price(self):
+        return self.get_ticker_real_time_info_response().high_price
+
+    @property
+    def low_price(self):
+        return self.get_ticker_real_time_info_response().low_price
+
+    @property
+    def count(self):
+        return self.get_ticker_real_time_info_response().count
+
+    @property
+    def volume(self):
+        return self.get_ticker_real_time_info_response().volume
+
+    @property
+    def value(self):
+        return self.get_ticker_real_time_info_response().value
+
+    @property
+    def last_date(self):
+        return self.get_ticker_real_time_info_response().last_date
 
     @property
     def best_demand_vol(self):
