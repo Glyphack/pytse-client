@@ -27,8 +27,17 @@ if __name__ == '__main__':
             ticker.p_e_ratio
             ticker.group_p_e_ratio
             ticker.base_volume
+            ticker.state
             ticker.last_price
             ticker.adj_close
+            ticker.yesterday_price
+            ticker.open_price
+            ticker.high_price
+            ticker.low_price
+            ticker.count
+            ticker.volume
+            ticker.value
+            ticker.last_date
             ticker.shareholders
             ticker.total_shares
             ticker.get_shareholders_history(
