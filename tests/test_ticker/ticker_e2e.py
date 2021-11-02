@@ -38,6 +38,15 @@ if __name__ == '__main__':
             ticker.volume
             ticker.value
             ticker.last_date
+            ticker.flow
+            ticker.sta_max
+            ticker.sta_min
+            ticker.min_week
+            ticker.max_week
+            ticker.min_year
+            ticker.max_year
+            ticker.month_average_volume
+            ticker.float_shares
             ticker.shareholders
             ticker.total_shares
             ticker.get_shareholders_history(
