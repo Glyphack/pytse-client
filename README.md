@@ -180,36 +180,52 @@ print(ticker.group_name)  # نام گروه
 print(ticker.fiscal_year)  # سال مالی
 12/29
 print(ticker.eps)  # EPS
-15377.0
+16442.0
 print(ticker.p_e_ratio)  # P/E
-6.994212135006828
+6.705388638851721
 print(ticker.group_p_e_ratio)  # group P/E
-18.0
+8.24
 print(ticker.nav)  # NAV خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
 112,881
 print(ticker.nav_date)  # last date of NAV تاریخ بروزرسانی خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
 1400/7/25 13:58:00
-9.39
 print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
-66639.9822222222
+71483.0238888889
 print(ticker.p_s_ratio)  # P/S این نسبت ویژه شرکت‌های تولیدی است
-1.6138959887677713
+1.5423242331125966
 print(ticker.base_volume)  # حجم مبنا
-896459.0
+918780.0
+print(ticker.state)  # وضعیت نماد
+مجاز
 print(ticker.last_price)  # آخرین معامله
-108800
+109940
 print(ticker.adj_close)  # قیمت پایانی
-107550
+110250
+print(ticker.yesterday_price)  # قیمت دیروز
+106800
+print(ticker.open_price)  # قیمت اولین معامله
+108200
+print(ticker.high_price)  # قیمت حداکثر
+111830
+print(ticker.low_price)  # قیمت حداقل
+108200
+print(ticker.count)  # تعداد معاملات
+3934
+print(ticker.volume)  # حجم معاملات
+2602437
+print(ticker.value)  # ارزش معاملات
+286919407590
+print(ticker.last_date)  # تاریخ آخرین اطلاعات قیمت پایانی ناشی از تغییرات شرکتی و معاملات
+2021-11-01 12:29:54
 print(ticker.best_supply_price)  # قیمت بهترین تقاضا
-108800
+109960
 print(ticker.best_supply_vol)  # حجم بهترین تقاضا
-35461
+8296
 print(ticker.best_demand_price)  # قیمت بهترین عرضه
-108800
+109920
 print(ticker.best_demand_vol)  # حجم بهترین عرضه
-50
+3620
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
-
 print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام داران عمده
 print(ticker.get_ticker_real_time_info_response()) # اطلاعات لحظه‌ای مانند قیمت و پیشنهادات خرید و فروش
 
@@ -230,6 +246,8 @@ ticker = tse.Ticker(symbol="بركت", adjust=True)
 ##### نکته۱
 
 طبق تجربه‌ ای که داشتم چون گاهی اوقات سایت بورس مدت زیادی طول میکشه تا اطلاعات رو بفرسته یا بعضی مواقع نمیفرسته بهتر هست که اول تابع دانلود رو استفاده کنید برای سهم‌هایی که لازم هست و بعد با دیتای اون ها کار کنید.
+
+در صورت نیاز به اطلاعات لحظه‌ای نماد بهتر است کل [اطلاعات لحظه‌ای سهام](#اطلاعات-لحظهای-سهام) را یکجا دریافت کنید تا هم دیتای دریافتی مربوط به یک زمان باشند و هم از ارسال درخواست های مکرر به سایت بورس جلوگیری شود.
 
 ##### نکته۲
 
@@ -379,8 +397,17 @@ print(real_time_data.best_supply_price)  # قیمت بهترین تقاضا
 print(real_time_data.best_supply_vol)  # حجم بهترین تقاضا
 print(real_time_data.best_demand_price)  # قیمت بهترین عرضه
 print(real_time_data.best_demand_vol)  # حجم بهترین عرضه
-print(real_time_data.adj_close) # آخرین معامله
-print(real_time_data.last_price) # قیمت پایانی
+print(real_time_data.state)  # وضعیت نماد
+print(real_time_data.last_price)  # قیمت آخرین معامله
+print(real_time_data.adj_close)  # قیمت پایانی
+print(real_time_data.yesterday_price)  # قیمت دیروز
+print(real_time_data.open_price)  # قیمت اولین معامله
+print(real_time_data.high_price)  # قیمت حداکثر
+print(real_time_data.low_price)  # قیمت حداقل
+print(real_time_data.count)  # تعداد معاملات
+print(real_time_data.volume)  # حجم معاملات
+print(real_time_data.value)  # ارزش معاملات
+print(real_time_data.last_date)  # آخرین اطلاعات قیمت ناشی از تغییرات شرکتی و معاملات
 
 # پیشنهادات فروش
 for sell_order in real_time_data.sell_orders:
