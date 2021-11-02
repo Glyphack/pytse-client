@@ -58,6 +58,8 @@ class RealtimeTickerInfo:
     buy_orders: Optional[List[Order]]
     individual_trade_summary: Optional[TradeSummary]
     corporate_trade_summary: Optional[TradeSummary]
+    nav: Optional[int]
+    nav_date: Optional[str]
 
 
 class Ticker:
@@ -395,6 +397,14 @@ class Ticker:
     def best_supply_price(self):
         return self.get_ticker_real_time_info_response().best_supply_price
 
+    @property
+    def nav(self):
+        return self.get_ticker_real_time_info_response().nav
+
+    @property
+    def nav_date(self):
+        return self.get_ticker_real_time_info_response().nav_date
+
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
         """
         notes on usage:
@@ -443,6 +453,14 @@ class Ticker:
                 adj_close = int(price_section[3])
             except (ValueError, IndexError):
                 adj_close = None
+
+        try:
+            info_section = response_sections_list[0].split(",")
+            nav = int(info_section[15])
+            nav_date = str(info_section[14])
+        except (ValueError, IndexError):
+            nav = None
+            nav_date = None
 
         try:
             orders_section = response_sections_list[2]
@@ -509,6 +527,8 @@ class Ticker:
             sell_orders=sell_orders,
             individual_trade_summary=individual_trade_summary,
             corporate_trade_summary=corporate_trade_summary,
+            nav=nav,
+            nav_date=nav_date,
         )
 
     @property
