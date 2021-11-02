@@ -576,3 +576,21 @@ class Ticker:
             "IR": "ممنوع-محفوظ",
         }
         return states.get(state_code, "")
+
+    def get_trade_details(self):
+        session = utils.requests_retry_session()
+        page = session.get(tse_settings.TSE_TRADE_DETAIL_URL.format(
+            self.index), timeout=5)
+        session.close()
+        soup = bs4.BeautifulSoup(page.content, "lxml")
+        xml_rows = soup.find_all("row")
+        rows = []
+        for xml_row in xml_rows:
+            cells = xml_row.find_all("cell")
+            row = [
+                datetime.time.fromisoformat(cells[1].text),
+                int(cells[2].text),
+                float(cells[3].text)
+            ]
+            rows.append(row)
+        return pd.DataFrame(rows, columns=['date', 'volume', 'price'])
