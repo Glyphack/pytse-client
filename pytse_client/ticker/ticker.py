@@ -239,6 +239,88 @@ class Ticker:
         return fiscal_year[0] if fiscal_year else None
 
     @property
+    def flow(self) -> str:
+        """
+        عنوان بازار
+        """
+        flow_code = re.findall(
+            r"Flow='(.*?)'", self._ticker_page_response.text
+        )[0]
+        return self._flow_name(flow_code)
+
+    @property
+    def sta_max(self) -> float:
+        """
+        حداکثر قیمت مجاز
+        """
+        return float(re.findall(
+            r"PSGelStaMax='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def sta_min(self) -> float:
+        """
+        حداقل قیمت مجاز
+        """
+        return float(re.findall(
+            r"PSGelStaMin='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def min_week(self) -> float:
+        """
+        حداقل قیمت هفته اخیر
+        """
+        return float(re.findall(
+            r"MinWeek='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def max_week(self) -> float:
+        """
+        حداکثر قیمت هفته اخیر
+        """
+        return float(re.findall(
+            r"MaxWeek='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def min_year(self) -> float:
+        """
+        حداقل قیمت بازه سال
+        """
+        return float(re.findall(
+            r"MinYear='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def max_year(self) -> float:
+        """
+        حداکثر قیمت بازه سال
+        """
+        return float(re.findall(
+            r"MaxYear='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def month_average_volume(self) -> str:
+        """
+        میانگین حجم ماه
+        """
+        return re.findall(
+            r"QTotTran5JAvg='(.*?)'", self._ticker_page_response.text
+        )[0]
+
+    @property
+    def float_shares(self) -> float:
+        """
+        درصد سهام شناور
+        """
+        return float(re.findall(
+            r"KAjCapValCpsIdx='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
     def client_types(self):
         return download_ticker_client_types_record(self._index)
 
@@ -576,3 +658,14 @@ class Ticker:
             "IR": "ممنوع-محفوظ",
         }
         return states.get(state_code, "")
+
+    def _flow_name(self, flow_code) -> str:
+        flows = {
+            "0": "عمومی - مشترک بین بورس و فرابورس",
+            "1": "بورس",
+            "2": "فرابورس",
+            "3": "آتی",
+            "4": "پایه فرابورس",
+            "5": "پایه فرابورس (منتشر نمی شود)",
+        }
+        return flows.get(flow_code, "")
