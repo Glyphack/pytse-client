@@ -14,6 +14,7 @@ ticker = Ticker("نوری")
 print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
+print(ticker.fulltitle)  # نام و توضیحات شرکت
 print(ticker.url)  # آدرس صفحه سهم
 print(ticker.group_name)  # نام گروه
 print(ticker.fiscal_year)  # سال مالی

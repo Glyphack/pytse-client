@@ -29,7 +29,7 @@ from pytse_client.ticker.api_extractors import (
     get_orders,
 )
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils.persian import replace_persian
+from pytse_client.utils.persian import replace_persian, replace_arabic
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
@@ -148,8 +148,16 @@ class Ticker:
 
     @property
     def title(self) -> str:
-        return re.findall(r"Title='(.*?)',", self._ticker_page_response.text
-                          )[0].split("-")[0].strip()
+        return replace_arabic(
+            re.findall(r"Title='(.*?)',", self._ticker_page_response.text
+                       )[0].split("-")[0]
+        )
+
+    @property
+    def fulltitle(self) -> str:
+        return replace_arabic(
+            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[0]
+        )
 
     @property
     def group_name(self) -> str:

@@ -21,6 +21,7 @@ if __name__ == '__main__':
         try:
             ticker = Ticker(symbol)
             ticker.title
+            ticker.fulltitle
             ticker.url
             ticker.group_name
             ticker.eps
