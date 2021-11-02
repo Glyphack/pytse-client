@@ -36,6 +36,15 @@ print(ticker.count)  # تعداد معاملات
 print(ticker.volume)  # حجم معاملات
 print(ticker.value)  # ارزش معاملات
 print(ticker.last_date)  # آخرین اطلاعات قیمت ناشی از تغییرات شرکتی و معاملات
+print(ticker.flow)  # عنوان بازار
+print(ticker.sta_max)  # حداکثر قیمت مجاز
+print(ticker.sta_min)  # حداقل قیمت مجاز
+print(ticker.min_week)  # حداقل قیمت هفته اخیر
+print(ticker.max_week)  # حداکثر قیمت هفته اخیر
+print(ticker.min_year)  # حداقل قیمت بازه سال
+print(ticker.max_year)  # حداکثر قیمت بازه سال
+print(ticker.month_average_volume)  # میانگین حجم ماه
+print(ticker.float_shares)  # درصد سهام شناور
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.shareholders.percentage.sum())  # جمع سهام داران
 print(ticker.total_shares)
