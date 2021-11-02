@@ -30,6 +30,7 @@ from pytse_client.ticker.api_extractors import (
 )
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils.persian import replace_persian
+from pytse_client.utils.decorators import safe_run
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
@@ -249,6 +250,7 @@ class Ticker:
         return self._flow_name(flow_code)
 
     @property
+    @safe_run
     def sta_max(self) -> float:
         """
         حداکثر قیمت مجاز
@@ -258,6 +260,7 @@ class Ticker:
         )[0])
 
     @property
+    @safe_run
     def sta_min(self) -> float:
         """
         حداقل قیمت مجاز
@@ -267,6 +270,7 @@ class Ticker:
         )[0])
 
     @property
+    @safe_run
     def min_week(self) -> float:
         """
         حداقل قیمت هفته اخیر
@@ -276,6 +280,7 @@ class Ticker:
         )[0])
 
     @property
+    @safe_run
     def max_week(self) -> float:
         """
         حداکثر قیمت هفته اخیر
@@ -285,6 +290,7 @@ class Ticker:
         )[0])
 
     @property
+    @safe_run
     def min_year(self) -> float:
         """
         حداقل قیمت بازه سال
@@ -294,6 +300,7 @@ class Ticker:
         )[0])
 
     @property
+    @safe_run
     def max_year(self) -> float:
         """
         حداکثر قیمت بازه سال
@@ -312,6 +319,7 @@ class Ticker:
         )[0]
 
     @property
+    @safe_run
     def float_shares(self) -> float:
         """
         درصد سهام شناور
