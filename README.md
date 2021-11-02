@@ -172,7 +172,9 @@ ticker = tse.Ticker("نوری")
 print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
-پتروشيمي نوري (نوري)
+پتروشیمی نوری (نوری)
+print(ticker.fulltitle)  # نام و توضیحات شرکت
+پتروشیمی نوری (نوری) - بازار دوم بورس
 print(ticker.url)  # آدرس صفحه سهم
 http://tsetmc.com/Loader.aspx?ParTree=151311&i=19040514831923530
 print(ticker.group_name)  # نام گروه
