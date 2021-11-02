@@ -20,6 +20,8 @@ print(ticker.fiscal_year)  # سال مالی
 print(ticker.eps)  # eps
 print(ticker.p_e_ratio)  # P/E
 print(ticker.group_p_e_ratio)  # group P/E
+print(ticker.nav)  # NAV خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
+print(ticker.nav_date)  # last date of NAV ویژه صندوق‌ها می‌باشد
 print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
 print(ticker.p_s_ratio)  # P/S این نسبت ویژه شرکت‌های تولیدی است
 print(ticker.base_volume)  # حجم مبنا

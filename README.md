@@ -184,6 +184,11 @@ print(ticker.eps)  # EPS
 print(ticker.p_e_ratio)  # P/E
 6.994212135006828
 print(ticker.group_p_e_ratio)  # group P/E
+18.0
+print(ticker.nav)  # NAV خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
+112,881
+print(ticker.nav_date)  # last date of NAV تاریخ بروزرسانی خالص ارزش دارایی‌ها ویژه صندوق‌ها می‌باشد
+1400/7/25 13:58:00
 9.39
 print(ticker.psr)  # PSR این نسبت ویژه شرکت‌های تولیدی است
 66639.9822222222
