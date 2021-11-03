@@ -437,16 +437,13 @@ print(real_time_data.corporate_trade_summary.sell_vol)
 <div dir="ltr">
 
 ```python
+import pytse_client as tse
+
+ticker = tse.Ticker("نوری")
 trade_details = ticker.get_trade_details()
-
 print(trade_details)
-```
-</div>
 
-خروجی این تابع یک دیتا فریم به شکل زیر هست
-<div dir="ltr">
-
-```
+# Output
           date  volume     price
 0     09:00:20   10000  111900.0
 1     09:00:20    4480  111900.0
