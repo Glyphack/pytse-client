@@ -434,11 +434,13 @@ print(real_time_data.corporate_trade_summary.sell_vol)
 ##### ریز معاملات سهام
 از طریق تابع `get_trade_details` می‌توان ریز معاملات آخرین روز معاملاتی سهام را گرفت:
 
+<div dir="ltr">
 ```python
 trade_details = ticker.get_trade_details()
 
 print(trade_details)
 ```
+</div>
 
 خروجی این تابع یک دیتا فریم به شکل زیر هست
 <div dir="ltr">
