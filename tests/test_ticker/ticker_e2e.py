@@ -44,7 +44,6 @@ if __name__ == '__main__':
                 from_when=datetime.timedelta(days=20)
             )
             ticker.get_ticker_real_time_info_response()
-            ticker.get_trade_details()
         except Exception as e:
             logger.exception(f"Exception testing {symbol}")
             symbols_errors[symbol].append(e)
