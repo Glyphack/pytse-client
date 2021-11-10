@@ -29,8 +29,8 @@ from pytse_client.ticker.api_extractors import (
     get_orders,
 )
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils.persian import replace_persian
 from pytse_client.utils.decorators import safe_run
+from pytse_client.utils.persian import replace_persian, replace_arabic
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
 
@@ -149,8 +149,16 @@ class Ticker:
 
     @property
     def title(self) -> str:
-        return re.findall(r"Title='(.*?)',", self._ticker_page_response.text
-                          )[0].split("-")[0].strip()
+        return replace_arabic(
+            re.findall(r"Title='(.*?)',", self._ticker_page_response.text
+                       )[0].split("-")[0]
+        )
+
+    @property
+    def fulltitle(self) -> str:
+        return replace_arabic(
+            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[0]
+        )
 
     @property
     def group_name(self) -> str:
@@ -677,3 +685,21 @@ class Ticker:
             "5": "پایه فرابورس (منتشر نمی شود)",
         }
         return flows.get(flow_code, "")
+
+    def get_trade_details(self):
+        session = utils.requests_retry_session()
+        page = session.get(tse_settings.TSE_TRADE_DETAIL_URL.format(
+            self.index), timeout=5)
+        session.close()
+        soup = bs4.BeautifulSoup(page.content, "lxml")
+        xml_rows = soup.find_all("row")
+        rows = []
+        for xml_row in xml_rows:
+            cells = xml_row.find_all("cell")
+            row = [
+                datetime.time.fromisoformat(cells[1].text),
+                int(cells[2].text),
+                float(cells[3].text)
+            ]
+            rows.append(row)
+        return pd.DataFrame(rows, columns=['date', 'volume', 'price'])

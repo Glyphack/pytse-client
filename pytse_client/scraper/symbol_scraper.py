@@ -74,7 +74,7 @@ def get_market_symbols_from_market_watch_page() -> List[MarketSymbol]:
     # response contain different groups for different data
     response_groups = response.text.split("@")
 
-    if len(response_groups) < 3 or response_groups[2].split(";"):
+    if len(response_groups) < 3:
         logger.error(
             "symbols information from market watch page is not valid",
             extra={"response": response}
