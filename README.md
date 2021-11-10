@@ -28,6 +28,7 @@
         - [شناور سهم](#شناور-سهم)
         - [تاریخچه‌ی سهام داران عمده](#تاریخچهی-سهام-داران-عمده)
         - [اطلاعات لحظه‌ای سهام](#اطلاعات-لحظهای-سهام)
+        - [ریز معاملات سهام](#ریز-معاملات-سهام)
       - [کامیونیتی](#کامیونیتی)
       - [پکیج های مورد نیاز:](#پکیج-های-مورد-نیاز)
       - [الهام گرفته از:](#الهام-گرفته-از)
@@ -229,6 +230,7 @@ print(ticker.best_demand_vol)  # حجم بهترین عرضه
 3620
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام داران عمده
+print(ticker.get_trade_details())  # ریز معاملات روز جاری
 print(ticker.get_ticker_real_time_info_response()) # اطلاعات لحظه‌ای مانند قیمت و پیشنهادات خرید و فروش
 
 
@@ -428,6 +430,34 @@ print(real_time_data.corporate_trade_summary.buy_count)
 print(real_time_data.corporate_trade_summary.buy_vol)
 print(real_time_data.corporate_trade_summary.sell_count)
 print(real_time_data.corporate_trade_summary.sell_vol)
+```
+</div>
+
+##### ریز معاملات سهام
+از طریق تابع `get_trade_details` می‌توان ریز معاملات آخرین روز معاملاتی سهام را گرفت:
+
+<div dir="ltr">
+
+```python
+import pytse_client as tse
+
+ticker = tse.Ticker("نوری")
+trade_details = ticker.get_trade_details()
+print(trade_details)
+
+# Output
+          date  volume     price
+0     09:00:20   10000  111900.0
+1     09:00:20    4480  111900.0
+2     09:00:20    3171  111900.0
+3     09:00:20    1647  111900.0
+4     09:00:20    1101  111900.0
+       ...     ...       ...
+6478  12:29:57    1163  116000.0
+6479  12:29:57    2159  116000.0
+6480  12:29:57     795  116000.0
+6481  12:29:58     257  116000.0
+6482  12:29:59     601  116000.0
 ```
 </div>
 

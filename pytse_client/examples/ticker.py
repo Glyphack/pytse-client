@@ -40,6 +40,7 @@ print(ticker.last_date)  # آخرین اطلاعات قیمت ناشی از تغ
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.shareholders.percentage.sum())  # جمع سهام داران
 print(ticker.total_shares)
+print(ticker.get_trade_details())  # ریز معاملات روز جاری
 
 real_time_data = ticker.get_ticker_real_time_info_response()
 print(real_time_data.individual_trade_summary.buy_count)
