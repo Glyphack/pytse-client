@@ -21,7 +21,6 @@ if __name__ == '__main__':
         try:
             ticker = Ticker(symbol)
             ticker.title
-            ticker.fulltitle
             ticker.url
             ticker.group_name
             ticker.eps
@@ -39,8 +38,8 @@ if __name__ == '__main__':
             ticker.volume
             ticker.value
             ticker.last_date
-            ticker.shareholders
             ticker.total_shares
+            ticker.shareholders
             ticker.get_shareholders_history(
                 from_when=datetime.timedelta(days=20)
             )

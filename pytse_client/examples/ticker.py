@@ -14,7 +14,6 @@ ticker = Ticker("نوری")
 print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
-print(ticker.fulltitle)  # نام و توضیحات شرکت
 print(ticker.url)  # آدرس صفحه سهم
 print(ticker.group_name)  # نام گروه
 print(ticker.fiscal_year)  # سال مالی
@@ -37,9 +36,9 @@ print(ticker.count)  # تعداد معاملات
 print(ticker.volume)  # حجم معاملات
 print(ticker.value)  # ارزش معاملات
 print(ticker.last_date)  # آخرین اطلاعات قیمت ناشی از تغییرات شرکتی و معاملات
+print(ticker.total_shares)  # تعداد سهام
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.shareholders.percentage.sum())  # جمع سهام داران
-print(ticker.total_shares)
 print(ticker.get_trade_details())  # ریز معاملات روز جاری
 
 real_time_data = ticker.get_ticker_real_time_info_response()
