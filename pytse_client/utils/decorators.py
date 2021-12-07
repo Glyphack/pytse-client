@@ -1,11 +1,19 @@
-def safe_run(func):
+import functools
 
-    def func_wrapper(*args, **kwargs):
 
-        try:
-            return func(*args, **kwargs)
+def catch(*exception_args):
 
-        except Exception:
-            return None
+    def wrapper(func):
 
-    return func_wrapper
+        @functools.wraps(func)
+        def inner(*args, **kwargs):
+
+            try:
+                return func(*args, **kwargs)
+
+            except exception_args:
+                return None
+
+        return inner
+
+    return wrapper
