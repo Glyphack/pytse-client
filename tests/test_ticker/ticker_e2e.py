@@ -47,12 +47,13 @@ if __name__ == '__main__':
             ticker.max_year
             ticker.month_average_volume
             ticker.float_shares
-            ticker.shareholders
             ticker.total_shares
+            ticker.shareholders
             ticker.get_shareholders_history(
                 from_when=datetime.timedelta(days=20)
             )
             ticker.get_ticker_real_time_info_response()
+            ticker.get_trade_details()
         except Exception as e:
             logger.exception(f"Exception testing {symbol}")
             symbols_errors[symbol].append(e)

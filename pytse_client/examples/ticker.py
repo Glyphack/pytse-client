@@ -45,9 +45,10 @@ print(ticker.min_year)  # حداقل قیمت بازه سال
 print(ticker.max_year)  # حداکثر قیمت بازه سال
 print(ticker.month_average_volume)  # میانگین حجم ماه
 print(ticker.float_shares)  # درصد سهام شناور
+print(ticker.total_shares)  # تعداد سهام
 print(ticker.shareholders)  # اطلاعات سهام داران عمده
 print(ticker.shareholders.percentage.sum())  # جمع سهام داران
-print(ticker.total_shares)
+print(ticker.get_trade_details())  # ریز معاملات روز جاری
 
 real_time_data = ticker.get_ticker_real_time_info_response()
 print(real_time_data.individual_trade_summary.buy_count)
