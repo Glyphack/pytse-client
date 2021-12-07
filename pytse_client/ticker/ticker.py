@@ -29,6 +29,7 @@ from pytse_client.ticker.api_extractors import (
     get_orders,
 )
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client.utils.decorators import catch
 from pytse_client.utils.persian import replace_persian, replace_arabic
 from tenacity import retry, wait_random
 from tenacity.before_sleep import before_sleep_log
@@ -245,6 +246,95 @@ class Ticker:
             re.DOTALL
         )
         return fiscal_year[0] if fiscal_year else None
+
+    @property
+    def flow(self) -> str:
+        """
+        عنوان بازار
+        """
+        flow_code = re.findall(
+            r"Flow='(.*?)'", self._ticker_page_response.text
+        )[0]
+        return self._flow_name(flow_code)
+
+    @property
+    @catch(IndexError, ValueError)
+    def sta_max(self) -> float:
+        """
+        حداکثر قیمت مجاز
+        """
+        return float(re.findall(
+            r"PSGelStaMax='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    @catch(IndexError, ValueError)
+    def sta_min(self) -> float:
+        """
+        حداقل قیمت مجاز
+        """
+        return float(re.findall(
+            r"PSGelStaMin='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    @catch(IndexError, ValueError)
+    def min_week(self) -> float:
+        """
+        حداقل قیمت هفته اخیر
+        """
+        return float(re.findall(
+            r"MinWeek='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    @catch(IndexError, ValueError)
+    def max_week(self) -> float:
+        """
+        حداکثر قیمت هفته اخیر
+        """
+        return float(re.findall(
+            r"MaxWeek='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    @catch(IndexError, ValueError)
+    def min_year(self) -> float:
+        """
+        حداقل قیمت بازه سال
+        """
+        return float(re.findall(
+            r"MinYear='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    @catch(IndexError, ValueError)
+    def max_year(self) -> float:
+        """
+        حداکثر قیمت بازه سال
+        """
+        return float(re.findall(
+            r"MaxYear='(.*?)'", self._ticker_page_response.text
+        )[0])
+
+    @property
+    def month_average_volume(self) -> str:
+        """
+        میانگین حجم ماه
+        """
+        return re.findall(
+            r"QTotTran5JAvg='(.*?)'", self._ticker_page_response.text
+        )[0]
+
+    @property
+    @catch(IndexError, ValueError)
+    def float_shares(self) -> float:
+        """
+        درصد سهام شناور
+        """
+        return float(re.findall(
+            r"KAjCapValCpsIdx='(.*?)'", self._ticker_page_response.text
+        )[0])
 
     @property
     def client_types(self):
@@ -584,6 +674,17 @@ class Ticker:
             "IR": "ممنوع-محفوظ",
         }
         return states.get(state_code, "")
+
+    def _flow_name(self, flow_code) -> str:
+        flows = {
+            "0": "عمومی - مشترک بین بورس و فرابورس",
+            "1": "بورس",
+            "2": "فرابورس",
+            "3": "آتی",
+            "4": "پایه فرابورس",
+            "5": "پایه فرابورس (منتشر نمی شود)",
+        }
+        return flows.get(flow_code, "")
 
     def get_trade_details(self):
         session = utils.requests_retry_session()

@@ -222,6 +222,24 @@ print(ticker.value)  # ارزش معاملات
 286919407590
 print(ticker.last_date)  # تاریخ آخرین اطلاعات قیمت پایانی ناشی از تغییرات شرکتی و معاملات
 2021-11-01 12:29:54
+print(ticker.flow)  # عنوان بازار
+بورس
+print(ticker.sta_max)  # حداکثر قیمت مجاز
+115760.0
+print(ticker.sta_min)  # حداقل قیمت مجاز
+104740.0
+print(ticker.min_week)  # حداقل قیمت هفته اخیر
+104500.0
+print(ticker.max_week)  # حداکثر قیمت هفته اخیر
+111830.0
+print(ticker.min_year)  # حداقل قیمت بازه سال
+48320.0
+print(ticker.max_year)  # حداکثر قیمت بازه سال
+197000.0
+print(ticker.month_average_volume)  # میانگین حجم ماه
+3865804
+print(ticker.float_shares)  # درصد سهام شناور
+10.0
 print(ticker.best_supply_price)  # قیمت بهترین تقاضا
 109960
 print(ticker.best_supply_vol)  # حجم بهترین تقاضا
