@@ -49,6 +49,16 @@ pip install pytse-client
 
 </div>
 
+## نصب آخرین نسخه در حال توسعه
+
+<div dir="ltr">
+
+```bash
+pip install git+https://github.com/Glyphack/pytse-client.git
+```
+
+</div>
+
 ## نحوه استفاده
 
 ### دانلود سابقه سهم‌ها
