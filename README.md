@@ -344,7 +344,7 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 ```python
 import pytse_client as tse
 
-ticker = Ticker("وبملت")
+ticker = tse.Ticker("وبملت")
 print(ticker.shareholders)  # اطلاعات سهام‌داران عمده
 
 # Output
@@ -376,7 +376,7 @@ print(ticker.shareholders)  # اطلاعات سهام‌داران عمده
 ```python
 import pytse_client as tse
 
-ticker = Ticker("وبملت")
+ticker = tse.Ticker("وبملت")
 
 print(ticker.shareholders.percentage.sum())  # جمع درصد سهام‌داران عمده
 53.63
@@ -393,7 +393,7 @@ print(100 - ticker.shareholders.percentage.sum())  # درصد سهام شناو�
 ```python
 import pytse_client as tse
 
-ticker = Ticker("وبملت")
+ticker = tse.Ticker("وبملت")
 ticker.get_shareholders_history(
     from_when=datetime.timedelta(days=90),  # تعداد روز‌های گذشته که مقدار پیشفرض ۹۰ روز است
     to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
@@ -444,7 +444,7 @@ Retrying pytse_client.ticker.ticker.Ticker._get_ticker_daily_info_page_response 
 ```python
 import pytse_client as tse
 
-ticker = Ticker("وبملت")
+ticker = tse.Ticker("وبملت")
 real_time_data = ticker.get_ticker_real_time_info_response()
 
 print(real_time_data.buy_orders) # پیشنهادات خرید
