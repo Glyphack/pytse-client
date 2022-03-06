@@ -45,7 +45,7 @@ def get_ticker_old_index(ticker_symbol: str, isIndex: bool = False):
     return symbols_information().get(ticker_symbol, {}).get("old", []).copy()
 
 
-def all_symbols(isIndex: bool) -> Set:
+def all_symbols(isIndex: bool = False) -> Set:
     return set(symbols_information(isIndex).keys())
 
 
