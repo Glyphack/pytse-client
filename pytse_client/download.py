@@ -92,6 +92,7 @@ def download(
                     df_list[symbol] = adjust_price(df_list[symbol])
             else:
                 _adjust_data_frame_for_fIndex(df, include_jdate)
+                df_list[symbol] = df
 
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
@@ -217,6 +218,8 @@ def _adjust_data_frame_for_fIndex(df, include_jdate):
         df.jdate = df.date.apply(
             lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
         )
+    else:
+        df.drop(columns=["jdate"], inplace=True)
 
 
 @retry(
@@ -242,6 +245,11 @@ def download_ticker_daily_record(ticker_index: str, session: Session):
     return pd.read_csv(data)
 
 
+@retry(
+    retry=retry_if_exception_type(HTTPError),
+    wait=wait_random(min=1, max=4),
+    before_sleep=before_sleep_log(logger, logging.DEBUG)
+)
 def download_fIndex_record(fIndex: str, session: Session):
     url = tse_settings.TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS.format(fIndex)
     response = session.get(url, timeout=10)
@@ -256,13 +264,14 @@ def download_fIndex_record(fIndex: str, session: Session):
 
     response.raise_for_status()
 
-    data = StringIO(response.text)
+    data = response.text
     data = re.split(r'\;|\,', data)
     dates = data[::2]
     values = data[1::2]
     values = list(map(float, values))
     df = pd.DataFrame(
         tuple(zip(dates, values)), columns=['jdate', 'value'])
+
     return df
 
 

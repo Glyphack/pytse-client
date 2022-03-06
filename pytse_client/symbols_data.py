@@ -32,7 +32,7 @@ def symbols_information(isIndex: bool = False) -> Dict[str, Dict]:
 
 
 def get_fIndex_index(fIndex_name: str):
-    return symbols_information(True).get(fIndex_name, {}).get("index")
+    return symbols_information(isIndex=True).get(fIndex_name, {}).get("index")
 
 
 def get_ticker_index(ticker_symbol: str):

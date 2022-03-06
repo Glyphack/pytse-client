@@ -10,7 +10,7 @@ if __name__ == '__main__':
     ls = re.findall(
         r'<tr><td><a target="_blank" href="Loader\.aspx\?ParTree=15131J&i=\d*">.*</a></td>', text)
 
-    final_list = []
+    final_dict = {}
 
     for toBeIndex in ls:
         key = re.search(
@@ -21,8 +21,7 @@ if __name__ == '__main__':
         section_number = int(section_number.group(
             1)) if section_number != None else ""
         key = re.sub(r'^\d+|\d+$|-', '', key)
-        final_list.append(
-            {key: {"index": index, "section_number": section_number}})
+        final_dict[key] = {"index": index, "section_number": section_number}
 
     with open("indices_name.json", "w") as f:
-        jsp = json.dump(final_list, f, indent=2, ensure_ascii=False)
+        jsp = json.dump(final_dict, f, indent=2, ensure_ascii=False)
