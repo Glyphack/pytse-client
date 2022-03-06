@@ -23,5 +23,6 @@ if __name__ == '__main__':
         key = re.sub(r'^\d+|\d+$|-', '', key)
         final_list.append(
             {key: {"index": index, "section_number": section_number}})
+
     with open("indices_name.json", "w") as f:
         jsp = json.dump(final_list, f, indent=2, ensure_ascii=False)

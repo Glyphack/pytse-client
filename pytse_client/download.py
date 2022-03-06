@@ -4,6 +4,7 @@ from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
+import re
 import jdatetime
 import pandas as pd
 from pytse_client import config, symbols_data, translations, tse_settings
@@ -23,10 +24,11 @@ def download(
     write_to_csv: bool = False,
     include_jdate: bool = False,
     base_path: str = config.DATA_BASE_PATH,
-    adjust: bool = False
+    adjust: bool = False,
+    isIndex: bool = False
 ) -> Dict[str, pd.DataFrame]:
     if symbols == "all":
-        symbols = symbols_data.all_symbols()
+        symbols = symbols_data.all_symbols(isIndex)
     elif isinstance(symbols, str):
         symbols = [symbols]
 
@@ -39,16 +41,25 @@ def download(
                     and symbols_data.get_ticker_index(symbol) is None):
                 ticker_indexes = [symbol]
             else:
-                ticker_index = _handle_ticker_index(symbol)
+                ticker_index = _handle_ticker_index(symbol, isIndex)
                 if ticker_index is None:
                     raise Exception(f"Cannot find symbol: {symbol}")
-                ticker_indexes = symbols_data.get_ticker_old_index(symbol)
+                ticker_indexes = symbols_data.get_ticker_old_index(
+                    symbol, isIndex)
                 ticker_indexes.insert(0, ticker_index)
-            for index in ticker_indexes:
-                future = executor.submit(
-                    download_ticker_daily_record, index, session
-                )
-                future_to_symbol[future] = symbol
+            if not isIndex:
+                for index in ticker_indexes:
+                    future = executor.submit(
+                        download_ticker_daily_record, index, session
+                    )
+
+                    future_to_symbol[future] = symbol
+            else:
+                for index in ticker_indexes:
+                    future = executor.submit(
+                        download_fIndex_record, index, session
+                    )
+                    future_to_symbol[future] = symbol
 
         for future in futures.as_completed(future_to_symbol):
             symbol = future_to_symbol[future]
@@ -60,25 +71,27 @@ def download(
                     extra={"Error": ex}
                 )
                 continue
+            if not isIndex:
+                df = df.iloc[::-1].reset_index(drop=True)
+                df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
+                df = df.drop(columns=["<PER>", "<TICKER>"])
+                _adjust_data_frame(df, include_jdate)
 
-            df = df.iloc[::-1].reset_index(drop=True)
-            df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
-            df = df.drop(columns=["<PER>", "<TICKER>"])
-            _adjust_data_frame(df, include_jdate)
+                if symbol in df_list:
+                    df_list[symbol] = (
+                        df_list[symbol].append(
+                            df,
+                            ignore_index=True,
+                            sort=False
+                        ).sort_values('date').reset_index(drop=True)
+                    )
+                else:
+                    df_list[symbol] = df
 
-            if symbol in df_list:
-                df_list[symbol] = (
-                    df_list[symbol].append(
-                        df,
-                        ignore_index=True,
-                        sort=False
-                    ).sort_values('date').reset_index(drop=True)
-                )
+                if adjust:
+                    df_list[symbol] = adjust_price(df_list[symbol])
             else:
-                df_list[symbol] = df
-
-            if adjust:
-                df_list[symbol] = adjust_price(df_list[symbol])
+                _adjust_data_frame_for_fIndex(df, include_jdate)
 
             if write_to_csv:
                 Path(base_path).mkdir(parents=True, exist_ok=True)
@@ -135,9 +148,9 @@ def adjust_price(
 
     Description
     -----------
-    #Note: adjustment does not include Tenth and twentieth days
+    # Note: adjustment does not include Tenth and twentieth days
     df.index = range(0,101,1)
-    #step is 1
+    # step is 1
     step = df.index.step
     diff = [10,20]
     ratio_list = [0.5, 0.8]
@@ -195,6 +208,17 @@ def _adjust_data_frame(df, include_jdate):
         )
 
 
+def _adjust_data_frame_for_fIndex(df, include_jdate):
+    df["date"] = df["jdate"].apply(
+        lambda x: jdatetime.datetime.togregorian(jdatetime.datetime.strptime(x, "%Y/%m/%d")))
+    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
+    if include_jdate:
+        df['jdate'] = ""
+        df.jdate = df.date.apply(
+            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
+        )
+
+
 @retry(
     retry=retry_if_exception_type(HTTPError),
     wait=wait_random(min=1, max=4),
@@ -216,6 +240,30 @@ def download_ticker_daily_record(ticker_index: str, session: Session):
 
     data = StringIO(response.text)
     return pd.read_csv(data)
+
+
+def download_fIndex_record(fIndex: str, session: Session):
+    url = tse_settings.TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS.format(fIndex)
+    response = session.get(url, timeout=10)
+    if 400 <= response.status_code < 500:
+        logger.error(
+            f"Cannot read daily trade records from the url: {url}",
+            extra={
+                "response": response.text,
+                "code": response.status_code
+            }
+        )
+
+    response.raise_for_status()
+
+    data = StringIO(response.text)
+    data = re.split(r'\;|\,', data)
+    dates = data[::2]
+    values = data[1::2]
+    values = list(map(float, values))
+    df = pd.DataFrame(
+        tuple(zip(dates, values)), columns=['jdate', 'value'])
+    return df
 
 
 def download_client_types_records(
@@ -260,8 +308,17 @@ def download_client_types_records(
     return df_list
 
 
-def _handle_ticker_index(symbol):
+def _handle_fIndex_index(symbol):
+    fIndex = symbols_data.get_fIndex_index(symbol)
+    return fIndex
+
+
+def _handle_ticker_index(symbol, isIndex: bool):
+    if isIndex:
+        return _handle_fIndex_index(symbol)
+
     ticker_index = symbols_data.get_ticker_index(symbol)
+
     if ticker_index is None:
         market_symbol = get_symbol_info(symbol)
         if market_symbol is not None:
@@ -343,12 +400,12 @@ def get_symbol_info(symbol_name: str):
 
     symbols = response.text.split(';')
     market_symbol = MarketSymbol(
-                code=None,
-                symbol=None,
-                index=None,
-                name=None,
-                old=[],
-            )
+        code=None,
+        symbol=None,
+        index=None,
+        name=None,
+        old=[],
+    )
     for symbol_full_info in symbols:
         if symbol_full_info.strip() == "":
             continue
