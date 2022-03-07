@@ -24,4 +24,4 @@ if __name__ == '__main__':
         final_dict[key] = {"index": index, "section_number": section_number}
 
     with open("indices_name.json", "w") as f:
-        jsp = json.dump(final_dict, f, indent=2, ensure_ascii=False)
+        json.dump(final_dict, f, indent=2, ensure_ascii=False)
