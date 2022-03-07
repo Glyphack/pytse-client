@@ -322,7 +322,7 @@ def _handle_fIndex_index(symbol):
     return fIndex
 
 
-def _handle_ticker_index(symbol, isIndex: bool):
+def _handle_ticker_index(symbol, isIndex: bool = False):
     if isIndex:
         return _handle_fIndex_index(symbol)
 
