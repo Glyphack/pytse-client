@@ -7,16 +7,16 @@ if __name__ == '__main__':
     text = req.get(
         "http://www.tsetmc.com/Loader.aspx?Partree=151315&Flow=1").text
 
-    ls = re.findall(
+    market_indexes = re.findall(
         r'<tr><td><a target="_blank" href="Loader\.aspx\?ParTree=15131J&i=\d*">.*</a></td>', text)
 
     final_dict = {}
 
-    for toBeIndex in ls:
+    for market_index in market_indexes:
         key = re.search(
-            '">(.*)</a></td>', toBeIndex).group(1)
+            '">(.*)</a></td>', market_index).group(1)
         index = re.search(
-            '<tr><td><a target="_blank" href="Loader\.aspx\?ParTree=15131J&i=(\d*)', toBeIndex).group(1)
+            '<tr><td><a target="_blank" href="Loader\.aspx\?ParTree=15131J&i=(\d*)', market_index).group(1)
         section_number = re.search(r'(^\d+|\d+$)', key)
         section_number = int(section_number.group(
             1)) if section_number != None else ""
