@@ -47,19 +47,14 @@ def download(
                 ticker_indexes = symbols_data.get_ticker_old_index(
                     symbol, isIndex)
                 ticker_indexes.insert(0, ticker_index)
-            if not isIndex:
-                for index in ticker_indexes:
-                    future = executor.submit(
-                        download_ticker_daily_record, index, session
-                    )
+            
+            download_symbol_record = download_fIndex_record if isIndex else download_ticker_daily_record            
+            for index in ticker_indexes:
+                future = executor.submit(
+                    download_symbol_record, index, session
+                )
 
-                    future_to_symbol[future] = symbol
-            else:
-                for index in ticker_indexes:
-                    future = executor.submit(
-                        download_fIndex_record, index, session
-                    )
-                    future_to_symbol[future] = symbol
+                future_to_symbol[future] = symbol
 
         for future in futures.as_completed(future_to_symbol):
             symbol = future_to_symbol[future]
