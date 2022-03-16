@@ -5,49 +5,49 @@ from pytse_client import config
 from pytse_client.scraper.symbol_scraper import MarketSymbol
 
 ticker_name_to_index_mapping = None
-fIndex_name_to_index_mapping = None  # fIndex = financial index
+financial_index_name_to_index_mapping = None  
 
 
-def symbols_information(isIndex: bool = False) -> Dict[str, Dict]:
+def financial_indexes_information() -> Dict[str, Dict]:
+    global financial_index_name_to_index_mapping
+    
+    if financial_index_name_to_index_mapping is None:
+        with open(
+            f"{config.pytse_dir}/data/indices_name.json", "r", encoding="utf8"
+        ) as symbols_name:
+            financial_index_name_to_index_mapping = json.load(symbols_name)
+    
+    return financial_index_name_to_index_mapping
+
+def symbols_information() -> Dict[str, Dict]:
     global ticker_name_to_index_mapping
-    global fIndex_name_to_index_mapping
-
-    to_return = ticker_name_to_index_mapping if not isIndex else fIndex_name_to_index_mapping
-
-    if not isIndex and ticker_name_to_index_mapping is None:
+    
+    if ticker_name_to_index_mapping is None:
         with open(
             f"{config.pytse_dir}/data/symbols_name.json", "r", encoding="utf8"
         ) as symbols_name:
             ticker_name_to_index_mapping = json.load(symbols_name)
-            to_return = ticker_name_to_index_mapping
-
-    elif isIndex and fIndex_name_to_index_mapping is None:
-        with open(
-            f"{config.pytse_dir}/data/indices_name.json", "r", encoding="utf8"
-        ) as symbols_name:
-            fIndex_name_to_index_mapping = json.load(symbols_name)
-            to_return = fIndex_name_to_index_mapping
-
-    return to_return
+            
+    return ticker_name_to_index_mapping
 
 
-def get_fIndex_index(fIndex_name: str):
-    return symbols_information(isIndex=True).get(fIndex_name, {}).get("index")
+def get_financial_index(financial_index_name: str):
+    return financial_indexes_information().get(financial_index_name, {}).get("index")
 
 
 def get_ticker_index(ticker_symbol: str):
     return symbols_information().get(ticker_symbol, {}).get("index")
 
 
-def get_ticker_old_index(ticker_symbol: str, isIndex: bool = False):
-    if isIndex:
-        return []
+def get_ticker_old_index(ticker_symbol: str):
     return symbols_information().get(ticker_symbol, {}).get("old", []).copy()
 
 
-def all_symbols(isIndex: bool = False) -> Set:
-    return set(symbols_information(isIndex).keys())
+def all_symbols() -> Set:
+    return set(symbols_information().keys())
 
+def all_financial_index() -> Set:
+    return set(financial_indexes_information().keys())
 
 def append_symbol_to_file(
     market_symbol: MarketSymbol,
