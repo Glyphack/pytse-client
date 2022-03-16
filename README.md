@@ -19,7 +19,8 @@
   - [نصب](#نصب)
   - [نصب آخرین نسخه در حال توسعه](#نصب-آخرین-نسخه-در-حال-توسعه)
   - [نحوه استفاده](#نحوه-استفاده)
-    - [دانلود سابقه سهم‌ها](#دانلود-سابقه-سهمها)
+    - [دانلود سابقه سهم ها](#دانلود-سابقه-سهم-ها)
+    - [دانلود سابقه شاخص های مالی](#دانلود-سابقه-شاخص-های-مالی)
     - [دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا](#دانلود-سابقه-معاملات-حقیقی-و-حقوقی-به-صورت-مجزا)
     - [ماژول Ticker](#ماژول-ticker)
         - [نکته ۱](#نکته-۱)
@@ -65,7 +66,7 @@ pip install git+https://github.com/Glyphack/pytse-client.git
 
 ## نحوه استفاده
 
-### دانلود سابقه سهم‌ها
+### دانلود سابقه سهم ها
 
 با استفاده از این تابع می‌توان سابقه سهام رو دریافت کرد و هم اون رو ذخیره و هم توی کد استفاده کرد
 
@@ -126,6 +127,8 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 
 </div>
 
+### دانلود سابقه شاخص های مالی
+
 <div style="line-height:80px;">
 برای دانلود سابقه شاخص های منتخب بازار که از طریق این <a href="http://www.tsetmc.com/Loader.aspx?Partree=151315&Flow=1">  لینک </a>
 می توانید لیست نام آن ها را ملاحظه کنید کافی است اسم شاخص یا شاخص های مورد نظر خود را به صورت
@@ -135,14 +138,10 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 `symbols`
 وارد کنید.
 
-همینطور در صورتی که علاقه داشته باشید دیتای مربوط به همه شاخص ها را دریافت کنید کافی است که در بخش `symbols`
+همینطور در صورتی که علاقه داشته باشید دیتای مربوط به همه شاخص ها را دریافت کنید کافی است که در برابر کلید `symbols`
 رشته
 `"all"`
 وارد کنید.
-
-نکته بسیار مهم اینست که در صورتی که قصد دریافت هر گونه داده‌ی مربوط به شاخص را دارید حتما باید در تابع `download`
-فیلد `isIndex=True`
-قرار دهید.
 
 چند نمونه از دریافت داده‌های شاخصی را می‌توانید در پایین مشاهده کنید.
 
@@ -150,11 +149,12 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 <div dir="ltr">
 
 ```python
-import pytse_client as tse
+from pytse_client.download import download_financial_indexes
 
-tse.download(symbols="شاخص كل", write_to_csv=True, isIndex=True)
+download_financial_indexes(symbols="all", write_to_csv=True, base_path="hello")
 
-tse.download(symbols="all", write_to_csv=True, include_jdate=True, isIndex=True)
+
+download_financial_indexes(symbols=["شاخص قيمت 50 شركت", "فني مهندسي"], write_to_csv=True, include_jdate=True)
 ```
 
 </div>
