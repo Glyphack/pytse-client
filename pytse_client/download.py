@@ -19,6 +19,41 @@ from tenacity.before_sleep import before_sleep_log
 logger = logging.getLogger(config.LOGGER_NAME)
 
 
+
+def _handle_ticker_index(symbol):
+    ticker_index = symbols_data.get_ticker_index(symbol)
+
+    if ticker_index is None:
+        market_symbol = get_symbol_info(symbol)
+        if market_symbol is not None:
+            symbols_data.append_symbol_to_file(market_symbol)
+            ticker_index = market_symbol.index
+    return ticker_index
+
+
+
+def _extract_ticker_client_types_data(ticker_index: str) -> List:
+    url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
+    with requests_retry_session() as session:
+        response = session.get(url, timeout=5)
+    data = response.text.split(";")
+    data = [row.split(",") for row in data]
+    return data
+
+
+
+def _create_financial_index_from_text_response(data):
+    data = re.split(r'\;|\,', data)
+    dates = data[::2]
+    values = data[1::2]
+    values = list(map(float, values))
+    df = pd.DataFrame(
+        tuple(zip(dates, values)), columns=['jdate', 'value'])
+        
+    return df
+
+
+
 def download(
     symbols: Union[List, str],
     write_to_csv: bool = False,
@@ -110,6 +145,8 @@ def download(
     df_list[symbol] = df
     """
 
+
+
 def adjust_price(
     df: pd.DataFrame
 ) -> pd.DataFrame:
@@ -197,6 +234,7 @@ def adjust_price(
     return new_df
 
 
+
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
     if include_jdate:
@@ -204,6 +242,7 @@ def _adjust_data_frame(df, include_jdate):
         df.jdate = df.date.apply(
             lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
         )
+
 
 
 def _adjust_data_frame_for_fIndex(df, include_jdate):
@@ -217,6 +256,7 @@ def _adjust_data_frame_for_fIndex(df, include_jdate):
         )
     else:
         df.drop(columns=["jdate"], inplace=True)
+
 
 
 @retry(
@@ -260,14 +300,13 @@ def download_fIndex_record(fIndex: str, session: Session):
         )
 
     response.raise_for_status()
-
+    
     data = response.text
-    data = re.split(r'\;|\,', data)
-    dates = data[::2]
-    values = data[1::2]
-    values = list(map(float, values))
-    df = pd.DataFrame(
-        tuple(zip(dates, values)), columns=['jdate', 'value'])
+    
+    if not data or ";" not in data or "," not in data:
+        raise ValueError(f"Invalid response from the url: {url}.\nExpected valid financial index data.")
+    
+    df = _create_financial_index_from_text_response(data)
 
     return df
 
@@ -327,7 +366,6 @@ def download_financial_indexes(
      
 
 
-
 def download_client_types_records(
     symbols: Union[List, str],
     write_to_csv: bool = False,
@@ -370,16 +408,6 @@ def download_client_types_records(
     return df_list
 
 
-def _handle_ticker_index(symbol):
-    ticker_index = symbols_data.get_ticker_index(symbol)
-
-    if ticker_index is None:
-        market_symbol = get_symbol_info(symbol)
-        if market_symbol is not None:
-            symbols_data.append_symbol_to_file(market_symbol)
-            ticker_index = market_symbol.index
-    return ticker_index
-
 
 @retry(
     retry=retry_if_exception_type(HTTPError),
@@ -421,14 +449,6 @@ def download_ticker_client_types_record(ticker_index: Optional[str]):
     return client_types_data_frame
 
 
-def _extract_ticker_client_types_data(ticker_index: str) -> List:
-    url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
-    with requests_retry_session() as session:
-        response = session.get(url, timeout=5)
-    data = response.text.split(";")
-    data = [row.split(",") for row in data]
-    return data
-
 
 def get_symbol_id(symbol_name: str):
     url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
@@ -442,6 +462,7 @@ def get_symbol_id(symbol_name: str):
     if persian.replace_arabic(symbol_name) == symbol_full_info[0].strip():
         return symbol_full_info[2]  # symbol id
     return None
+
 
 
 def get_symbol_info(symbol_name: str):
