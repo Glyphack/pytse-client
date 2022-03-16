@@ -31,7 +31,6 @@ def _handle_ticker_index(symbol):
     return ticker_index
 
 
-
 def _extract_ticker_client_types_data(ticker_index: str) -> List:
     url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
     with requests_retry_session() as session:
@@ -51,6 +50,27 @@ def _create_financial_index_from_text_response(data):
         tuple(zip(dates, values)), columns=['jdate', 'value'])
         
     return df
+
+def _adjust_data_frame(df, include_jdate):
+    df.date = pd.to_datetime(df.date, format="%Y%m%d")
+    if include_jdate:
+        df['jdate'] = ""
+        df.jdate = df.date.apply(
+            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
+        )
+
+
+def _adjust_data_frame_for_fIndex(df, include_jdate):
+    df["date"] = df["jdate"].apply(
+        lambda x: jdatetime.datetime.togregorian(jdatetime.datetime.strptime(x, "%Y/%m/%d")))
+    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
+    if include_jdate:
+        df['jdate'] = ""
+        df.jdate = df.date.apply(
+            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
+        )
+    else:
+        df.drop(columns=["jdate"], inplace=True)
 
 
 
@@ -145,8 +165,6 @@ def download(
     df_list[symbol] = df
     """
 
-
-
 def adjust_price(
     df: pd.DataFrame
 ) -> pd.DataFrame:
@@ -234,28 +252,6 @@ def adjust_price(
     return new_df
 
 
-
-def _adjust_data_frame(df, include_jdate):
-    df.date = pd.to_datetime(df.date, format="%Y%m%d")
-    if include_jdate:
-        df['jdate'] = ""
-        df.jdate = df.date.apply(
-            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
-        )
-
-
-
-def _adjust_data_frame_for_fIndex(df, include_jdate):
-    df["date"] = df["jdate"].apply(
-        lambda x: jdatetime.datetime.togregorian(jdatetime.datetime.strptime(x, "%Y/%m/%d")))
-    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
-    if include_jdate:
-        df['jdate'] = ""
-        df.jdate = df.date.apply(
-            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
-        )
-    else:
-        df.drop(columns=["jdate"], inplace=True)
 
 
 
