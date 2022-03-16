@@ -158,13 +158,6 @@ def download(
 
 
 
-    """
-    if symbols == "all":
-        symbols = symbols_data.all_symbols()
-    _adjust_data_frame_for_fIndex(df, include_jdate)
-    df_list[symbol] = df
-    """
-
 def adjust_price(
     df: pd.DataFrame
 ) -> pd.DataFrame:
