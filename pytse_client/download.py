@@ -19,7 +19,6 @@ from tenacity.before_sleep import before_sleep_log
 logger = logging.getLogger(config.LOGGER_NAME)
 
 
-
 def _handle_ticker_index(symbol):
     ticker_index = symbols_data.get_ticker_index(symbol)
 
@@ -40,7 +39,6 @@ def _extract_ticker_client_types_data(ticker_index: str) -> List:
     return data
 
 
-
 def _create_financial_index_from_text_response(data):
     data = re.split(r'\;|\,', data)
     dates = data[::2]
@@ -48,8 +46,8 @@ def _create_financial_index_from_text_response(data):
     values = list(map(float, values))
     df = pd.DataFrame(
         tuple(zip(dates, values)), columns=['jdate', 'value'])
-        
     return df
+
 
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
@@ -62,7 +60,8 @@ def _adjust_data_frame(df, include_jdate):
 
 def _adjust_data_frame_for_fIndex(df, include_jdate):
     df["date"] = df["jdate"].apply(
-        lambda x: jdatetime.datetime.togregorian(jdatetime.datetime.strptime(x, "%Y/%m/%d")))
+        lambda x: jdatetime.datetime.
+        togregorian(jdatetime.datetime.strptime(x, "%Y/%m/%d")))
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     if include_jdate:
         df['jdate'] = ""
@@ -71,7 +70,6 @@ def _adjust_data_frame_for_fIndex(df, include_jdate):
         )
     else:
         df.drop(columns=["jdate"], inplace=True)
-
 
 
 def download(
@@ -101,7 +99,7 @@ def download(
                 ticker_indexes = symbols_data.get_ticker_old_index(
                     symbol)
                 ticker_indexes.insert(0, ticker_index)
-            
+
             for index in ticker_indexes:
                 future = executor.submit(
                     download_ticker_daily_record, index, session
@@ -155,7 +153,6 @@ def download(
         print("Warning, download did not complete, re-run the code")
     session.close()
     return df_list
-
 
 
 def adjust_price(
@@ -245,9 +242,6 @@ def adjust_price(
     return new_df
 
 
-
-
-
 @retry(
     retry=retry_if_exception_type(HTTPError),
     wait=wait_random(min=1, max=4),
@@ -289,16 +283,12 @@ def download_fIndex_record(fIndex: str, session: Session):
         )
 
     response.raise_for_status()
-    
     data = response.text
-    
     if not data or ";" not in data or "," not in data:
-        raise ValueError(f"Invalid response from the url: {url}.\nExpected valid financial index data.")
-    
+        raise ValueError(f"""Invalid response from the url: {url}.
+                         \nExpected valid financial index data.""")
     df = _create_financial_index_from_text_response(data)
-
     return df
-
 
 
 def download_financial_indexes(
@@ -337,7 +327,6 @@ def download_financial_indexes(
                     extra={"Error": ex}
                 )
                 continue
-            
             _adjust_data_frame_for_fIndex(df, include_jdate)
             df_list[symbol] = df
 
@@ -352,7 +341,6 @@ def download_financial_indexes(
         print("Warning, download did not complete, re-run the code")
     session.close()
     return df_list
-     
 
 
 def download_client_types_records(
@@ -397,7 +385,6 @@ def download_client_types_records(
     return df_list
 
 
-
 @retry(
     retry=retry_if_exception_type(HTTPError),
     wait=wait_random(min=1, max=4),
@@ -438,7 +425,6 @@ def download_ticker_client_types_record(ticker_index: Optional[str]):
     return client_types_data_frame
 
 
-
 def get_symbol_id(symbol_name: str):
     url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
     response = requests_retry_session().get(url, timeout=10)
@@ -451,7 +437,6 @@ def get_symbol_id(symbol_name: str):
     if persian.replace_arabic(symbol_name) == symbol_full_info[0].strip():
         return symbol_full_info[2]  # symbol id
     return None
-
 
 
 def get_symbol_info(symbol_name: str):
