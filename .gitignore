@@ -25,3 +25,4 @@ dmypy.json
 *.csv
 .vscode/settings.json
 
+my.py
