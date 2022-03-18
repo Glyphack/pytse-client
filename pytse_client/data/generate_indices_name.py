@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     market_indexes = re.findall(
         r'<tr><td><a target="_blank" href="Loader'
-        '\.aspx\?ParTree=15131J&i=\d*">.*</a></td>',
+        r'\.aspx\?ParTree=15131J&i=\d*">.*</a></td>',
         text)
     final_dict = {}
 
@@ -18,7 +18,7 @@ if __name__ == '__main__':
             '">(.*)</a></td>', market_index).group(1)
         index = re.search(
             '<tr><td><a target="_blank" href="Loader'
-            '\.aspx\?ParTree=15131J&i=(\d*)',
+            r'\.aspx\?ParTree=15131J&i=(\d*)',
             market_index).group(1)
         section_number = re.search(r'(^\d+|\d+$)', key)
         section_number = int(section_number.group(
