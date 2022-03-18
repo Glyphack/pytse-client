@@ -1,6 +1,11 @@
 TSE_TICKER_EXPORT_DATA_ADDRESS = (
     "http://tsetmc.com/tsev2/data/Export-txt.aspx?t=i&a=1&b=0&i={}"
 )
+
+TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS = (
+    "http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={}&t=value"
+)
+
 TSE_TICKER_ADDRESS = ("http://tsetmc.com/Loader.aspx?ParTree=151311&i={}")
 
 # FIXME: c should be cSecVal (group code of instrument)
