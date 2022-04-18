@@ -28,6 +28,7 @@ print(ticker.base_volume)  # حجم مبنا
 print(ticker.state)  # وضعیت نماد
 print(ticker.last_price)  # قیمت آخرین معامله
 print(ticker.adj_close)  # قیمت پایانی
+print(ticker.market_cap) # ارزش بازار شرکت
 print(ticker.yesterday_price)  # قیمت دیروز
 print(ticker.open_price)  # قیمت اولین معامله
 print(ticker.high_price)  # قیمت حداکثر
