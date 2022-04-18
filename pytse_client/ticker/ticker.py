@@ -64,6 +64,7 @@ class RealtimeTickerInfo:
     # ارزش بازار
     market_cap: Optional[int]
 
+
 class Ticker:
     def __init__(
         self,
@@ -499,7 +500,7 @@ class Ticker:
     @property
     def nav(self):
         return self.get_ticker_real_time_info_response().nav
-    
+
     @property
     def market_cap(self):
         return self.get_ticker_real_time_info_response().market_cap
