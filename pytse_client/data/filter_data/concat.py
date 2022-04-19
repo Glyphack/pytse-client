@@ -18,9 +18,8 @@ for line in key_stats_ls:
     number = int(number[2:])
     disc = re.split(r"\<\/div\>", disc)[0]
     nums_and_disc.append((number, disc))
-
-number, persian_explanation, symbol = None, None, None
-
+    
+    
 with open("README.md", "w") as f2:
     f2.write("""در این بخش آمار کلیدی را در قالب یک نگاشت سه عضوی مشاهده می‌کنید.""")
     f2.write("\n\n\n| شماره | توضیحات | سمبل |\n")
