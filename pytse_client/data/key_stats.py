@@ -43,12 +43,13 @@ def _request_key_stats() -> str:
 
 
 def _get_list_of_processed_stats(raw_key_stats: str) -> Tuple[List[str], List[str]]:
-    key_stats = raw_key_stats.replace("\n", "")
     proccessed_key_stats = re.sub(
-        r'([0-9]+)\,([0-9]+)\,([0-9\.]+)\;', '@\g<1>@\g<2>,\g<3>;', key_stats)
-    list_of_key_stats = proccessed_key_stats.split("@")
-    idxs = list_of_key_stats[1::2]
-    values = list_of_key_stats[0::2]
+        r'([0-9]+)\,([0-9]+)\,([0-9\.]+)\;', '@\g<1>@\g<2>,\g<3>;', raw_key_stats)
+    list_of_key_stats = proccessed_key_stats.split("@")[1:]
+    idxs = list_of_key_stats[0::2]
+    values = list_of_key_stats[1::2]
+    
+    
     return idxs, values
 
 

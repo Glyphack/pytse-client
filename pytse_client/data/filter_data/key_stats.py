@@ -79,12 +79,12 @@ class KeyStats(object):
     rank_close_days_last_12_month = 49
 
     ave_vol_individual_buy_last_3_month = 50
-    avg_vol_individual_buy_last_12_month = 51
+    ave_vol_individual_buy_last_12_month = 51
     rank_vol_individual_buy_last_3_month = 52
     rank_vol_individual_buy_last_12_month = 53
 
     ave_vol_corporation_buy_last_3_month = 54
-    avg_vol_corporation_buy_last_12_month = 55
+    ave_vol_corporation_buy_last_12_month = 55
     rank_vol_corporation_buy_last_3_month = 56
     rank_vol_corporation_buy_last_12_month = 57
 
@@ -99,17 +99,17 @@ class KeyStats(object):
     rank_numof_corporation_buyer_last_12_month = 65
 
     ave_numof_buyer_last_3_month = 66
-    avg_numof_buyer_last_12_month = 67
+    ave_numof_buyer_last_12_month = 67
     rank_numof_buyer_last_3_month = 68
     rank_numof_buyer_last_12_month = 69
 
     ave_vol_individual_sell_last_3_month = 70
-    avg_vol_individual_sell_last_12_month = 71
+    ave_vol_individual_sell_last_12_month = 71
     rank_vol_individual_sell_last_3_month = 72
     rank_vol_individual_sell_last_12_month = 73
 
     ave_vol_corporation_sell_last_3_month = 74
-    avg_vol_corporation_sell_last_12_month = 75
+    ave_vol_corporation_sell_last_12_month = 75
     rank_vol_corporation_sell_last_3_month = 76
     rank_vol_corporation_sell_last_12_month = 77
 
@@ -124,7 +124,7 @@ class KeyStats(object):
     rank_numof_corporation_seller_last_12_month = 85
 
     ave_numof_seller_last_3_month = 86
-    avg_numof_seller_last_12_month = 87
+    ave_numof_seller_last_12_month = 87
     rank_numof_seller_last_3_month = 88
     rank_numof_seller_last_12_month = 89
 
