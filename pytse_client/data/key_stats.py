@@ -56,7 +56,7 @@ def _get_list_of_processed_stats(raw_key_stats: str) \
     return idxs, values
 
 
-def get_aggregated_key_stats(to_json=False)\
+def get_aggregated_key_stats(base_path=None, to_json=False)\
         -> Dict[str, Dict[str, str]]:
     aggregated_key_stats = {}
     index_to_symbol_map = _map_index_to_symbols()
@@ -81,7 +81,8 @@ def get_aggregated_key_stats(to_json=False)\
             **tmp_key_stat, "symbol": symbol, "name": name}
 
     if to_json:
-        base_path = config.KEY_STATS_BASE_PATH
+        base_path = config.KEY_STATS_BASE_PATH if\
+                        base_path is None else base_path
         Path(base_path).mkdir(parents=True, exist_ok=True)
         path = os.path.join(base_path, "key_stats.json")
         with open(path, 'w', encoding="utf8") as json_file:
