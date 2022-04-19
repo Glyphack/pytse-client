@@ -42,9 +42,13 @@ def _request_key_stats() -> str:
     return raw_key_stats
 
 
-def _get_list_of_processed_stats(raw_key_stats: str) -> Tuple[List[str], List[str]]:
+def _get_list_of_processed_stats(raw_key_stats: str) \
+        -> Tuple[List[str], List[str]]:
+
+    # group 1 is idx, group 2 is key, group 3 is value
     proccessed_key_stats = re.sub(
-        r'([0-9]+)\,([0-9]+)\,([0-9\.]+)\;', '@\g<1>@\g<2>,\g<3>;', raw_key_stats)
+        r'([0-9]+)\,([0-9]+)\,([0-9\.]+)\;',
+        '@\\g<1>@\\g<2>,\\g<3>;', raw_key_stats)
     list_of_key_stats = proccessed_key_stats.split("@")[1:]
     idxs = list_of_key_stats[0::2]
     values = list_of_key_stats[1::2]
@@ -52,7 +56,8 @@ def _get_list_of_processed_stats(raw_key_stats: str) -> Tuple[List[str], List[st
     return idxs, values
 
 
-def get_aggregated_key_stats(to_json=False) -> Dict[str, Dict[str, str]]:
+def get_aggregated_key_stats(to_json=False)\
+        -> Dict[str, Dict[str, str]]:
     aggregated_key_stats = {}
     index_to_symbol_map = _map_index_to_symbols()
     raw_key_stats = _request_key_stats()
