@@ -48,8 +48,7 @@ def _get_list_of_processed_stats(raw_key_stats: str) -> Tuple[List[str], List[st
     list_of_key_stats = proccessed_key_stats.split("@")[1:]
     idxs = list_of_key_stats[0::2]
     values = list_of_key_stats[1::2]
-    
-    
+
     return idxs, values
 
 
@@ -73,12 +72,14 @@ def get_aggregated_key_stats(to_json=False) -> Dict[str, Dict[str, str]]:
         for each_segment in segmented_val_stat:
             key, val = each_segment.split(",")
             tmp_key_stat[filter_key_value[int(key)]] = val
-        aggregated_key_stats[idx_stat] = {**tmp_key_stat, "symbol": symbol, "name": name}
+        aggregated_key_stats[idx_stat] = {
+            **tmp_key_stat, "symbol": symbol, "name": name}
 
     if to_json:
         base_path = config.KEY_STATS_BASE_PATH
         Path(base_path).mkdir(parents=True, exist_ok=True)
         path = os.path.join(base_path, "key_stats.json")
         with open(path, 'w', encoding="utf8") as json_file:
-            json.dump(aggregated_key_stats, json_file, indent=4, ensure_ascii=False)
+            json.dump(aggregated_key_stats, json_file,
+                      indent=4, ensure_ascii=False)
     return aggregated_key_stats
