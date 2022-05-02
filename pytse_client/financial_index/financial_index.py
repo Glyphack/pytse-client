@@ -25,8 +25,7 @@ class FinancialIndex:
     @property
     def last_update(self):
         # زمان انتشار
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_update_time_td: BeautifulSoup = \
             soup.find_all("td", text="زمان انتشار")[0]
         update_time_td: BeautifulSoup =\
@@ -36,8 +35,7 @@ class FinancialIndex:
     @property
     def last_value(self):
         # آخرین مقدار شاخص
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_lastval_td: BeautifulSoup =\
             soup.find_all("td", text="آخرین مقدار شاخص")[0]
         lastval_td: BeautifulSoup =\
@@ -47,8 +45,7 @@ class FinancialIndex:
     @property
     def high(self):
         # بیشترین مقدار روز
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_high_td: BeautifulSoup =\
             soup.find_all("td", text="بیشترین مقدار روز")[0]
         high_td: BeautifulSoup =\
@@ -58,8 +55,7 @@ class FinancialIndex:
     @property
     def low(self):
         # کمترین مقدار روز
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_low_td: BeautifulSoup =\
             soup.find_all("td", text="کمترین مقدار روز")[0]
         low_td: BeautifulSoup =\
@@ -76,8 +72,7 @@ class FinancialIndex:
 
     def _get_contributing_symbols(self, raw_html: str):
         # شرکت های موجود در شاخص
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_contr_symbols: BeautifulSoup =\
             soup.find_all("div", text="شرکت های موجود در شاخص")[0]
         contr_symbols: BeautifulSoup =\
@@ -103,8 +98,7 @@ class FinancialIndex:
 
     @property
     def intraday_price(self) -> pd.DataFrame:
-        raw_html = self._financial_index_page_text
-        soup = BeautifulSoup(raw_html, 'html.parser')
+        soup = self._financial_index_page_soup
         before_intraday_price: BeautifulSoup =\
             soup.find_all("div", text="سابقه شاخص روز جاری")[0]
 
@@ -133,6 +127,10 @@ class FinancialIndex:
         return df
 
     @property
+    def _financial_index_page_soup(self):
+        return BeautifulSoup(self._financial_index_page_text, 'html.parser')
+
+    @property
     def _financial_index_page_text(self):
         raw_html = utils.requests_retry_session()\
             .get(self._intraday_url, timeout=10).text
@@ -145,6 +143,6 @@ class FinancialIndex:
             map(lambda x: x.replace("(", "-"), intraday_price_ls))
         intraday_price_ls = list(
             map(lambda x: x.replace(")", ""), intraday_price_ls))
-        rows = [intraday_price_ls[i:i+5]
+        rows = [intraday_price_ls[i:i+col_len]
                 for i in range(0, len(intraday_price_ls), col_len)]
         return rows
