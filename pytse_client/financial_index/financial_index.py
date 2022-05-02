@@ -1,7 +1,7 @@
 import functools
 import pandas as pd
 
-from typing import Optional, List
+from typing import Optional, List, Dict
 from bs4 import BeautifulSoup
 
 
@@ -51,13 +51,22 @@ class FinancialIndex:
     
     
         
-    def _get_contributing_symbols(self, raw_html: str) -> List[Ticker]: 
-        pass
+    def _get_contributing_symbols(self, raw_html: str): 
+        # شرکت های موجود در شاخص
+        raw_html = self._financial_index_page_text
+        soup = BeautifulSoup(raw_html, 'html.parser')
+        before_contr_symbols: BeautifulSoup = soup.find_all("div", 
+                                       text="شرکت های موجود در شاخص")[0]
+        contr_symbols: BeautifulSoup= before_contr_symbols.find_next_siblings("div")[0]
+        _index_symbols =  list(map(lambda x: x.a["href"].split("i=")[1], contr_symbols.find_all("td")[::9]))
+        _symbols = list(map(lambda x: x.get_text(), contr_symbols.find_all("td")[::9]))
+        _contr_symbols = list(zip(_index_symbols, _symbols))
+        return [{"symbol": _contr_symbol[1], "index": _contr_symbol[0]} for _contr_symbol in _contr_symbols]
     
     @property 
     @functools.lru_cache()
-    def contributing_symbol(self) -> List[Ticker]:
-        self._get_contributing_symbols(
+    def contributing_symbols(self) -> List[Dict[str, str]]:
+        return self._get_contributing_symbols(
             self._financial_index_page_text
         )
 
