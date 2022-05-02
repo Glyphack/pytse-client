@@ -7,17 +7,15 @@ from bs4 import BeautifulSoup
 
 from pytse_client import utils
 from pytse_client import symbols_data
-from pytse_client import config
 from pytse_client import tse_settings
 from pytse_client.download import download_financial_indexes
-from pytse_client import Ticker
 
 
 class FinancialIndex:
     def __init__(self,
                  symbol: str,
                  index: Optional[str] = None
-                 ):
+    ):
         self._index: str = index or symbols_data.get_financial_index(symbol)
         self.symbol: str = symbol if index is None else self._index
         self._intraday_url: str = tse_settings\
