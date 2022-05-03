@@ -302,6 +302,7 @@ print(ticker.best_demand_price)  # قیمت بهترین عرضه
 print(ticker.best_demand_vol)  # حجم بهترین عرضه
 3620
 print(ticker.total_shares)  # تعداد سهام
+print(ticker.market_cap) # ارزش بازار شرکت
 print(ticker.shareholders)  # اطلاعات سهام‌داران عمده
 print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام‌داران عمده
 print(ticker.get_trade_details())  # ریز معاملات روز جاری
