@@ -4,23 +4,27 @@ import pandas as pd
 from typing import Optional, List, Dict
 from bs4 import BeautifulSoup
 
-
 from pytse_client import utils
 from pytse_client import symbols_data
 from pytse_client import tse_settings
 from pytse_client.download import download_financial_indexes
+from pytse_client import config
 
 
 class FinancialIndex:
     def __init__(self,
                  symbol: str,
-                 index: Optional[str] = None
+                 index: Optional[str] = None,
+                 base_path: Optional[str] = config.FINANCIAL_INDEX_BASE_PATH,
+                 write_history: Optional[bool] = False,
                  ):
         self._index: str = index or symbols_data.get_financial_index(symbol)
         self.symbol: str = symbol if index is None else self._index
         self._intraday_url: str = tse_settings\
             .TSE_FINANCIAL_INDEX_EXPORT_INTRADAY_DATA_ADDRESS\
             .format(self._index)
+        self._base_path = base_path
+        self._write_history = write_history
 
     @property
     def last_update(self):
@@ -66,11 +70,12 @@ class FinancialIndex:
     @functools.lru_cache()
     def history(self):
         return download_financial_indexes(self.symbol,
-                                          write_to_csv=False,
+                                          write_to_csv=self._write_history,
                                           include_jdate=True,
+                                          base_path=self._base_path
                                           )[self.symbol]
 
-    def _get_contributing_symbols(self, raw_html: str):
+    def _get_contributing_symbols(self):
         # شرکت های موجود در شاخص
         soup = self._financial_index_page_soup
         before_contr_symbols: BeautifulSoup =\
@@ -92,9 +97,7 @@ class FinancialIndex:
     @property
     @functools.lru_cache()
     def contributing_symbols(self) -> List[Dict[str, str]]:
-        return self._get_contributing_symbols(
-            self._financial_index_page_text
-        )
+        return self._get_contributing_symbols()
 
     @property
     def intraday_price(self) -> pd.DataFrame:
