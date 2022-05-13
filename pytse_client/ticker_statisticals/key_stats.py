@@ -135,7 +135,7 @@ filter_class = KeyStats()
 keys = [attr for attr in dir(filter_class) if not attr.startswith("__")]
 # convert filter_class to dict
 filter_key_value = {getattr(filter_class, key): key for key in keys}
-filter_value_NONE = {key:None for key in filter_key_value.values()}
+filter_value_NONE = {key: None for key in filter_key_value.values()}
 
 if __name__ == '__main__':
     print(filter_key_value)

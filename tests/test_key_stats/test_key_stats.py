@@ -24,7 +24,7 @@ class TestKeyStats(unittest.TestCase):
             exists(Path(f"{self.write_csv_path}/key_stats.csv"))
         )
         self.assertFalse(df.empty)
-        
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKeyStats)

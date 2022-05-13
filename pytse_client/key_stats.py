@@ -11,7 +11,10 @@ from pytse_client import (
 )
 
 from pytse_client.ticker_statisticals.utils import get_index_to_symbol_map
-from pytse_client.ticker_statisticals import filter_key_value, filter_value_NONE
+from pytse_client.ticker_statisticals import (
+    filter_key_value,
+    filter_value_NONE
+)
 
 
 def _map_index_to_symbols():
@@ -67,33 +70,32 @@ def get_aggregated_key_stats(base_path=None, to_json=False, to_csv=False)\
             filter_key_found[filter_key_value[int(key)]] = val
         aggregated_key_stats[idx_stat] = {
             **filter_value_NONE,
-            **filter_key_found, 
-            "symbol": symbol, 
+            **filter_key_found,
+            "symbol": symbol,
             "name": name
         }
 
     aggregated_key_stats_df = pd.DataFrame.from_dict(aggregated_key_stats).T
-    
+
     # change type of columns to int
     str_cols = {"symbol", "name"}
     numeric_cols = set(aggregated_key_stats_df.columns) - str_cols
     numeric_cols_ls = list(numeric_cols)
     aggregated_key_stats_df[numeric_cols_ls]\
         = aggregated_key_stats_df[numeric_cols_ls].apply(
-            pd.to_numeric, 
+            pd.to_numeric,
             errors='coerce'
-        )
+    )
     aggregated_key_stats_df["index"] = aggregated_key_stats_df.index
     aggregated_key_stats_df.reset_index(drop=True, inplace=True)
-    
+
     print(base_path)
     if to_csv:
         base_path = config.KEY_STATS_BASE_PATH if\
-                        base_path is None else base_path
+            base_path is None else base_path
         Path(base_path).mkdir(parents=True, exist_ok=True)
-            
+
         path = os.path.join(base_path, "key_stats.csv")
-        aggregated_key_stats_df.to_csv(path, index=False)                
-            
-    
+        aggregated_key_stats_df.to_csv(path, index=False)
+
     return aggregated_key_stats_df
