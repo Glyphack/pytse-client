@@ -39,7 +39,7 @@ def _get_list_of_processed_stats(raw_key_stats: str) \
     return indices, values
 
 
-def get_aggregated_key_stats(base_path=None, to_json=False, to_csv=False)\
+def get_aggregated_key_stats(base_path=None, to_csv=False)\
         -> Dict[str, Dict[str, str]]:
     aggregated_key_stats = {}
     index_to_symbol_map = _map_index_to_symbols()
@@ -89,7 +89,6 @@ def get_aggregated_key_stats(base_path=None, to_json=False, to_csv=False)\
     aggregated_key_stats_df["index"] = aggregated_key_stats_df.index
     aggregated_key_stats_df.reset_index(drop=True, inplace=True)
 
-    print(base_path)
     if to_csv:
         base_path = config.KEY_STATS_BASE_PATH if\
             base_path is None else base_path
