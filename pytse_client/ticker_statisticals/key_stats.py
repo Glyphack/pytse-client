@@ -14,7 +14,7 @@
 # بسته: close
 # باز: open
 
-class KeyStats(object):
+class KeyStats():
     # name : id
     ave_val_trans_last_3_month = 1
     ave_val_trans_last_12_month = 2

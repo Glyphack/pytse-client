@@ -22,27 +22,6 @@ def _map_index_to_symbols():
     return get_index_to_symbol_map(symbol_dic)
 
 
-def _request_key_stats() -> str:
-    session = utils.requests_retry_session()
-    try:
-        response = session.get(tse_settings.KEY_STATS_URL)
-    except Exception as e:
-        print('--- Could not retrieve key stats ---')
-        print(e)
-        return ""
-    finally:
-        session.close()
-
-    try:
-        raw_key_stats = response.text
-    except AttributeError as e:
-        print(f"--- Not a valid response --- \n\n{response}\n\n")
-        print(e)
-        return ""
-
-    return raw_key_stats
-
-
 def _get_list_of_processed_stats(raw_key_stats: str) \
         -> Tuple[List[str], List[str]]:
 
@@ -61,7 +40,15 @@ def get_aggregated_key_stats(base_path=None, to_json=False, to_csv=False)\
         -> Dict[str, Dict[str, str]]:
     aggregated_key_stats = {}
     index_to_symbol_map = _map_index_to_symbols()
-    raw_key_stats = _request_key_stats()
+    session = utils.requests_retry_session()
+    try:
+        response = session.get(tse_settings.KEY_STATS_URL)
+    except Exception as e:
+        raise Exception(f"Failed to get key stats: {e}")
+    finally:
+        session.close()
+
+    raw_key_stats = response.text
     indices, values = _get_list_of_processed_stats(raw_key_stats)
 
     linked_stats = zip(indices, values)
@@ -98,7 +85,8 @@ def get_aggregated_key_stats(base_path=None, to_json=False, to_csv=False)\
         )
     aggregated_key_stats_df["index"] = aggregated_key_stats_df.index
     aggregated_key_stats_df.reset_index(drop=True, inplace=True)
-        
+    
+    print(base_path)
     if to_csv:
         base_path = config.KEY_STATS_BASE_PATH if\
                         base_path is None else base_path
