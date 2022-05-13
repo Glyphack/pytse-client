@@ -594,32 +594,24 @@ print(trade_details)
 ```python
 from pytse_client import get_aggregated_key_stats
 
-key_stats = get_aggregated_key_stats(base_path="hello", to_json=True)
+key_stats = get_aggregated_key_stats(base_path="hello", to_csv=True)
 
 # Output
 
-{
-    "114312662654155": {
-        "ave_val_trans_last_3_month": "33908281472",
-        .
-        .
-        .
-        "rank_numof_seller_last_12_month": "40",
-        "symbol": "وسپهر",
-        "name": "سرمایه گذاری مالی سپهرصادرات"
-    },
-    .
-    .
-    .
-}
+   ave_numof_buyer_last_12_month  ave_numof_buyer_last_3_month  ave_numof_corporation_buyer_last_12_month  ...  symbol                          name            index
+0                          610.0                         345.0                                        1.0  ...   وسپهر  سرمایه گذاری مالی سپهرصادرات  114312662654155
+1                          816.0                         381.0                                        1.0  ...    شصدف                صنعتی دوده فام  204092872752957
+2                           92.0                          76.0                                        0.0  ...     فسا                  پتروشیمی فسا  318005355896147
+3                          298.0                         246.0                                        2.0  ...   فرآور          فرآوریموادمعدنیایران  408934423224097
+4                          407.0                         332.0                                        1.0  ...   سبزوا              سیمان لار سبزوار  611986653700161
 
 ```
 
 همانطور که در مثال(ناقص به دلیل کمبود جا) بالا می بینید خروجی این دستور یک دیکشنری است که آمارهای کلیدی تمامی نمادهایی که در پکیج معتبر هستند و دیده‌بان در اختیار کاربران قرار می‌دهد را در خود دارد.
 
-به صورت همزمان اطلاعات در ‍‍`hello/key_stats.json` ذخیره می‌شود.
-در صورتی که نمی‌خواهید خروجی جیسون ساخته شود کافی است که `to_json==False` قرار دهید.
-همینطور در صورت خالی گذاشتن `base_path` به جای آن `key_stats_data/key_stats.json` استفاده می‌شود.
+به صورت همزمان اطلاعات در ‍‍`hello/key_stats.csv` ذخیره می‌شود.
+در صورتی که نمی‌خواهید خروجی csv ساخته شود کافی است که `to_csv==False` قرار دهید.
+همینطور در صورت خالی گذاشتن `base_path` به جای آن `key_stats_data/key_stats.csv` استفاده می‌شود.
 
 
 </div>
