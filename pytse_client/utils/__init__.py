@@ -5,3 +5,5 @@ from pytse_client.utils.scrape import (
 )
 from pytse_client.utils.string import convert_to_number_if_number
 from pytse_client.utils.date import datetime_range
+from pytse_client.utils.get_session import get_raw_text
+from pytse_client.utils.symbols import map_index_to_symbols

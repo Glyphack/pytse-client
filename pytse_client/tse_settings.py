@@ -59,6 +59,11 @@ KEY_STATS_URL = (
     "http://www.tsetmc.com/tsev2/data/InstValue.aspx?t=a"
 )
 
+# get some information about each ticker using دیده بان بازار
+MARKET_WATCH_URL = (
+    "http://www.tsetmc.com/tsev2/data/MarketWatchInit.aspx?h=0&r=0"
+)
+
 
 DATE_FORMAT = "%Y%m%d"
 MIN_DATE = 20010321

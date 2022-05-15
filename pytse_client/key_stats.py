@@ -15,14 +15,7 @@ from pytse_client.ticker_statisticals import (
     filter_key_value,
     filter_value_NONE
 )
-
-
-def _map_index_to_symbols():
-    parent_dir = os.path.dirname(os.path.abspath(__file__))
-    symbols_file = os.path.join(parent_dir, "data/symbols_name.json")
-    with open(symbols_file, 'r') as json_file:
-        symbol_dic = json.load(json_file)
-    return get_index_to_symbol_map(symbol_dic)
+from pytse_client.utils import map_index_to_symbols
 
 
 def _get_list_of_processed_stats(raw_key_stats: str) \
@@ -42,7 +35,7 @@ def _get_list_of_processed_stats(raw_key_stats: str) \
 def get_aggregated_key_stats(base_path=None, to_csv=False)\
         -> Dict[str, Dict[str, str]]:
     aggregated_key_stats = {}
-    index_to_symbol_map = _map_index_to_symbols()
+    index_to_symbol_map = map_index_to_symbols()
     session = utils.requests_retry_session()
     try:
         response = session.get(tse_settings.KEY_STATS_URL)
