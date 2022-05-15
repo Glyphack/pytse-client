@@ -61,6 +61,8 @@ class RealtimeTickerInfo:
     corporate_trade_summary: Optional[TradeSummary]
     nav: Optional[int]
     nav_date: Optional[str]
+    # ارزش بازار
+    market_cap: Optional[int]
 
 
 class Ticker:
@@ -500,6 +502,10 @@ class Ticker:
         return self.get_ticker_real_time_info_response().nav
 
     @property
+    def market_cap(self):
+        return self.get_ticker_real_time_info_response().market_cap
+
+    @property
     def nav_date(self):
         return self.get_ticker_real_time_info_response().nav_date
 
@@ -551,6 +557,10 @@ class Ticker:
                 adj_close = int(price_section[3])
             except (ValueError, IndexError):
                 adj_close = None
+            try:
+                market_cap = adj_close * self.total_shares
+            except ValueError:
+                market_cap = None
 
         try:
             info_section = response_sections_list[0].split(",")
@@ -626,6 +636,7 @@ class Ticker:
             individual_trade_summary=individual_trade_summary,
             corporate_trade_summary=corporate_trade_summary,
             nav=nav,
+            market_cap=market_cap,
             nav_date=nav_date,
         )
 
