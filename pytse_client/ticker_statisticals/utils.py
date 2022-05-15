@@ -12,7 +12,7 @@ def get_index_to_symbol_map(dic: dict):
 
 
 def get_keys_of_market_watch():
-    """ 
+    """
         [
             '71957984642204570', # id
             'IRO7APTP0001', # code
@@ -37,14 +37,14 @@ def get_keys_of_market_watch():
             '2436.00', # min allowed
             '10000000000', # number of stocks
             '309' # ?
-        ] 
+        ]
     """
     keys = [
-      "id", "code", "symbol", "name", "last_changed", "open_price",
-      "adj_closing_price", "last_price", "number_of_trans", 
-      "volume_of_trans", "value_of_trans", "min_price", "max_year",
-      "yesterday_price", "EPS", "base_volume", "", "", "group_number",
-      "max_price_allowed", "min_price_allowed", "number_of_stocks", ""
+        "id", "code", "symbol", "name", "last_changed", "open_price",
+        "adj_closing_price", "last_price", "number_of_trans",
+        "volume_of_trans", "value_of_trans", "min_price", "max_year",
+        "yesterday_price", "EPS", "base_volume", "", "", "group_number",
+        "max_price_allowed", "min_price_allowed", "number_of_stocks", ""
     ]
     return keys
 
@@ -52,7 +52,7 @@ def get_keys_of_market_watch():
 def get_keys_of_asks_bids():
     """
         [
-            '4507558419857064', # id 
+            '4507558419857064', # id
             '2', # row_number (starting from 1)
             '1', # num_of_sellers
             '1', # number_of_buyers
@@ -63,14 +63,15 @@ def get_keys_of_asks_bids():
         ]
     """
     keys = [
-      "id", "row_number", "num_of_sellers", "number_of_buyers", "buy_price",
-      "sell_price", "buy_volume", "sell_volume"
+        "id", "row_number", "num_of_sellers", "number_of_buyers", "buy_price",
+        "sell_price", "buy_volume", "sell_volume"
     ]
     return keys
-        
+
+
 def get_keys_of_client_types():
     """
-        [   
+        [
             '5054819322815158', # id
             '406', # num_of_individual_buyers
             '5', # num_of_corporate_buyers
@@ -90,8 +91,6 @@ def get_keys_of_client_types():
     ]
     return keys
 
-
-  
 
 if __name__ == '__main__':
     d = {"s": {"index": 1, "dummy": 100}, "a": {

@@ -1,8 +1,8 @@
 import os
 import json
 
-
 from pytse_client.ticker_statisticals import get_index_to_symbol_map
+
 
 def map_index_to_symbols():
     parent_dir = os.path.dirname(os.path.abspath(__file__))
