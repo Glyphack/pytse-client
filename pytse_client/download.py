@@ -307,7 +307,14 @@ def download_financial_indexes(
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
         session = requests_retry_session()
         for symbol in symbols:
-            financial_index = symbols_data.get_financial_index(symbol)
+            if (
+                symbol.isnumeric()
+                and
+                symbols_data.get_financial_index(symbol) is None
+            ):
+                financial_index = symbol
+            else:
+                financial_index = symbols_data.get_financial_index(symbol)
             if financial_index is None:
                 raise Exception(f"Cannot find financial index: {symbol}")
 

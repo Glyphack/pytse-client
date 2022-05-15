@@ -25,6 +25,4 @@ dmypy.json
 *.csv
 .vscode/settings.json
 
-my.py
 key_stats_data
-my.txt
