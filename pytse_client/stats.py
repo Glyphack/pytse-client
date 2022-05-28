@@ -40,8 +40,8 @@ def _get_dict_of_client_types(raw_client_types: str):
     final_client_types = {}
     for each_client_type in raw_client_types.split(";"):
         key_val = list(zip(client_types_keys,
-             each_client_type.split(",")
-        ))
+                           each_client_type.split(",")
+                           ))
         key_val_dict = dict(key_val)
         final_client_types[key_val_dict["index"]] = key_val_dict
     return final_client_types
@@ -52,10 +52,10 @@ def get_stats(base_path=None, to_csv=False)\
     aggregated_key_stats = {}
     index_to_symbol_map = map_index_to_symbols()
     session = utils.requests_retry_session()
-    
+
     raw_key_stats = _get_key_stats(session).text
     indices, values = _get_list_of_processed_stats(raw_key_stats)
-    
+
     raw_client_types = _get_client_types(session).text
     client_types_dict = _get_dict_of_client_types(raw_client_types)
 
@@ -70,15 +70,15 @@ def get_stats(base_path=None, to_csv=False)\
         segmented_val_stat = re.split(r'\;', val_stat)
         segmented_val_stat = list(
             filter(lambda x: x != '', segmented_val_stat))
-        
+
         for each_segment in segmented_val_stat:
             key, val = each_segment.split(",")
             filter_key_found[filter_key_value[int(key)]] = val
-        
+
         client_types = client_types_dict.get(idx_stat, {
-            key:None for key in get_keys_of_client_types()
+            key: None for key in get_keys_of_client_types()
         })
-        
+
         aggregated_key_stats[idx_stat] = {
             **filter_value_NONE,
             **filter_key_found,
