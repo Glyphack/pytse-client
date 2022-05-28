@@ -40,7 +40,7 @@ def get_keys_of_market_watch():
         ]
     """
     keys = [
-        "id", "code", "symbol", "name", "last_changed", "open_price",
+        "index", "code", "symbol", "name", "last_changed", "open_price",
         "adj_closing_price", "last_price", "number_of_trans",
         "volume_of_trans", "value_of_trans", "min_price", "max_year",
         "yesterday_price", "EPS", "base_volume", "", "", "group_number",

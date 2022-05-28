@@ -13,6 +13,7 @@ from pytse_client import (
 from pytse_client.ticker_statisticals.utils import (
     get_index_to_symbol_map,
     get_keys_of_client_types,
+    get_keys_of_market_watch,
 )
 from pytse_client.ticker_statisticals import (
     filter_key_value,
@@ -47,6 +48,24 @@ def _get_dict_of_client_types(raw_client_types: str):
     return final_client_types
 
 
+def _get_dict_of_market_watch(raw_market_watch: str):
+    try:
+        _market_watch = raw_market_watch.split("@")[2]
+    except IndexError:
+        print("Failed to get market watch stats")
+        return {}
+    
+    market_watch_keys = get_keys_of_market_watch()
+    final_market_watch = {}
+    for each_market_watch in _market_watch.split(";"):
+        key_val = list(zip(market_watch_keys,
+                           each_market_watch.split(",")
+                           ))
+        key_val_dict = dict(key_val)
+        final_market_watch[key_val_dict["index"]] = key_val_dict
+    return final_market_watch
+
+
 def get_stats(base_path=None, to_csv=False)\
         -> pd.DataFrame:
     aggregated_key_stats = {}
@@ -58,6 +77,9 @@ def get_stats(base_path=None, to_csv=False)\
 
     raw_client_types = _get_client_types(session).text
     client_types_dict = _get_dict_of_client_types(raw_client_types)
+
+    raw_market_watch = _get_market_watch(session).text
+    market_watch_dict = _get_dict_of_market_watch(raw_market_watch)                  
 
     linked_stats = zip(indices, values)
     for idx_stat, val_stat in linked_stats:
@@ -79,10 +101,15 @@ def get_stats(base_path=None, to_csv=False)\
             key: None for key in get_keys_of_client_types()
         })
 
+        market_watch = market_watch_dict.get(idx_stat, {
+            key: None for key in get_keys_of_market_watch()
+        })
+        
         aggregated_key_stats[idx_stat] = {
             **filter_value_NONE,
             **filter_key_found,
             **client_types,
+            **market_watch,
             "symbol": symbol,
             "name": name
         }
@@ -127,6 +154,15 @@ def _get_client_types(session):
         response = session.get(tse_settings.CLIENT_TYPES_URL)
     except Exception as e:
         raise Exception(f"Failed to get client types: {e}")
+    finally:
+        session.close()
+    return response
+
+def _get_market_watch(session):
+    try:
+        response = session.get(tse_settings.MARKET_WATCH_URL)
+    except Exception as e:
+        raise Exception(f"Failed to get market watch: {e}")
     finally:
         session.close()
     return response
