@@ -54,7 +54,7 @@ def _get_dict_of_market_watch(raw_market_watch: str):
     except IndexError:
         print("Failed to get market watch stats")
         return {}
-    
+
     market_watch_keys = get_keys_of_market_watch()
     final_market_watch = {}
     for each_market_watch in _market_watch.split(";"):
@@ -79,7 +79,7 @@ def get_stats(base_path=None, to_csv=False)\
     client_types_dict = _get_dict_of_client_types(raw_client_types)
 
     raw_market_watch = _get_market_watch(session).text
-    market_watch_dict = _get_dict_of_market_watch(raw_market_watch)                  
+    market_watch_dict = _get_dict_of_market_watch(raw_market_watch)
 
     linked_stats = zip(indices, values)
     for idx_stat, val_stat in linked_stats:
@@ -104,7 +104,7 @@ def get_stats(base_path=None, to_csv=False)\
         market_watch = market_watch_dict.get(idx_stat, {
             key: None for key in get_keys_of_market_watch()
         })
-        
+
         aggregated_key_stats[idx_stat] = {
             **filter_value_NONE,
             **filter_key_found,
@@ -157,6 +157,7 @@ def _get_client_types(session):
     finally:
         session.close()
     return response
+
 
 def _get_market_watch(session):
     try:
