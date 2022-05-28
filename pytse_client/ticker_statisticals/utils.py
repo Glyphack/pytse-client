@@ -84,10 +84,10 @@ def get_keys_of_client_types():
         ]
     """
     keys = [
-        "id", "num_of_individual_buyers", "num_of_corporate_buyers",
-        "volume_of_individual_buyers", "volume_of_corporate_buyers",
-        "num_of_individual_sellers", "num_of_corporate_sellers",
-        "volume_of_individual_sellers", "volume_of_corporate_sellers"
+        "index", "numof_individual_buy", "numof_corporate_buy",
+        "vol_individual_buy", "vol_corporate_buy",
+        "numof_individual_sell", "numof_corporate_sell",
+        "vol_individual_sell", "vol_corporate_sell"
     ]
     return keys
 

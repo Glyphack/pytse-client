@@ -10,7 +10,10 @@ from pytse_client import (
     config
 )
 
-from pytse_client.ticker_statisticals.utils import get_index_to_symbol_map
+from pytse_client.ticker_statisticals.utils import (
+    get_index_to_symbol_map,
+    get_keys_of_client_types,
+)
 from pytse_client.ticker_statisticals import (
     filter_key_value,
     filter_value_NONE
@@ -32,20 +35,29 @@ def _get_list_of_processed_stats(raw_key_stats: str) \
     return indices, values
 
 
-def get_aggregated_key_stats(base_path=None, to_csv=False)\
-        -> Dict[str, Dict[str, str]]:
+def _get_dict_of_client_types(raw_client_types: str):
+    client_types_keys = get_keys_of_client_types()
+    final_client_types = {}
+    for each_client_type in raw_client_types.split(";"):
+        key_val = list(zip(client_types_keys,
+             each_client_type.split(",")
+        ))
+        key_val_dict = dict(key_val)
+        final_client_types[key_val_dict["index"]] = key_val_dict
+    return final_client_types
+
+
+def get_stats(base_path=None, to_csv=False)\
+        -> pd.DataFrame:
     aggregated_key_stats = {}
     index_to_symbol_map = map_index_to_symbols()
     session = utils.requests_retry_session()
-    try:
-        response = session.get(tse_settings.KEY_STATS_URL)
-    except Exception as e:
-        raise Exception(f"Failed to get key stats: {e}")
-    finally:
-        session.close()
-
-    raw_key_stats = response.text
+    
+    raw_key_stats = _get_key_stats(session).text
     indices, values = _get_list_of_processed_stats(raw_key_stats)
+    
+    raw_client_types = _get_client_types(session).text
+    client_types_dict = _get_dict_of_client_types(raw_client_types)
 
     linked_stats = zip(indices, values)
     for idx_stat, val_stat in linked_stats:
@@ -58,12 +70,19 @@ def get_aggregated_key_stats(base_path=None, to_csv=False)\
         segmented_val_stat = re.split(r'\;', val_stat)
         segmented_val_stat = list(
             filter(lambda x: x != '', segmented_val_stat))
+        
         for each_segment in segmented_val_stat:
             key, val = each_segment.split(",")
             filter_key_found[filter_key_value[int(key)]] = val
+        
+        client_types = client_types_dict.get(idx_stat, {
+            key:None for key in get_keys_of_client_types()
+        })
+        
         aggregated_key_stats[idx_stat] = {
             **filter_value_NONE,
             **filter_key_found,
+            **client_types,
             "symbol": symbol,
             "name": name
         }
@@ -91,3 +110,23 @@ def get_aggregated_key_stats(base_path=None, to_csv=False)\
         aggregated_key_stats_df.to_csv(path, index=False)
 
     return aggregated_key_stats_df
+
+
+def _get_key_stats(session):
+    try:
+        response = session.get(tse_settings.KEY_STATS_URL)
+    except Exception as e:
+        raise Exception(f"Failed to get key stats: {e}")
+    finally:
+        session.close()
+    return response
+
+
+def _get_client_types(session):
+    try:
+        response = session.get(tse_settings.CLIENT_TYPES_URL)
+    except Exception as e:
+        raise Exception(f"Failed to get client types: {e}")
+    finally:
+        session.close()
+    return response

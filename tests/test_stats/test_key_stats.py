@@ -3,7 +3,7 @@ import unittest
 from os.path import exists
 from pathlib import Path
 
-from pytse_client import get_aggregated_key_stats
+from pytse_client import get_stats
 
 
 class TestKeyStats(unittest.TestCase):
@@ -16,7 +16,7 @@ class TestKeyStats(unittest.TestCase):
         return super().tearDown()
 
     def test_key_stats(self):
-        df = get_aggregated_key_stats(
+        df = get_stats(
             base_path=self.write_csv_path,
             to_csv=True
         )
