@@ -1,9 +1,8 @@
-import json
 from pathlib import Path
 import os
 import re
 import pandas as pd
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 from pytse_client import (
     utils,
     tse_settings,
@@ -11,7 +10,6 @@ from pytse_client import (
 )
 
 from pytse_client.ticker_statisticals.utils import (
-    get_index_to_symbol_map,
     get_keys_of_client_types,
     get_keys_of_market_watch,
 )
