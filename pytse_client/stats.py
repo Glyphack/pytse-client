@@ -62,6 +62,7 @@ def _get_dict_of_market_watch(raw_market_watch: str):
                            each_market_watch.split(",")
                            ))
         key_val_dict = dict(key_val)
+        del key_val_dict["NOT_VALID_KEY"]
         final_market_watch[key_val_dict["index"]] = key_val_dict
     return final_market_watch
 
@@ -103,6 +104,7 @@ def get_stats(base_path=None, to_csv=False)\
 
         market_watch = market_watch_dict.get(idx_stat, {
             key: None for key in get_keys_of_market_watch()
+            if key != "NOT_VALID_KEY"
         })
 
         aggregated_key_stats[idx_stat] = {

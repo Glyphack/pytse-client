@@ -43,8 +43,9 @@ def get_keys_of_market_watch():
         "index", "code", "symbol", "name", "last_changed", "open_price",
         "adj_closing_price", "last_price", "number_of_trans",
         "volume_of_trans", "value_of_trans", "min_price", "max_year",
-        "yesterday_price", "EPS", "base_volume", "", "", "group_number",
-        "max_price_allowed", "min_price_allowed", "number_of_stocks", ""
+        "yesterday_price", "EPS", "base_volume", "NOT_VALID_KEY",
+        "NOT_VALID_KEY", "group_number", "max_price_allowed",
+        "min_price_allowed", "number_of_stocks", "NOT_VALID_KEY"
     ]
     return keys
 
