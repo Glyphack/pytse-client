@@ -34,8 +34,8 @@
         - [ریز معاملات سهام](#ریز-معاملات-سهام)
     - [آمارهای کلیدی نمادها](#آمارهای-کلیدی-سهام)
   - [کامیونیتی](#کامیونیتی)
-  - [پکیج‌های مورد نیاز:](#پکیجهای-مورد-نیاز)
-  - [الهام گرفته از:](#الهام-گرفته-از)
+  - [منابع آموزشی](#منابع-آموزشی)
+  - [الهام گرفته از](#الهام-گرفته-از)
 
 ## قابلیت‌ها
 
@@ -624,14 +624,13 @@ key_stats = get_aggregated_key_stats(base_path="hello", to_csv=True)
 
 https://discord.gg/ampPDKHpVv
 
-<div id="required-packages" />
+<div id="education" />
 
-## پکیج‌های مورد نیاز:
+## منابع آموزشی
+لیست زیر پست و یا دوره‌های آموزشی است که به شما کمک می‌کند استفاده از پایتون و پکیج pytse را بیاموزید
 
-- [Pandas](https://github.com/pydata/pandas)
-- [Requests](http://docs.python-requests.org/en/master/)
-- [jdatetime](https://github.com/slashmili/python-jalali)
-- [beautifulsoup4](https://pypi.org/project/beautifulsoup4)
+- https://virgool.io/@sh.hooshyari/%D8%AF%D8%B1%DB%8C%D8%A7%D9%81%D8%AA-%D8%A7%D8%B7%D9%84%D8%A7%D8%B9%D8%A7%D8%AA-%D8%A8%D9%88%D8%B1%D8%B3-%D8%AA%D9%87%D8%B1%D8%A7%D9%86-%D8%A8%D8%A7-%D9%BE%D8%A7%DB%8C%D8%AA%D9%88%D9%86-mgaev4iytip6
+- https://github.com/sfmqrb/Eco-Finance-Course
 
 <div id="credits" />
 
