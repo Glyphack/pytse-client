@@ -7,12 +7,14 @@ from pytse_client import utils
 from pytse_client.ticker_statisticals import get_keys_of_asks_bids
 from pytse_client.tse_settings import MARKET_WATCH_URL
 from pytse_client.config import ASKS_BIDS_PATH
+from pytse_client.utils.request_session import requests_retry_session
 
 keys_of_asks_bids = get_keys_of_asks_bids()
 
 
 def get_asks_and_bids(to_csv=False, base_path=None):
-    raw_text = utils.get_raw_text(MARKET_WATCH_URL)
+    raw_text = requests_retry_session()\
+        .get(MARKET_WATCH_URL, timeout=10).text
     raw_tickers = raw_text.split("@")[3].split(";")
     ticker_ls = [raw.split(",") for raw in raw_tickers]
 
