@@ -35,6 +35,13 @@ def _get_list_of_processed_stats(raw_key_stats: str) \
 
 
 def _get_dict_of_client_types(raw_client_types: str):
+    """
+        output: Dictionary of client types with the following keys:
+            "index", "numof_individual_buy", "numof_corporate_buy",
+            "vol_individual_buy", "vol_corporate_buy",
+            "numof_individual_sell", "numof_corporate_sell",
+            "vol_individual_sell", "vol_corporate_sell"
+    """
     client_types_keys = get_keys_of_client_types()
     final_client_types = {}
     for each_client_type in raw_client_types.split(";"):
@@ -47,6 +54,15 @@ def _get_dict_of_client_types(raw_client_types: str):
 
 
 def _get_dict_of_market_watch(raw_market_watch: str):
+    """
+        output: Dictionary of market watch with the following keys:
+            "index", "code", "symbol", "name", "last_changed", "open_price",
+            "adj_closing_price", "last_price", "number_of_trans",
+            "volume_of_trans", "value_of_trans", "min_price", "max_year",
+            "yesterday_price", "EPS", "base_volume", "NOT_VALID_KEY",
+            "NOT_VALID_KEY", "group_number", "max_price_allowed",
+            "min_price_allowed", "number_of_stocks", "NOT_VALID_KEY"
+    """
     try:
         _market_watch = raw_market_watch.split("@")[2]
     except IndexError:
