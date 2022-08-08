@@ -1,4 +1,3 @@
-import os
 import json
 
 from pytse_client.ticker_statisticals import get_index_to_symbol_map
