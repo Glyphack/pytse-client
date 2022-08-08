@@ -145,11 +145,11 @@ def get_stats(base_path=None, to_csv=False)\
     aggregated_key_stats_df.reset_index(drop=True, inplace=True)
 
     if to_csv:
-        base_path = config.KEY_STATS_BASE_PATH if\
+        base_path = config.STATS_BASE_PATH if\
             base_path is None else base_path
         Path(base_path).mkdir(parents=True, exist_ok=True)
 
-        path = os.path.join(base_path, "key_stats.csv")
+        path = os.path.join(base_path, "stats.csv")
         aggregated_key_stats_df.to_csv(path, index=False)
 
     return aggregated_key_stats_df
