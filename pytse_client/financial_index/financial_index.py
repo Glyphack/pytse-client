@@ -141,14 +141,14 @@ class FinancialIndex:
 
     def _get_rows(self, intraday_price_ls, col_len):
         '''
-        intraday_price_ls: a table in financial index history page that contains 
-            intraday information as string
+        intraday_price_ls: a table in financial index history page that
+        contains intraday information as string
         col_len: number of table columns
-        
+
         in the result return from tsetmc negative values like -3
         are represented as (3) here they are converted to normal representaion
         '''
-        
+
         # Remove separators in numbers: 3,000 -> 3000
         intraday_price_ls = list(
             map(lambda x: x.replace(",", ""), intraday_price_ls))

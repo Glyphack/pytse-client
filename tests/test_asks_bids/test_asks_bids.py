@@ -3,12 +3,12 @@ import unittest
 from os.path import exists
 from pathlib import Path
 
-from pytse_client import get_aggregated_key_stats
+from pytse_client import get_asks_and_bids
 
 
 class TestKeyStats(unittest.TestCase):
     def setUp(self) -> None:
-        self.write_csv_path = "test_key_stats_dir"
+        self.write_csv_path = "test_asks_bids_dir"
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -16,12 +16,12 @@ class TestKeyStats(unittest.TestCase):
         return super().tearDown()
 
     def test_key_stats(self):
-        df = get_aggregated_key_stats(
+        df = get_asks_and_bids(
             base_path=self.write_csv_path,
             to_csv=True
         )
         self.assertTrue(
-            exists(Path(f"{self.write_csv_path}/key_stats.csv"))
+            exists(Path(f"{self.write_csv_path}/bids_asks.csv"))
         )
         self.assertFalse(df.empty)
 
