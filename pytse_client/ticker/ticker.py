@@ -509,6 +509,14 @@ class Ticker:
     def nav_date(self):
         return self.get_ticker_real_time_info_response().nav_date
 
+    @property
+    def TR_Gold_scan(self):
+        H = self.get_ticker_real_time_info_response().high_price
+        L = self.get_ticker_real_time_info_response().low_price
+        CP = self.get_ticker_real_time_info_response().yesterday_price
+        tr_list = [(H-L), abs(H-CP), abs(L-CP)]
+        return max(tr_list)
+
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
         """
         notes on usage:
