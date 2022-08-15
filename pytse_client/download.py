@@ -152,7 +152,28 @@ def download(
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
     session.close()
-    return df_list
+    df_list_gold_scan = gold_scan_task(df_list.keys())
+    return df_list_gold_scan
+
+
+def gold_scan_task(df_list_key):
+
+    dict_Gold = {}
+    dict_df = {}
+    dict_culmn = {}
+
+    a = df_list_key.to_dict()
+
+    for i in a['open']:
+        for culmn in a:
+            dict_culmn[culmn] = a[culmn][i]
+        del dict_culmn['date']
+        dict_df[i] = dict_culmn
+
+    for i in a['date']:
+        dict_Gold[a['date'][i]] = dict_df[i]
+
+    return dict_Gold
 
 
 def adjust_price(
