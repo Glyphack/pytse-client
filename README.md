@@ -23,19 +23,19 @@
     - [دانلود سابقه شاخص های مالی](#دانلود-سابقه-شاخص-های-مالی)
     - [دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا](#دانلود-سابقه-معاملات-حقیقی-و-حقوقی-به-صورت-مجزا)
     - [ماژول Ticker](#ماژول-ticker)
-      - [نکته ۱](#نکته-۱)
-      - [نکته ۲](#نکته-۲)
+        - [نکته ۱](#نکته-۱)
+        - [نکته ۲](#نکته-۲)
       - [اطلاعات نماد‌های حذف شده](#اطلاعات-نمادهای-حذف-شده)
       - [اطلاعات حقیقی و حقوقی](#اطلاعات-حقیقی-و-حقوقی)
       - [سهامداران عمده](#سهامداران-عمده)
-        - [شناور سهم](#شناور-سهم)
         - [تاریخچه‌ی سهام‌داران عمده](#تاریخچهی-سهامداران-عمده)
+        - [شناور سهم](#شناور-سهم)
         - [اطلاعات لحظه‌ای سهام](#اطلاعات-لحظهای-سهام)
         - [ریز معاملات سهام](#ریز-معاملات-سهام)
     - [تمامی اطلاعات موجود برای فیلترنویسی](#تمامی-اطلاعات-موجود-برای-فیلترنویسی)
   - [کامیونیتی](#کامیونیتی)
   - [منابع آموزشی](#منابع-آموزشی)
-  - [الهام گرفته از](#الهام-گرفته-از)
+  - [الهام گرفته از:](#الهام-گرفته-از)
 
 ## قابلیت‌ها
 
@@ -421,29 +421,13 @@ print(ticker.shareholders)  # اطلاعات سهام‌داران عمده
 
 </div>
 
-##### شناور سهم
-
-برای مثال میشه با استفاده از دیتای سهامداران عمده، شناوری سهم رو حساب کرد:
-
-<div dir="ltr">
-
-```python
-import pytse_client as tse
-
-ticker = tse.Ticker("وبملت")
-
-print(ticker.shareholders.percentage.sum())  # جمع درصد سهام‌داران عمده
-53.63
-
-print(100 - ticker.shareholders.percentage.sum())  # درصد سهام شناور
-46.37
-```
-
-</div>
-
 ##### تاریخچه‌ی سهام‌داران عمده
 
 با استفاده از تابع get_shareholders_history میشه تاریخچه اطلاعات سهام‌داران عمده رو گرفت:
+
+**رفع خطای asyncio.run() cannot be called from a running event loop**
+در صورتی که این خطا رو گرفتید به این معنی هست که تابع `get_shareholders_history` در یک تابع `async` داره اجرا میشه.
+برای رفع اون کافیه که تابع `get_shareholders_history_async` رو استفاده کنید مطابق مثال پایین تکه کد دوم.
 
 <div dir="ltr">
 
@@ -456,6 +440,16 @@ ticker.get_shareholders_history(
     to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
     only_trade_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
 )
+
+# در صورتی که میخواهید تابع
+# async
+# رو استفاده کنید
+await ticker.get_shareholders_history(
+    from_when=datetime.timedelta(days=90),  # تعداد روز‌های گذشته که مقدار پیشفرض ۹۰ روز است
+    to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
+    only_trade_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
+)
+
 ```
 
 </div>
@@ -491,6 +485,26 @@ ticker.get_shareholders_history(
 
 ```
 Retrying pytse_client.ticker.ticker.Ticker._get_ticker_daily_info_page_response in 1.3127419515957892 seconds as it raised ClientResponseError: 500, message='Internal Server Error', url=URL('http://cdn.tsetmc.com/Loader.aspx?ParTree=15131P&i=56574323121551263&d=20210220').
+```
+
+</div>
+
+##### شناور سهم
+
+برای مثال میشه با استفاده از دیتای سهامداران عمده، شناوری سهم رو حساب کرد:
+
+<div dir="ltr">
+
+```python
+import pytse_client as tse
+
+ticker = tse.Ticker("وبملت")
+
+print(ticker.shareholders.percentage.sum())  # جمع درصد سهام‌داران عمده
+53.63
+
+print(100 - ticker.shareholders.percentage.sum())  # درصد سهام شناور
+46.37
 ```
 
 </div>
