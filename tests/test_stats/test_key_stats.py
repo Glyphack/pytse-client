@@ -16,16 +16,11 @@ class TestKeyStats(unittest.TestCase):
         return super().tearDown()
 
     def test_key_stats(self):
-        df = get_stats(
-            base_path=self.write_csv_path,
-            to_csv=True
-        )
-        self.assertTrue(
-            exists(Path(f"{self.write_csv_path}/key_stats.csv"))
-        )
+        df = get_stats(base_path=self.write_csv_path, to_csv=True)
+        self.assertTrue(exists(Path(f"{self.write_csv_path}/key_stats.csv")))
         self.assertFalse(df.empty)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestKeyStats)
     unittest.TextTestRunner(verbosity=3).run(suite)
