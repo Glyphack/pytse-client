@@ -512,6 +512,7 @@ print(100 - ticker.shareholders.percentage.sum())  # درصد سهام شناو�
 ##### اطلاعات لحظه‌ای سهام
 
 از طریق تابع `get_ticker_real_time_info_response` میشه اطلاعات لحظه‌ای سهام رو گرفت.
+در صورتی که هنگام گرفتن اطلاعات لحظه‌ای وضعیت سهام در حالت ممنوع متوقف باشد یا نماد قدیمی باشد اطلاعات لحظه‌ای موجود نیست و با ارور مواجه خواهید شد که باید به درستی هندل شود.
 نمونه‌ی استفاده
 
 <div dir="ltr">
@@ -520,7 +521,10 @@ print(100 - ticker.shareholders.percentage.sum())  # درصد سهام شناو�
 import pytse_client as tse
 
 ticker = tse.Ticker("وبملت")
-real_time_data = ticker.get_ticker_real_time_info_response()
+try:
+    real_time_data = ticker.get_ticker_real_time_info_response()
+except RuntimeError: # هندل کردن ارور در صورت وجود نداشتن اطلاعات لحظه‌ای
+    print("cannot get realtime data")
 
 print(real_time_data.buy_orders) # پیشنهادات خرید
 print(real_time_data.sell_orders) # پیشنهادات فروش
