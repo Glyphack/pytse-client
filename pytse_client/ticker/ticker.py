@@ -11,10 +11,17 @@ import aiohttp
 import bs4
 import pandas as pd
 import requests
-from tenacity import retry, wait_random
+from tenacity import retry
 from tenacity.before_sleep import before_sleep_log
+from tenacity.wait import wait_random
 
-from pytse_client import config, symbols_data, translations, tse_settings, utils
+from pytse_client import (
+    config,
+    symbols_data,
+    translations,
+    tse_settings,
+    utils,
+)
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.proxy.dto import ShareholderData
 from pytse_client.proxy.tsetmc import get_day_shareholders_history
@@ -70,7 +77,9 @@ class Ticker:
         self._index = index or symbols_data.get_ticker_index(symbol)
         self.symbol = symbol if index is None else self._index
         self.adjust = adjust
-        self.daily_records_csv_path = f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
+        self.daily_records_csv_path = (
+            f"{config.DATA_BASE_PATH}/{self.symbol}.csv"
+        )
         self.adjusted_daily_records_csv_path = (
             f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         )
@@ -79,8 +88,10 @@ class Ticker:
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         # FIXME: if symbol equals instrument id, it cannot fetch introduction
         # page. it occurrs when Ticker called with index id not symbol
-        self._introduction_url = tse_settings.TSE_TICKER_INTRODUCTION_URL.format(
-            replace_persian(self.symbol)
+        self._introduction_url = (
+            tse_settings.TSE_TICKER_INTRODUCTION_URL.format(
+                replace_persian(self.symbol)
+            )
         )
         self._history: pd.DataFrame = pd.DataFrame()
 
@@ -136,14 +147,16 @@ class Ticker:
         instrument id of a ticker is like instrument_id and used for calling
         some apis from tsetmc
         """
-        return re.findall(r"CIsin='([\w\d]*)|',$", self._ticker_page_response.text)[0]
+        return re.findall(
+            r"CIsin='([\w\d]*)|',$", self._ticker_page_response.text
+        )[0]
 
     @property
     def title(self) -> str:
         return replace_arabic(
-            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[0].split(
-                "-"
-            )[0]
+            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[
+                0
+            ].split("-")[0]
         )
 
     @property
@@ -154,7 +167,9 @@ class Ticker:
 
     @property
     def group_name(self) -> str:
-        return re.findall(r"LSecVal='([\D]*)',", self._ticker_page_response.text)[0]
+        return re.findall(
+            r"LSecVal='([\D]*)',", self._ticker_page_response.text
+        )[0]
 
     @property
     def p_e_ratio(self) -> Optional[float]:
@@ -172,7 +187,9 @@ class Ticker:
         """
         Notes on usage: tickers like وملت does not have group P/E (gpe)
         """
-        gpe = re.findall(r"SectorPE='([\d.]*)',", self._ticker_page_response.text)
+        gpe = re.findall(
+            r"SectorPE='([\d.]*)',", self._ticker_page_response.text
+        )
         if not gpe or not gpe[0]:
             return None
         return float(gpe[0])
@@ -182,9 +199,9 @@ class Ticker:
         """
         Notes on usage: tickers like آسام does not have eps
         """
-        eps = re.findall(r"EstimatedEPS='([-,\d]*)',", self._ticker_page_response.text)[
-            0
-        ]
+        eps = re.findall(
+            r"EstimatedEPS='([-,\d]*)',", self._ticker_page_response.text
+        )[0]
         if eps == "":
             return None
         return float(eps)
@@ -205,7 +222,9 @@ class Ticker:
         """
         Notes on usage: tickers like آسام does not have psr
         """
-        psr = re.findall(r"PSR='([+-]?[\.\d]*)'", self._ticker_page_response.text)
+        psr = re.findall(
+            r"PSR='([+-]?[\.\d]*)'", self._ticker_page_response.text
+        )
         if not psr or psr[0] == "":
             return None
         return float(psr[0])
@@ -213,13 +232,17 @@ class Ticker:
     @property
     def total_shares(self) -> float:
         return float(
-            re.findall(r"ZTitad=([-,\d]*),", self._ticker_page_response.text)[0]
+            re.findall(r"ZTitad=([-,\d]*),", self._ticker_page_response.text)[
+                0
+            ]
         )
 
     @property
     def base_volume(self) -> float:
         return float(
-            re.findall(r"BaseVol=([-,\d]*),", self._ticker_page_response.text)[0]
+            re.findall(r"BaseVol=([-,\d]*),", self._ticker_page_response.text)[
+                0
+            ]
         )
 
     @property
@@ -236,7 +259,9 @@ class Ticker:
         """
         عنوان بازار
         """
-        flow_code = re.findall(r"Flow='(.*?)'", self._ticker_page_response.text)[0]
+        flow_code = re.findall(
+            r"Flow='(.*?)'", self._ticker_page_response.text
+        )[0]
         return self._flow_name(flow_code)
 
     @property
@@ -246,7 +271,9 @@ class Ticker:
         حداکثر قیمت مجاز
         """
         return float(
-            re.findall(r"PSGelStaMax='(.*?)'", self._ticker_page_response.text)[0]
+            re.findall(
+                r"PSGelStaMax='(.*?)'", self._ticker_page_response.text
+            )[0]
         )
 
     @property
@@ -256,7 +283,9 @@ class Ticker:
         حداقل قیمت مجاز
         """
         return float(
-            re.findall(r"PSGelStaMin='(.*?)'", self._ticker_page_response.text)[0]
+            re.findall(
+                r"PSGelStaMin='(.*?)'", self._ticker_page_response.text
+            )[0]
         )
 
     @property
@@ -265,7 +294,9 @@ class Ticker:
         """
         حداقل قیمت هفته اخیر
         """
-        return float(re.findall(r"MinWeek='(.*?)'", self._ticker_page_response.text)[0])
+        return float(
+            re.findall(r"MinWeek='(.*?)'", self._ticker_page_response.text)[0]
+        )
 
     @property
     @catch(IndexError, ValueError)
@@ -273,7 +304,9 @@ class Ticker:
         """
         حداکثر قیمت هفته اخیر
         """
-        return float(re.findall(r"MaxWeek='(.*?)'", self._ticker_page_response.text)[0])
+        return float(
+            re.findall(r"MaxWeek='(.*?)'", self._ticker_page_response.text)[0]
+        )
 
     @property
     @catch(IndexError, ValueError)
@@ -281,7 +314,9 @@ class Ticker:
         """
         حداقل قیمت بازه سال
         """
-        return float(re.findall(r"MinYear='(.*?)'", self._ticker_page_response.text)[0])
+        return float(
+            re.findall(r"MinYear='(.*?)'", self._ticker_page_response.text)[0]
+        )
 
     @property
     @catch(IndexError, ValueError)
@@ -289,14 +324,18 @@ class Ticker:
         """
         حداکثر قیمت بازه سال
         """
-        return float(re.findall(r"MaxYear='(.*?)'", self._ticker_page_response.text)[0])
+        return float(
+            re.findall(r"MaxYear='(.*?)'", self._ticker_page_response.text)[0]
+        )
 
     @property
     def month_average_volume(self) -> str:
         """
         میانگین حجم ماه
         """
-        return re.findall(r"QTotTran5JAvg='(.*?)'", self._ticker_page_response.text)[0]
+        return re.findall(
+            r"QTotTran5JAvg='(.*?)'", self._ticker_page_response.text
+        )[0]
 
     @property
     @catch(IndexError, ValueError)
@@ -305,7 +344,9 @@ class Ticker:
         درصد سهام شناور
         """
         return float(
-            re.findall(r"KAjCapValCpsIdx='(.*?)'", self._ticker_page_response.text)[0]
+            re.findall(
+                r"KAjCapValCpsIdx='(.*?)'", self._ticker_page_response.text
+            )[0]
         )
 
     @property
@@ -370,10 +411,12 @@ class Ticker:
             )
         )
         for date in filtered_dates:
-            tasks.append(get_day_shareholders_history(self._index, date, session))
-        all_tickers_shareholders: List[List[ShareholderData]] = await asyncio.gather(
-            *tasks
-        )
+            tasks.append(
+                get_day_shareholders_history(self._index, date, session)
+            )
+        all_tickers_shareholders: List[
+            List[ShareholderData]
+        ] = await asyncio.gather(*tasks)
         if session_created is True:
             await session.close()
 
@@ -545,10 +588,18 @@ class Ticker:
         try:
             orders_section = response_sections_list[2]
             buy_orders, sell_orders = get_orders(orders_section)
-            best_demand_vol = buy_orders[0].volume if 0 < len(buy_orders) else None
-            best_demand_price = buy_orders[0].price if 0 < len(buy_orders) else None
-            best_supply_vol = sell_orders[0].volume if 0 < len(sell_orders) else None
-            best_supply_price = sell_orders[0].price if 0 < len(sell_orders) else None
+            best_demand_vol = (
+                buy_orders[0].volume if 0 < len(buy_orders) else None
+            )
+            best_demand_price = (
+                buy_orders[0].price if 0 < len(buy_orders) else None
+            )
+            best_supply_vol = (
+                sell_orders[0].volume if 0 < len(sell_orders) else None
+            )
+            best_supply_price = (
+                sell_orders[0].price if 0 < len(sell_orders) else None
+            )
         except (IndexError):
             buy_orders = []
             sell_orders = []
@@ -568,7 +619,9 @@ class Ticker:
             individual_trade_summary = get_individual_trade_summary(
                 trade_summary_section
             )
-            corporate_trade_summary = get_corporate_trade_summary(trade_summary_section)
+            corporate_trade_summary = get_corporate_trade_summary(
+                trade_summary_section
+            )
         else:
             logger.warning(
                 f"""not enough sections in response to extract trade summaries
@@ -609,7 +662,9 @@ class Ticker:
 
     @functools.cached_property
     def _ticker_introduction_page_response(self):
-        return utils.requests_retry_session().get(self._introduction_url, timeout=10)
+        return utils.requests_retry_session().get(
+            self._introduction_url, timeout=10
+        )
 
     @functools.lru_cache()
     @retry(
@@ -620,7 +675,9 @@ class Ticker:
         self, session, date
     ) -> requests.Response:
         async with session.get(
-            tse_settings.INSTRUMENT_DAY_INFO_URL.format(index=self.index, date=date),
+            tse_settings.INSTRUMENT_DAY_INFO_URL.format(
+                index=self.index, date=date
+            ),
         ) as response:
             response.raise_for_status()
             page = await response.text()
