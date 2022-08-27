@@ -1,0 +1,27 @@
+name: Unit Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+ unit-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.7"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        poetry install
+
+    - name: Run unit tests
+      run: make unit_test

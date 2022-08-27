@@ -1,0 +1,23 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  lint-pycodestyle:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        pip install poetry
+        poetry install
+    - name: Python Style Checker
+      uses: andymckay/pycodestyle-action@0.1.3
+
