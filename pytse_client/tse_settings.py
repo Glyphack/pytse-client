@@ -6,12 +6,12 @@ TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS = (
     "http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={}&t=value"
 )
 
-TSE_FINANCIAL_INDEX_EXPORT_INTRADAY_DATA_ADDRESS = (
+FINANCIAL_INDEX_EXPORT_INTRADAY_URL = (
     "http://www.tsetmc.com/Loader.aspx?ParTree=15131J&i={}"
 )
 
 
-TSE_TICKER_ADDRESS = ("http://tsetmc.com/Loader.aspx?ParTree=151311&i={}")
+TSE_TICKER_ADDRESS = "http://tsetmc.com/Loader.aspx?ParTree=151311&i={}"
 
 # FIXME: c should be cSecVal (group code of instrument)
 # remove e parameter when instrument has not NAV value
@@ -24,16 +24,12 @@ TSE_TICKER_INTRODUCTION_URL = (
 TSE_CLIENT_TYPE_DATA_URL = (
     "http://www.tsetmc.com/tsev2/data/clienttype.aspx?i={}"
 )
-TSE_SYMBOL_ID_URL = ("http://www.tsetmc.com/tsev2/data/search.aspx?skey={}")
+TSE_SYMBOL_ID_URL = "http://www.tsetmc.com/tsev2/data/search.aspx?skey={}"
 
-TSE_TRADE_DETAIL_URL = (
-    "http://www.tsetmc.com/tsev2/data/TradeDetail.aspx?i={}"
-)
+TSE_TRADE_DETAIL_URL = "http://www.tsetmc.com/tsev2/data/TradeDetail.aspx?i={}"
 
 # use instrument id as argument
-TSE_SHAREHOLDERS_URL = (
-    "http://www.tsetmc.com/Loader.aspx?Partree=15131T&c={}"
-)
+TSE_SHAREHOLDERS_URL = "http://www.tsetmc.com/Loader.aspx?Partree=15131T&c={}"
 
 # returns all the instrument data for a specific date
 # date should be formatted like YYYYMMDD
@@ -42,7 +38,7 @@ INSTRUMENT_DAY_INFO_URL = (
 )
 
 # returns list of all symbols
-SYMBOLS_LIST_URL = ("http://www.tsetmc.com/Loader.aspx?ParTree=111C1417")
+SYMBOLS_LIST_URL = "http://www.tsetmc.com/Loader.aspx?ParTree=111C1417"
 
 # market watch init, has initial data for market watch like symbols name etc.
 MARKET_WATCH_INIT_URL = (
@@ -55,9 +51,7 @@ SYMBOL_DAY_INFO_SHAREHOLDERS_DATA = (
 )
 
 # get statistical information for all tickers
-KEY_STATS_URL = (
-    "http://www.tsetmc.com/tsev2/data/InstValue.aspx?t=a"
-)
+KEY_STATS_URL = "http://www.tsetmc.com/tsev2/data/InstValue.aspx?t=a"
 
 # get some information about each ticker using دیده بان بازار
 MARKET_WATCH_URL = (
@@ -65,9 +59,7 @@ MARKET_WATCH_URL = (
 )
 
 
-CLIENT_TYPES_URL = (
-    "http://www.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
-)
+CLIENT_TYPES_URL = "http://www.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
 
 DATE_FORMAT = "%Y%m%d"
 MIN_DATE = 20010321
