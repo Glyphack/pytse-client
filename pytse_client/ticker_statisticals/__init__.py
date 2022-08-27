@@ -5,5 +5,5 @@ from .utils import (
     get_keys_of_asks_bids,
     get_keys_of_client_types,
     get_keys_of_market_watch,
-    get_index_to_symbol_map
+    get_index_to_symbol_map,
 )

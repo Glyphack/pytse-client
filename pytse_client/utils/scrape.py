@@ -6,7 +6,7 @@ import pandas as pd
 
 
 def get_html_table_header_and_rows(
-    table: bs4.PageElement
+    table: bs4.PageElement,
 ) -> Tuple[List, List]:
     """
     return header and rows from a html table as a list
@@ -20,7 +20,7 @@ def get_html_table_header_and_rows(
 
     for table_row in table_rows:
         row = []
-        for cell in table_row.findAll(['th', 'td']):
+        for cell in table_row.findAll(["th", "td"]):
             row.append(cell)
         rows.append(row)
 

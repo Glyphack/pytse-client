@@ -29,7 +29,11 @@ def symbols_information() -> Dict[str, Dict]:
 
 
 def get_financial_index(financial_index_name: str):
-    return financial_indexes_information().get(financial_index_name, {}).get("index")
+    return (
+        financial_indexes_information()
+        .get(financial_index_name, {})
+        .get("index")
+    )
 
 
 def get_ticker_index(ticker_symbol: str) -> Optional[str]:

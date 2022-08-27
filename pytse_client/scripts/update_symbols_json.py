@@ -16,13 +16,13 @@ def write_symbols_to_json(
     market_symbols: List[MarketSymbol], filename: str, path: str
 ) -> None:
     Path(path).mkdir(parents=True, exist_ok=True)
-    with open(f'{path}/{filename}', 'w', encoding='utf8') as file:
+    with open(f"{path}/{filename}", "w", encoding="utf8") as file:
         data = {
             obj.symbol: {
                 "index": obj.index,
                 "code": obj.code,
                 "name": obj.name,
-                "old": obj.old
+                "old": obj.old,
             }
             for obj in market_symbols
         }
@@ -33,8 +33,8 @@ if __name__ == "__main__":
     # the sum order is important
     # https://github.com/Glyphack/pytse-client/issues/123
     market_symbols = (
-        get_market_symbols_from_market_watch_page() +
-        get_market_symbols_from_symbols_list_page()
+        get_market_symbols_from_market_watch_page()
+        + get_market_symbols_from_symbols_list_page()
     )
     deduplicated_market_symbols = list(set(market_symbols))
     # fetch old indexes of symbols

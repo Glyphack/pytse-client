@@ -4,7 +4,7 @@ from collections import namedtuple
 from dataclasses import dataclass
 from typing import List, Tuple
 
-Order = namedtuple('order', ['count', 'volume', 'price'])
+Order = namedtuple("order", ["count", "volume", "price"])
 
 
 @dataclass
@@ -20,7 +20,7 @@ def get_orders(orders_raw_text: str) -> Tuple[List[Order], List[Order]]:
         return [], []
     buy_orders_set = []
     sell_orders_set = []
-    orders = orders_raw_text.split(',')
+    orders = orders_raw_text.split(",")
     orders.pop()  # last item is empty string
     for order_text in orders:
         order_numbers = order_text.split("@")
@@ -42,7 +42,7 @@ def get_orders(orders_raw_text: str) -> Tuple[List[Order], List[Order]]:
 
 
 def get_individual_trade_summary(
-    individual_trade_summary_section
+    individual_trade_summary_section,
 ) -> TradeSummary:
     splitted_fields = individual_trade_summary_section.split(",")
     if len(splitted_fields) < 9:

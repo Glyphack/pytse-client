@@ -5,7 +5,7 @@
 """
 from pytse_client import download_client_types_records
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Download all tickers clients types at once.
     # This function returns a dictionary.
     records_1 = download_client_types_records("all")

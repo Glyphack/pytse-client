@@ -11,6 +11,7 @@ from_times = [
 ]
 for symbol, from_when in zip(symbols, from_times):
     print(f"downloading {symbol}")
-    Ticker(symbol).get_shareholders_history(from_when=from_when
-                                            ).to_csv(f"{symbol}.csv")
+    Ticker(symbol).get_shareholders_history(from_when=from_when).to_csv(
+        f"{symbol}.csv"
+    )
     print(f"downloaded {symbol}")

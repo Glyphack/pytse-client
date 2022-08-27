@@ -6,7 +6,10 @@ from typing import List, Tuple
 import pandas as pd
 
 from pytse_client import config, tse_settings, utils
-from pytse_client.ticker_statisticals import filter_key_value, filter_value_NONE
+from pytse_client.ticker_statisticals import (
+    filter_key_value,
+    filter_value_NONE,
+)
 from pytse_client.ticker_statisticals.utils import (
     get_keys_of_client_types,
     get_keys_of_market_watch,
@@ -14,11 +17,15 @@ from pytse_client.ticker_statisticals.utils import (
 from pytse_client.utils import map_index_to_symbols
 
 
-def _get_list_of_processed_stats(raw_key_stats: str) -> Tuple[List[str], List[str]]:
+def _get_list_of_processed_stats(
+    raw_key_stats: str,
+) -> Tuple[List[str], List[str]]:
 
     # group 1 is idx, group 2 is key, group 3 is value
     proccessed_key_stats = re.sub(
-        r"([0-9]+)\,([0-9]+)\,([0-9\.]+)\;", "@\\g<1>@\\g<2>,\\g<3>;", raw_key_stats
+        r"([0-9]+)\,([0-9]+)\,([0-9\.]+)\;",
+        "@\\g<1>@\\g<2>,\\g<3>;",
+        raw_key_stats,
     )
     list_of_key_stats = proccessed_key_stats.split("@")[1:]
     indices = list_of_key_stats[0::2]
@@ -93,7 +100,9 @@ def get_stats(base_path=None, to_csv=False) -> pd.DataFrame:
             name = index_to_symbol_map[idx_stat]["name"]
         filter_key_found = {}
         segmented_val_stat = re.split(r"\;", val_stat)
-        segmented_val_stat = list(filter(lambda x: x != "", segmented_val_stat))
+        segmented_val_stat = list(
+            filter(lambda x: x != "", segmented_val_stat)
+        )
 
         for each_segment in segmented_val_stat:
             key, val = each_segment.split(",")
@@ -105,7 +114,11 @@ def get_stats(base_path=None, to_csv=False) -> pd.DataFrame:
 
         market_watch = market_watch_dict.get(
             idx_stat,
-            {key: None for key in get_keys_of_market_watch() if key != "NOT_VALID_KEY"},
+            {
+                key: None
+                for key in get_keys_of_market_watch()
+                if key != "NOT_VALID_KEY"
+            },
         )
 
         aggregated_key_stats[idx_stat] = {

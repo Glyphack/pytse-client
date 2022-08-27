@@ -25,7 +25,9 @@ def get_asks_and_bids(to_csv=False, base_path=None):
     # filter df only if id is in index_to_symbols_map
     df = df[df["id"].isin(index_to_symbols_map.keys())]
     # create symbol based on map
-    df["symbol"] = df["id"].map(lambda id: index_to_symbols_map.get(id)["symbol"])
+    df["symbol"] = df["id"].map(
+        lambda id: index_to_symbols_map.get(id)["symbol"]
+    )
 
     if to_csv:
         base_path = base_path or ASKS_BIDS_PATH
