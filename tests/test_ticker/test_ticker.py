@@ -21,7 +21,7 @@ class TestTicker(unittest.TestCase):
 
 def suite():
     test_suite = unittest.TestSuite()
-    test_suite.addTest(TestDownloadSymbolHistory("test_download_symbol_history"))
+    test_suite.addTest(TestTicker("test_download_symbol_history"))
     return test_suite
 
 
