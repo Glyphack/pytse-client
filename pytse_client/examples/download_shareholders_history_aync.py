@@ -33,10 +33,9 @@ async def get_shareholders_history():
         # can increase and decrease speed
         session = await create_session(limit=2)
         print(f"downloading {symbol}")
-        shareholders_history = await Ticker(symbol
-                                            ).get_shareholders_history_async(
-                                                session=session
-                                            )
+        shareholders_history = await Ticker(
+            symbol
+        ).get_shareholders_history_async(session=session)
         shareholders_history.to_csv(f"{str(symbol)}.csv")
         print(f"downloaded {symbol} complete")
 

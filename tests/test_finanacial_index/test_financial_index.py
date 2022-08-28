@@ -21,7 +21,7 @@ class TestFinancialIndex(unittest.TestCase):
         f_index_record = FinancialIndex(
             self.valid_f_index,
             base_path=self.write_csv_path,
-            write_history=True
+            write_history=True,
         ).history
         self.assertTrue(
             exists(Path(f"{self.write_csv_path}/{self.valid_f_index}.csv"))
@@ -42,6 +42,6 @@ class TestFinancialIndex(unittest.TestCase):
         )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     suite = unittest.TestLoader().loadTestsFromTestCase(TestFinancialIndex)
     unittest.TextTestRunner(verbosity=3).run(suite)

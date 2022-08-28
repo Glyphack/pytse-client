@@ -21,7 +21,7 @@ class TestDownloadSymbolHistory(unittest.TestCase):
         symbol_record = download(
             symbols=self.valid_symbol,
             write_to_csv=True,
-            base_path=self.write_csv_path
+            base_path=self.write_csv_path,
         )[self.valid_symbol]
         self.assertTrue(
             exists(Path(f"{self.write_csv_path}/{self.valid_symbol}.csv"))
@@ -32,7 +32,7 @@ class TestDownloadSymbolHistory(unittest.TestCase):
         symbols_records = download(
             symbols=self.valid_symbols,
             write_to_csv=True,
-            base_path=self.write_csv_path
+            base_path=self.write_csv_path,
         )
         for symbol, symbol_record in symbols_records.items():
             self.assertTrue(
@@ -56,7 +56,7 @@ class TestDownloadClientTypes(unittest.TestCase):
         symbol_record = download_client_types_records(
             symbols=self.valid_symbol,
             write_to_csv=True,
-            base_path=self.write_csv_path
+            base_path=self.write_csv_path,
         )[self.valid_symbol]
         self.assertTrue(
             exists(Path(f"{self.write_csv_path}/{self.valid_symbol}.csv"))
@@ -67,7 +67,7 @@ class TestDownloadClientTypes(unittest.TestCase):
         symbols_records = download_client_types_records(
             symbols=self.valid_symbols,
             write_to_csv=True,
-            base_path=self.write_csv_path
+            base_path=self.write_csv_path,
         )
         for symbol, symbol_record in symbols_records.items():
             self.assertTrue(
@@ -83,6 +83,6 @@ def suite():
     return suite
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     runner = unittest.TextTestRunner()
     runner.run(suite())

@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Set
+from typing import Dict, List, Optional, Set
 
 from pytse_client import config
 from pytse_client.scraper.symbol_scraper import MarketSymbol
@@ -29,15 +29,28 @@ def symbols_information() -> Dict[str, Dict]:
 
 
 def get_financial_index(financial_index_name: str):
-    return financial_indexes_information().get(
-        financial_index_name, {}).get("index")
+    return (
+        financial_indexes_information()
+        .get(financial_index_name, {})
+        .get("index")
+    )
 
 
-def get_ticker_index(ticker_symbol: str):
+def get_ticker_index(ticker_symbol: str) -> Optional[str]:
     return symbols_information().get(ticker_symbol, {}).get("index")
 
 
-def get_ticker_old_index(ticker_symbol: str):
+def get_ticker_old_index(ticker_symbol: str) -> List[str]:
+    """
+    Returns list of deactivated ticket indexes with this symbol.
+    Deactivated symbols contain historical data but not real time.
+    Args:
+        ticker_symbol: symbol name in persian
+
+    Returns: index of old(deactivated) tickers with this symbol
+
+
+    """
     return symbols_information().get(ticker_symbol, {}).get("old", []).copy()
 
 
@@ -58,7 +71,7 @@ def append_symbol_to_file(
             "index": market_symbol.index,
             "code": market_symbol.code,
             "name": market_symbol.name,
-            "old": market_symbol.old
+            "old": market_symbol.old,
         }
     }
     if ticker_name_to_index_mapping is not None:

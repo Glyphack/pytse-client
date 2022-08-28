@@ -13,7 +13,7 @@ logging.basicConfig()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     symbols_errors = defaultdict(list)
     random_symbols = random.sample(list(all_symbols()), 50)
     for index, symbol in enumerate(random_symbols):

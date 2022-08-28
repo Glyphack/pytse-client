@@ -14,7 +14,7 @@ logger = logging.getLogger(config.LOGGER_NAME)
 
 @retry(
     wait=wait_random(min=3, max=5),
-    before_sleep=before_sleep_log(logger, logging.ERROR)
+    before_sleep=before_sleep_log(logger, logging.ERROR),
 )
 async def get_day_shareholders_history(
     ticker_index: str,

@@ -14,7 +14,8 @@
 # بسته: close
 # باز: open
 
-class KeyStats():
+
+class KeyStats:
     # name : id
     ave_val_trans_last_3_month = 1
     ave_val_trans_last_12_month = 2
@@ -137,5 +138,5 @@ keys = [attr for attr in dir(filter_class) if not attr.startswith("__")]
 filter_key_value = {getattr(filter_class, key): key for key in keys}
 filter_value_NONE = {key: None for key in filter_key_value.values()}
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(filter_key_value)

@@ -7,7 +7,7 @@ from pytse_client import Ticker, download
 import pandas as pd
 
 # to be able to see whole DataFrame columns
-pd.set_option('display.max_columns', 20)
+pd.set_option("display.max_columns", 20)
 
 download(symbols="نوری", write_to_csv=True)  # optional
 ticker = Ticker("نوری")

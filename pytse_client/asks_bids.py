@@ -1,20 +1,21 @@
-import pandas as pd
 import os
 from pathlib import Path
 
+import pandas as pd
 
 from pytse_client import utils
+from pytse_client.config import ASKS_BIDS_PATH
 from pytse_client.ticker_statisticals import get_keys_of_asks_bids
 from pytse_client.tse_settings import MARKET_WATCH_URL
-from pytse_client.config import ASKS_BIDS_PATH
 from pytse_client.utils.request_session import requests_retry_session
 
 keys_of_asks_bids = get_keys_of_asks_bids()
 
 
 def get_asks_and_bids(to_csv=False, base_path=None):
-    raw_text = requests_retry_session()\
-        .get(MARKET_WATCH_URL, timeout=10).text
+    session = requests_retry_session()
+    raw_text = session.get(MARKET_WATCH_URL, timeout=10).text
+    session.close()
     raw_tickers = raw_text.split("@")[3].split(";")
     ticker_ls = [raw.split(",") for raw in raw_tickers]
 
@@ -25,7 +26,8 @@ def get_asks_and_bids(to_csv=False, base_path=None):
     df = df[df["id"].isin(index_to_symbols_map.keys())]
     # create symbol based on map
     df["symbol"] = df["id"].map(
-        lambda id: index_to_symbols_map.get(id)["symbol"])
+        lambda id: index_to_symbols_map.get(id)["symbol"]
+    )
 
     if to_csv:
         base_path = base_path or ASKS_BIDS_PATH
