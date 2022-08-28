@@ -22,8 +22,9 @@ class TestDownloadSymbolHistory(unittest.TestCase):
 
     def test_update_symbols_json_file(self):
         write_symbols_to_json(
-            get_market_symbols_from_symbols_list_page(), "symbols_name.json",
-            self.write_path
+            get_market_symbols_from_symbols_list_page(),
+            "symbols_name.json",
+            self.write_path,
         )
         self.assertTrue(exists(Path(f"{self.write_path}/symbols_name.json")))
 
