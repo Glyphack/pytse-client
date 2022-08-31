@@ -50,6 +50,10 @@ SYMBOL_DAY_INFO_SHAREHOLDERS_DATA = (
     "http://cdn.tsetmc.com/api/Shareholder/{index}/{date}"
 )
 
+SYMBOL_DAY_INSTRUMENT_INFO_URL = (
+    "http://cdn.tsetmc.com/api/Instrument/GetInstrumentHistory/{index}/{date}"
+)
+
 # get statistical information for all tickers
 KEY_STATS_URL = "http://www.tsetmc.com/tsev2/data/InstValue.aspx?t=a"
 

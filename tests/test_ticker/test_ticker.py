@@ -7,6 +7,7 @@ class TestTicker(unittest.TestCase):
     def setUp(self) -> None:
         # This can break the test if symbol changes state
         self.deactivated_symbol = "رتکو"
+        self.activate_symbol = "ذوب"
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -16,6 +17,14 @@ class TestTicker(unittest.TestCase):
         self.assertRaises(
             RuntimeError,
             Ticker(self.deactivated_symbol).get_ticker_real_time_info_response,
+        )
+
+    def test_get_total_shares_history_on_activate_symbol(self):
+        import asyncio
+
+        # This should run without error
+        res = asyncio.run(
+            Ticker(self.activate_symbol).get_total_shares_history_async()
         )
 
 

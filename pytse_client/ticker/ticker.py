@@ -24,7 +24,10 @@ from pytse_client import (
 )
 from pytse_client.download import download, download_ticker_client_types_record
 from pytse_client.proxy.dto import ShareholderData
-from pytse_client.proxy.tsetmc import get_day_shareholders_history
+from pytse_client.proxy.tsetmc import (
+    get_day_shareholders_history,
+    get_day_ticker_info_history,
+)
 from pytse_client.ticker.api_extractors import (
     Order,
     TradeSummary,
@@ -354,8 +357,12 @@ class Ticker:
         return download_ticker_client_types_record(self._index)
 
     @property
-    def trade_dates(self):
-        return self._history["date"].to_list()
+    def trade_dates(self) -> List[datetime.date]:
+        trade_dates = map(
+            lambda datetime_val: datetime_val.date(),
+            pd.to_datetime(self._history["date"]),
+        )
+        return list(trade_dates)
 
     @property
     def shareholders(self) -> pd.DataFrame:
@@ -447,6 +454,55 @@ class Ticker:
                 "shareholder_name",
                 "change",
             ],
+        )
+
+    async def get_total_shares_history_async(
+        self,
+        from_when=datetime.timedelta(days=60),
+        to_when=datetime.datetime.now(),
+        only_open_days=True,
+        session=None,
+    ) -> pd.DataFrame:
+        requested_dates = map(
+            lambda datetime_val: datetime_val.date(),
+            utils.datetime_range(to_when - from_when, to_when),
+        )
+        session_created = False
+        if not session:
+            session_created = True
+            conn = aiohttp.TCPConnector(limit=25)
+            session = aiohttp.ClientSession(connector=conn)
+        tasks = []
+        filtered_dates = list(
+            filter(
+                lambda date: not only_open_days
+                or (only_open_days and date in self.trade_dates),
+                requested_dates,
+            )
+        )
+        for date in filtered_dates:
+            tasks.append(
+                get_day_ticker_info_history(self._index, date, session)
+            )
+        instrument_history: List[
+            InstrumentHistoryResponse
+        ] = await asyncio.gather(*tasks)
+        if session_created is True:
+            await session.close()
+
+        rows = []
+        for instrument_day_data, date in zip(
+            instrument_history, filtered_dates
+        ):
+            rows.append(
+                [
+                    date,
+                    instrument_day_data.total_shares,
+                ]
+            )
+        return pd.DataFrame(
+            data=rows,
+            columns=["date", "total_shares"],
         )
 
     @property
