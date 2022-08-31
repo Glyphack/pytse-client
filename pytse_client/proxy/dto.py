@@ -9,3 +9,13 @@ class ShareholderData:
     shares: float
     percentage: float
     change: float
+
+
+@dataclass
+class InstrumentHistoryResponse:
+    """
+    Represent the response coming from InstrumentHistory API
+    """
+
+    total_shares: int
+    base_volume: int
