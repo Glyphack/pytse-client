@@ -126,8 +126,9 @@ def download(
 
             if symbol in df_list:
                 df_list[symbol] = (
-                    df_list[symbol]
-                    .append(df, ignore_index=True, sort=False)
+                    pd.concat(
+                        [df_list[symbol], df], ignore_index=True, sort=False
+                    )
                     .sort_values("date")
                     .reset_index(drop=True)
                 )
