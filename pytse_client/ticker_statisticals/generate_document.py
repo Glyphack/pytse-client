@@ -19,7 +19,7 @@ for line in key_stats_ls:
     number = int(number[2:])
     disc = re.split(r"\<\/div\>", disc)[0]
     nums_and_disc.append((number, disc))
-with open("README.md", "w") as f2:
+with open("README.md", "w", encoding="utf8") as f2:
     f2.write(
         "در این بخش آمار کلیدی را در قالب" " یک نگاشت سه عضوی مشاهده می‌کنید."
     )

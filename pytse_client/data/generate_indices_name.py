@@ -29,5 +29,5 @@ if __name__ == "__main__":
         key = re.sub(r"^\d+|\d+$|-", "", key)
         final_dict[key] = {"index": index, "section_number": section_number}
 
-    with open("indices_name.json", "w") as f:
+    with open("indices_name.json", "w", encoding="utf8") as f:
         json.dump(final_dict, f, indent=2, ensure_ascii=False)
