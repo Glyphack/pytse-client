@@ -1,7 +1,10 @@
 import unittest
 
 from pytse_client import Ticker
-from pytse_client.ticker.export import ticker_real_time_data_to_csv
+from pytse_client.ticker.export import (
+    export_ticker_history_as_csv,
+    ticker_real_time_data_to_csv,
+)
 
 
 class TestTickerExport(unittest.TestCase):
@@ -14,6 +17,12 @@ class TestTickerExport(unittest.TestCase):
     def test_export_ticker_realtime_data_to_csv(self):
         ticker = Ticker("وبملت")
         df = ticker_real_time_data_to_csv(ticker)
+        self.assertTrue(df.empty is False)
+
+    def test_export_ticker_history_to_csv(self):
+        ticker = Ticker("وبملت")
+        df = export_ticker_history_as_csv(ticker)
+        df.to_csv("test.csv")
         self.assertTrue(df.empty is False)
 
 
