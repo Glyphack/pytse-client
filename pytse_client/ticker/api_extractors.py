@@ -1,10 +1,14 @@
 # utilities to extract data from APIs related to Ticker module
 
-from collections import namedtuple
 from dataclasses import dataclass
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 
-Order = namedtuple("order", ["count", "volume", "price"])
+
+@dataclass
+class Order:
+    count: int
+    volume: int
+    price: int
 
 
 @dataclass
@@ -24,26 +28,21 @@ def get_orders(orders_raw_text: str) -> Tuple[List[Order], List[Order]]:
     orders.pop()  # last item is empty string
     for order_text in orders:
         order_numbers = order_text.split("@")
-        buy_orders_set.append(
-            Order(
-                order_numbers[0],  # count
-                order_numbers[1],  # vol
-                order_numbers[2],  # price
-            )
-        )
-        sell_orders_set.append(
-            Order(
-                order_numbers[5],  # count
-                order_numbers[4],  # vol
-                order_numbers[3],  # price
-            )
-        )
+        buy_count = int(order_numbers[0])
+        buy_vol = int(order_numbers[1])
+        buy_price = int(order_numbers[2])
+        sell_count = int(order_numbers[3])
+        sell_vol = int(order_numbers[4])
+        sell_price = int(order_numbers[5])
+
+        buy_orders_set.append(Order(buy_count, buy_vol, buy_price))
+        sell_orders_set.append(Order(sell_count, sell_vol, sell_price))
     return buy_orders_set, sell_orders_set
 
 
 def get_individual_trade_summary(
     individual_trade_summary_section,
-) -> TradeSummary:
+) -> Optional[TradeSummary]:
     splitted_fields = individual_trade_summary_section.split(",")
     if len(splitted_fields) < 9:
         return None

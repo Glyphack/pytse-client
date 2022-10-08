@@ -19,7 +19,7 @@ from pytse_client import (
     utils,
 )
 from pytse_client.download import download, download_ticker_client_types_record
-from pytse_client.proxy.dto import ShareholderData
+from pytse_client.proxy.dto import InstrumentHistoryResponse, ShareholderData
 from pytse_client.proxy.tsetmc import (
     get_day_shareholders_history,
     get_day_ticker_info_history,
@@ -44,6 +44,7 @@ logger.addHandler(logging.NullHandler())
 
 @dataclass
 class RealtimeTickerInfo:
+    date_time: datetime.datetime
     state: Optional[str]
     last_price: Optional[float]
     adj_close: Optional[float]
@@ -76,7 +77,18 @@ class Ticker:
         index: Optional[str] = None,
         adjust: bool = False,
     ):
-        self._index = index or symbols_data.get_ticker_index(symbol)
+        determined_symbol_index = index or symbols_data.get_ticker_index(
+            symbol
+        )
+        if determined_symbol_index is None:
+            raise ValueError(
+                f"""Symbol {symbol} not found, if you are trying to use
+                             a symbol which is removed from the tse website
+                             provide it's index manually:
+                             ticker = tse.Ticker("", index="25165947991415904")
+                             """
+            )
+        self._index = determined_symbol_index
         self.symbol = symbol if index is None else self._index
         self.adjust = adjust
         self.daily_records_csv_path = (
@@ -88,8 +100,8 @@ class Ticker:
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
-        # FIXME: if symbol equals instrument id, it cannot fetch introduction
-        # page. it occurrs when Ticker called with index id not symbol
+        # TODO: if symbol equals instrument id, it cannot fetch introduction
+        # page. it occurs when Ticker called with index id not symbol
         self._introduction_url = (
             tse_settings.TSE_TICKER_INTRODUCTION_URL.format(
                 replace_persian(self.symbol)
@@ -99,27 +111,28 @@ class Ticker:
 
         if self.adjust:
             if os.path.exists(self.adjusted_daily_records_csv_path):
-                self.from_file()
+                self._history = self.from_file()
             else:
-                self.from_web()
+                self._history = download(
+                    symbols=self.symbol,
+                    adjust=self.adjust,
+                )[self.symbol]
         else:
             if os.path.exists(self.daily_records_csv_path):
-                self.from_file()
+                self._history = self.from_file()
             else:
-                self.from_web()
+                self._history = download(
+                    symbols=self.symbol,
+                    adjust=self.adjust,
+                )[self.symbol]
 
-    def from_web(self):
-        self._history = download(
-            symbols=self.symbol,
-            adjust=self.adjust,
-        )[self.symbol]
-
-    def from_file(self):
+    def from_file(self) -> pd.DataFrame:
         if self.adjust:
-            self._history = pd.read_csv(self.adjusted_daily_records_csv_path)
+            history = pd.read_csv(self.adjusted_daily_records_csv_path)
         else:
-            self._history = pd.read_csv(self.daily_records_csv_path)
-        self._history["date"] = pd.to_datetime(self._history["date"])
+            history = pd.read_csv(self.daily_records_csv_path)
+        history["date"] = pd.to_datetime(history["date"])
+        return history
 
     @property
     def history(self):
@@ -155,6 +168,9 @@ class Ticker:
 
     @property
     def title(self) -> str:
+        """
+        Symbol title in persian
+        """
         return replace_arabic(
             re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[
                 0
@@ -163,6 +179,9 @@ class Ticker:
 
     @property
     def fulltitle(self) -> str:
+        """
+        Symbol title with it's market in persian
+        """
         return replace_arabic(
             re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[0]
         )
@@ -182,7 +201,7 @@ class Ticker:
         eps = self.eps
         if adj_close is None or eps is None or eps == 0:
             return None
-        return self.get_ticker_real_time_info_response().adj_close / self.eps
+        return adj_close / eps
 
     @property
     def group_p_e_ratio(self) -> Optional[float]:
@@ -686,6 +705,7 @@ class Ticker:
             corporate_trade_summary = None
 
         return RealtimeTickerInfo(
+            datetime.datetime.now(),
             state,
             last_price,
             adj_close,
