@@ -372,7 +372,10 @@ class Ticker:
 
     @property
     def client_types(self):
-        return download_ticker_client_types_record(self._index)
+        client_types = download_ticker_client_types_record(self._index)
+        if client_types is None:
+            raise RuntimeError("cannot download client types data try again")
+        return client_types
 
     @property
     def trade_dates(self) -> List[datetime.date]:
