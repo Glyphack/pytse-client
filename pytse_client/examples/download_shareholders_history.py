@@ -1,4 +1,5 @@
 import datetime
+
 from pytse_client import Ticker
 
 symbols = [

@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
-
 from pytse_client import config, tse_settings, utils
 from pytse_client.ticker_statisticals import (
     filter_key_value,

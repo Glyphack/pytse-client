@@ -1,8 +1,10 @@
 # from .requests import requests_retry_session
-from .string import convert_to_number_if_number
 from typing import List, Tuple
+
 import bs4
 import pandas as pd
+
+from .string import convert_to_number_if_number
 
 
 def get_html_table_header_and_rows(

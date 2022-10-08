@@ -1,10 +1,10 @@
 """
 access properties of Ticker for all symbols
 """
-import traceback
 import datetime
 import logging
 import random
+import traceback
 from collections import defaultdict
 
 from pytse_client import Ticker, all_symbols

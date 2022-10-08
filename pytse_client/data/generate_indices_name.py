@@ -1,7 +1,7 @@
-import requests as req
-import re
 import json
+import re
 
+import requests as req
 
 if __name__ == "__main__":
     text = req.get(

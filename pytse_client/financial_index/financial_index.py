@@ -3,7 +3,6 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 from bs4 import BeautifulSoup
-
 from pytse_client import config, symbols_data, tse_settings, utils
 from pytse_client.download import download_financial_indexes
 

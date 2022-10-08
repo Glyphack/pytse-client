@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import pandas as pd
-
 from pytse_client import utils
 from pytse_client.config import ASKS_BIDS_PATH
 from pytse_client.ticker_statisticals import get_keys_of_asks_bids

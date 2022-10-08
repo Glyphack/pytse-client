@@ -6,11 +6,10 @@ from typing import List
 
 import requests
 from bs4 import BeautifulSoup
-from requests import HTTPError
-
 from pytse_client import config, tse_settings
 from pytse_client.utils import requests_retry_session
 from pytse_client.utils.persian import replace_arabic
+from requests import HTTPError
 
 logger = logging.getLogger(config.LOGGER_NAME)
 

@@ -1,14 +1,14 @@
 import json
+import locale
 from pathlib import Path
 from typing import List
-import locale
 
 from pytse_client import config
 from pytse_client.scraper.symbol_scraper import (
     MarketSymbol,
+    add_old_indexes_to_market_symbols,
     get_market_symbols_from_market_watch_page,
     get_market_symbols_from_symbols_list_page,
-    add_old_indexes_to_market_symbols,
 )
 
 

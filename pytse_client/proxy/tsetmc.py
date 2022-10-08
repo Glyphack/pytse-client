@@ -2,12 +2,11 @@ import datetime
 import logging
 
 import aiohttp
+from pytse_client import config, tse_settings
+from pytse_client.proxy.dto import InstrumentHistoryResponse, ShareholderData
 from tenacity import retry
 from tenacity.before_sleep import before_sleep_log
 from tenacity.wait import wait_random
-
-from pytse_client import config, tse_settings
-from pytse_client.proxy.dto import InstrumentHistoryResponse, ShareholderData
 
 logger = logging.getLogger(config.LOGGER_NAME)
 

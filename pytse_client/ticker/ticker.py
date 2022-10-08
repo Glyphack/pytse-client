@@ -11,10 +11,6 @@ import aiohttp
 import bs4
 import pandas as pd
 import requests
-from tenacity import retry
-from tenacity.before_sleep import before_sleep_log
-from tenacity.wait import wait_random
-
 from pytse_client import (
     config,
     symbols_data,
@@ -38,6 +34,9 @@ from pytse_client.ticker.api_extractors import (
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils.decorators import catch
 from pytse_client.utils.persian import replace_arabic, replace_persian
+from tenacity import retry
+from tenacity.before_sleep import before_sleep_log
+from tenacity.wait import wait_random
 
 logger = logging.getLogger(config.LOGGER_NAME)
 logger.addHandler(logging.NullHandler())

@@ -1,6 +1,7 @@
-from key_stats import filter_key_value
-import requests
 import re
+
+import requests
+from key_stats import filter_key_value
 
 try:
     response = requests.get(

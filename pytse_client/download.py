@@ -1,16 +1,16 @@
 import logging
+import re
 from concurrent import futures
 from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 
-import re
 import jdatetime
 import pandas as pd
 from pytse_client import config, symbols_data, translations, tse_settings
+from pytse_client.scraper.symbol_scraper import MarketSymbol
 from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
 from pytse_client.utils import persian, requests_retry_session
-from pytse_client.scraper.symbol_scraper import MarketSymbol
 from requests import HTTPError
 from requests.sessions import Session
 from tenacity import retry, retry_if_exception_type, wait_random
