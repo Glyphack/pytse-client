@@ -48,14 +48,43 @@ valid_keys = [key for key in keys]
 
 def get_secondly_orderbook(symbol_name, date, to_csv=False, base_path=None):
     df = get_orderbook(symbol_name, date)
-    new_columns = ['datetime']
-    for i in range(MAX_DEPTH):
+    df.drop(columns=["refID"], inplace=True)
+    new_columns = []
+    counter = 0
+    for i in range(1, MAX_DEPTH + 1):
         columns = [
-            f"{key}_{i}" for key in secondly_keys    
+            f"{key}_{i}" for key in secondly_keys
         ]
         new_columns.extend(columns)
-
     newdf = pd.DataFrame(columns=new_columns)
+    for idx, row in df.iterrows():
+        keys = {
+            f"{key}_{int(row['depth'])}": val for key, val in row.items()
+        }
+        for key, val in keys.items():
+            if 'depth' in key:
+                continue
+            newdf.at[idx, key] = val
+        counter += 1
+        if counter == 100:
+            break
+
+    for idx, row in newdf.iterrows():
+        if idx == 0:
+            last_idx = idx
+            continue
+        for key, val in row.items():
+            if pd.isna(newdf.at[idx, key]):
+                newdf.at[idx, key] = newdf.at[last_idx, key]
+        last_idx = idx
+
+    if to_csv:
+        base_path = base_path or ORDER_BOOK_HIST_PATH
+        Path(base_path).mkdir(parents=True, exist_ok=True)
+
+        path = os.path.join(base_path, "secondly_orderbook.csv")
+        df.to_csv(path, index=False)
+
     return newdf
 
 
