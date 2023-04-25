@@ -11,13 +11,13 @@ from pytse_client.symbols_data import get_ticker_index
 MAX_DEPTH = 5
 
 headers = {
-    'Accept': 'application/json, text/plain, */*',
-    'Accept-Language': 'en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-    'DNT': '1',
-    'Pragma': 'no-cache',
-    'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36',
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7",
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "DNT": "1",
+    "Pragma": "no-cache",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Mobile Safari/537.36",
 }
 
 
@@ -53,17 +53,13 @@ def get_secondly_orderbook(symbol_name, date, to_csv=False, base_path=None):
     new_columns = []
     counter = 0
     for i in range(1, MAX_DEPTH + 1):
-        columns = [
-            f"{key}_{i}" for key in secondly_keys
-        ]
+        columns = [f"{key}_{i}" for key in secondly_keys]
         new_columns.extend(columns)
     newdf = pd.DataFrame(columns=new_columns)
     for idx, row in df.iterrows():
-        keys = {
-            f"{key}_{int(row['depth'])}": val for key, val in row.items()
-        }
+        keys = {f"{key}_{int(row['depth'])}": val for key, val in row.items()}
         for key, val in keys.items():
-            if 'depth' in key:
+            if "depth" in key:
                 continue
             newdf.at[idx, key] = val
         counter += 1
@@ -91,25 +87,24 @@ def get_secondly_orderbook(symbol_name, date, to_csv=False, base_path=None):
 
 def get_orderbook(symbol_name, date, to_csv=False, base_path=None):
     index = get_ticker_index(symbol_name)
-    date = date.strftime('%Y%m%d')
+    date = date.strftime("%Y%m%d")
     print(f"symbol index is {index}")
     print(f"datetime is {date}")
     session = requests_retry_session(retries=5, backoff_factor=0.1)
-    url = TICKER_ORDER_BOOK.format(
-        index=index, date=date
-    )
+    url = TICKER_ORDER_BOOK.format(index=index, date=date)
 
     response = session.get(url, headers=headers, timeout=10)
     data = json.loads(response.content)
     session.close()
 
-    df = pd.json_normalize(data['bestLimitsHistory'])
+    df = pd.json_normalize(data["bestLimitsHistory"])
     if len(df) == 0:
         return pd.DataFrame(columns=valid_keys)
     df.rename(columns=reversed_keys, inplace=True)
     df = df.loc[:, valid_keys]
-    df['datetime'] = pd.to_datetime(
-        date + " " + df['datetime'].astype(str), format='%Y%m%d %H%M%S')
+    df["datetime"] = pd.to_datetime(
+        date + " " + df["datetime"].astype(str), format="%Y%m%d %H%M%S"
+    )
     df = df.sort_values(["datetime", "depth"], ascending=[True, True])
     df.set_index("datetime", inplace=True)
 
