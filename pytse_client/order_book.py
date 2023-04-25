@@ -22,12 +22,16 @@ keys = {
     "refID": "refID",
     "depth": "number",
     "bid": "pMeDem",
-    "ask": "pMeof",
+    "ask": "pMeOf",
     "vol_bid": "qTitMeDem",
-    "vol_ask": "qTitMeof",
+    "vol_ask": "qTitMeOf",
     "num_bid": "zOrdMeDem",
-    "num_ask": "zOrdMeof",
+    "num_ask": "zOrdMeOf",
 }
+
+
+reversed_keys = {val: key for key, val in keys.items()}
+valid_keys = [key for key in keys]
 
 
 def get_order_book(index, date, to_csv=False, base_path=None):
@@ -36,15 +40,15 @@ def get_order_book(index, date, to_csv=False, base_path=None):
         index=index, date=date
     )
 
-    print(url)
     response = session.get(url, headers=headers, timeout=10)
     data = json.loads(response.content)
-    print(data)
     session.close()
 
     # data cleanning
-
-    df = pd.DataFrame()
+    df = pd.json_normalize(data['bestLimitsHistory'])
+    df.rename(columns=reversed_keys, inplace=True)
+    df = df.loc[:, valid_keys]
+    df = df.sort_values(["date", "depth"], ascending=[True, True])
 
     if to_csv:
         base_path = base_path or ORDER_BOOK_HIST_PATH
