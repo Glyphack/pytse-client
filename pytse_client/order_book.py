@@ -40,7 +40,7 @@ def get_order_book(symbol_name, date, to_csv=False, base_path=None):
     date = date.strftime('%Y%m%d')
     print(f"symbol index is {index}")
     print(f"date is {date}")
-    session = requests_retry_session()
+    session = requests_retry_session(retries=5, backoff_factor=0.1)
     url = TICKER_ORDER_BOOK.format(
         index=index, date=date
     )
@@ -49,11 +49,13 @@ def get_order_book(symbol_name, date, to_csv=False, base_path=None):
     data = json.loads(response.content)
     session.close()
 
-    # data cleanning
     df = pd.json_normalize(data['bestLimitsHistory'])
+    if len(df) == 0:
+        return pd.DataFrame(columns=valid_keys)
     df.rename(columns=reversed_keys, inplace=True)
     df = df.loc[:, valid_keys]
-    df['date'] = pd.to_datetime(date + " " + df['date'].astype(str), format='%Y%m%d %H%M%S')
+    df['date'] = pd.to_datetime(
+        date + " " + df['date'].astype(str), format='%Y%m%d %H%M%S')
     df = df.sort_values(["date", "depth"], ascending=[True, True])
     df.set_index("date", inplace=True)
 
