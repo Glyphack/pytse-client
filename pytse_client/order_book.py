@@ -46,6 +46,7 @@ secondly_keys = [
 reversed_keys = {val: key for key, val in keys.items()}
 valid_keys = [key for key in keys]
 
+
 def get_secondly_orderbook(symbol_name, date, to_csv=False, base_path=None):
     df = get_orderbook(symbol_name, date)
     df.drop(columns=["refID"], inplace=True)
