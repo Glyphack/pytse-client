@@ -2,10 +2,11 @@ import os
 from pathlib import Path
 import json
 import pandas as pd
-from pytse_client import utils
+
 from pytse_client.config import ORDER_BOOK_HIST_PATH
 from pytse_client.tse_settings import TICKER_ORDER_BOOK
 from pytse_client.utils.request_session import requests_retry_session
+from pytse_client.symbols_data import get_ticker_index
 
 headers = {
     'Accept': 'application/json, text/plain, */*',
@@ -34,7 +35,11 @@ reversed_keys = {val: key for key, val in keys.items()}
 valid_keys = [key for key in keys]
 
 
-def get_order_book(index, date, to_csv=False, base_path=None):
+def get_order_book(symbol_name, date, to_csv=False, base_path=None):
+    index = get_ticker_index(symbol_name)
+    date = date.strftime('%Y%m%d')
+    print(f"symbol index is {index}")
+    print(f"date is {date}")
     session = requests_retry_session()
     url = TICKER_ORDER_BOOK.format(
         index=index, date=date
