@@ -48,7 +48,9 @@ def get_order_book(index, date, to_csv=False, base_path=None):
     df = pd.json_normalize(data['bestLimitsHistory'])
     df.rename(columns=reversed_keys, inplace=True)
     df = df.loc[:, valid_keys]
+    df['date'] = pd.to_datetime(date + " " + df['date'].astype(str), format='%Y%m%d %H%M%S')
     df = df.sort_values(["date", "depth"], ascending=[True, True])
+    df.set_index("date", inplace=True)
 
     if to_csv:
         base_path = base_path or ORDER_BOOK_HIST_PATH
