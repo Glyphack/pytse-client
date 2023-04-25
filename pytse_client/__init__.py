@@ -1,4 +1,5 @@
 from .asks_bids import get_asks_and_bids
+from .order_book import get_order_book
 from .download import (
     download,
     download_client_types_records,
