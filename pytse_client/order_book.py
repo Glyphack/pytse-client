@@ -12,7 +12,9 @@ from pytse_client.symbols_data import get_ticker_index
 from pytse_client.ticker import Ticker
 
 MAX_DEPTH = 5
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 error_msg = "{date} is not a valid date object. Make sure it was a trade day."
 
 headers = {
@@ -52,8 +54,9 @@ reversed_keys = {val: key for key, val in keys.items()}
 valid_keys = [key for key in keys]
 
 
-def get_orderbook(symbol_name, start_date, end_date=None,
-                            to_csv=False, base_path=None):
+def get_orderbook(
+    symbol_name, start_date, end_date=None, to_csv=False, base_path=None
+):
     ticker = Ticker(symbol_name)
     end_date = start_date if not end_date else end_date
     if not _validate_trade_date(ticker, start_date):
@@ -67,10 +70,9 @@ def get_orderbook(symbol_name, start_date, end_date=None,
             all_valid_dates.append(date)
     result = {}
     for valid_date in all_valid_dates:
-        df = _get_orderbook(symbol_name, valid_date,
-                                      to_csv, base_path)
+        df = _get_orderbook(symbol_name, valid_date, to_csv, base_path)
         result[valid_date.strftime("%Y-%m-%d")] = df
-        logging.info(f'successfully get orderbook in {valid_date}')
+        logging.info(f"successfully get orderbook in {valid_date}")
     return result
 
 
