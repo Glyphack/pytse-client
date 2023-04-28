@@ -55,14 +55,21 @@ valid_keys = [key for key in keys]
 
 
 def get_orderbook(
-    symbol_name, start_date, end_date=None, to_csv=False, base_path=None
+    symbol_name,
+    start_date: datetime.date,
+    end_date=None,
+    to_csv=False,
+    base_path=None,
+    ignore_date_validation=False,
+    diff_orderbook=False,  # faster to process but only stores the difference
 ):
     ticker = Ticker(symbol_name)
     end_date = start_date if not end_date else end_date
-    if not _validate_trade_date(ticker, start_date):
-        raise Exception(error_msg.format(date=start_date))
-    if not _validate_trade_date(ticker, end_date):
-        raise Exception(error_msg.format(date=end_date))
+    if not ignore_date_validation:
+        if not _validate_trade_date(ticker, start_date):
+            raise Exception(error_msg.format(date=start_date))
+        if not _validate_trade_date(ticker, end_date):
+            raise Exception(error_msg.format(date=end_date))
     all_valid_dates = []
     for n in range((end_date - start_date).days + 1):
         date = start_date + datetime.timedelta(n)
@@ -70,21 +77,36 @@ def get_orderbook(
             all_valid_dates.append(date)
     result = {}
     for valid_date in all_valid_dates:
-        df = _get_orderbook(symbol_name, valid_date, to_csv, base_path)
+        try:
+            df = _get_orderbook(
+                symbol_name, valid_date, to_csv, base_path, diff_orderbook
+            )
+        except Exception as e:
+            logging.error(e)
+            logging.info("returning the results until now ...")
+            return result
+
         result[valid_date.strftime("%Y-%m-%d")] = df
-        logging.info(f"successfully get orderbook in {valid_date}")
+        logging.info(f"successfully construct orderbook on {valid_date}")
     return result
 
 
-def _validate_trade_date(ticker: Ticker, date: datetime.datetime):
+def _validate_trade_date(ticker: Ticker, date: datetime.date):
     return date in ticker.trade_dates
 
 
-def _get_orderbook(symbol_name, date, to_csv=False, base_path=None):
+def _get_orderbook(
+    symbol_name,
+    date: datetime.date,
+    to_csv=False,
+    base_path=None,
+    diff_orderbook=False,
+):
     df = _get_diff_orderbook(symbol_name, date)
+    if diff_orderbook:
+        return df
     df.drop(columns=["refID"], inplace=True)
     new_columns = []
-    counter = 0
     for i in range(1, MAX_DEPTH + 1):
         columns = [f"{key}_{i}" for key in secondly_keys]
         new_columns.extend(columns)
@@ -95,9 +117,6 @@ def _get_orderbook(symbol_name, date, to_csv=False, base_path=None):
             if "depth" in key:
                 continue
             newdf.at[idx, key] = val
-        counter += 1
-        if counter == 100:
-            break
 
     for idx, row in newdf.iterrows():
         if idx == 0:
@@ -118,13 +137,14 @@ def _get_orderbook(symbol_name, date, to_csv=False, base_path=None):
     return newdf
 
 
-def _get_diff_orderbook(symbol_name, date):
+def _get_diff_orderbook(symbol_name, date_obj: datetime.date):
     index = get_ticker_index(symbol_name)
-    date = date.strftime("%Y%m%d")
+    date = date_obj.strftime("%Y%m%d")
     session = requests_retry_session(retries=10, backoff_factor=0.2)
     url = TICKER_ORDER_BOOK.format(index=index, date=date)
 
     response = session.get(url, headers=headers, timeout=10)
+    logging.info(f"successfully download raw orderbook on {date_obj} from tse")
     data = json.loads(response.content)
     session.close()
 
