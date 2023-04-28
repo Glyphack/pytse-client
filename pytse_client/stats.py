@@ -19,7 +19,6 @@ from pytse_client.utils import map_index_to_symbols
 def _get_list_of_processed_stats(
     raw_key_stats: str,
 ) -> Tuple[List[str], List[str]]:
-
     # group 1 is idx, group 2 is key, group 3 is value
     proccessed_key_stats = re.sub(
         r"([0-9]+)\,([0-9]+)\,([0-9\.]+)\;",
