@@ -677,7 +677,7 @@ class Ticker:
             best_supply_price = (
                 sell_orders[0].price if 0 < len(sell_orders) else None
             )
-        except (IndexError):
+        except IndexError:
             buy_orders = []
             sell_orders = []
             logger.warning(
