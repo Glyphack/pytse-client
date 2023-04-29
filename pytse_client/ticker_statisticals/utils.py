@@ -60,7 +60,7 @@ def get_keys_of_market_watch():
         "volume_of_trans",
         "value_of_trans",
         "min_price",
-        "max_year",
+        "max_price",
         "yesterday_price",
         "EPS",
         "base_volume",
