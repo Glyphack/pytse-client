@@ -111,7 +111,9 @@ def _get_orderbook(
             new_columns.extend(columns)
         newdf = pd.DataFrame(columns=new_columns)
         for idx, row in df.iterrows():
-            keys = {f"{key}_{int(row['depth'])}": val for key, val in row.items()}
+            keys = {
+                f"{key}_{int(row['depth'])}": val for key, val in row.items()
+            }
             for key, val in keys.items():
                 if "depth" in key:
                     continue
