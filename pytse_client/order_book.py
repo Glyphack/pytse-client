@@ -103,36 +103,37 @@ def _get_orderbook(
     diff_orderbook=False,
 ):
     df = _get_diff_orderbook(symbol_name, date)
-    if diff_orderbook:
-        return df
-    df.drop(columns=["refID"], inplace=True)
-    new_columns = []
-    for i in range(1, MAX_DEPTH + 1):
-        columns = [f"{key}_{i}" for key in secondly_keys]
-        new_columns.extend(columns)
-    newdf = pd.DataFrame(columns=new_columns)
-    for idx, row in df.iterrows():
-        keys = {f"{key}_{int(row['depth'])}": val for key, val in row.items()}
-        for key, val in keys.items():
-            if "depth" in key:
-                continue
-            newdf.at[idx, key] = val
+    if not diff_orderbook:
+        df.drop(columns=["refID"], inplace=True)
+        new_columns = []
+        for i in range(1, MAX_DEPTH + 1):
+            columns = [f"{key}_{i}" for key in secondly_keys]
+            new_columns.extend(columns)
+        newdf = pd.DataFrame(columns=new_columns)
+        for idx, row in df.iterrows():
+            keys = {f"{key}_{int(row['depth'])}": val for key, val in row.items()}
+            for key, val in keys.items():
+                if "depth" in key:
+                    continue
+                newdf.at[idx, key] = val
 
-    for idx, row in newdf.iterrows():
-        if idx == 0:
+        for idx, row in newdf.iterrows():
+            if idx == 0:
+                last_idx = idx
+                continue
+            for key, val in row.items():
+                if pd.isna(newdf.at[idx, key]):
+                    newdf.at[idx, key] = newdf.at[last_idx, key]
             last_idx = idx
-            continue
-        for key, val in row.items():
-            if pd.isna(newdf.at[idx, key]):
-                newdf.at[idx, key] = newdf.at[last_idx, key]
-        last_idx = idx
+    else:
+        newdf = df
 
     if to_csv:
         base_path = base_path or ORDER_BOOK_HIST_PATH
         Path(base_path).mkdir(parents=True, exist_ok=True)
         file_name = f'organized_orderbook_{date.strftime("%Y-%m-%d")}.csv'
         path = os.path.join(base_path, file_name)
-        df.to_csv(path, index=False)
+        newdf.to_csv(path, index=False)
 
     return newdf
 
