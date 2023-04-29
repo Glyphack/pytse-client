@@ -12,9 +12,6 @@ __pycache__/
 */.venv/
 /.spyproject/
 
-# Poetry
-poetry.lock
-
 # mypy
 .mypy_cache/
 .dmypy.json
