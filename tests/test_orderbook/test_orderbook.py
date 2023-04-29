@@ -37,8 +37,8 @@ class TestOrderBook(unittest.TestCase):
             diff_orderbook=True,
         )
         self.assertTrue(exists(Path(f"{self.write_csv_path}")))
-        self.assertTrue(len(dict_df) > 0)
-        self.assertTrue(
+        self.assertGreater(len(dict_df), 0)
+        self.assertFalse(
             dict_df[self.valid_start_date.strftime("%Y-%m-%d")].empty
         )
 
