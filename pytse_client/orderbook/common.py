@@ -59,11 +59,11 @@ def _validate_trade_date(ticker: Ticker, date: datetime.date):
 
 
 def validate_dates(
-        ticker: Ticker,
-        start_date: datetime.date,
-        end_date: datetime.date,
-        ignore_date_validation: bool
-        ):
+    ticker: Ticker,
+    start_date: datetime.date,
+    end_date: datetime.date,
+    ignore_date_validation: bool,
+):
     if not ignore_date_validation:
         if not _validate_trade_date(ticker, start_date):
             raise Exception(ERROR_MSG.format(date=start_date))
@@ -71,10 +71,11 @@ def validate_dates(
             raise Exception(ERROR_MSG.format(date=end_date))
 
 
-def get_valid_dates(ticker: Ticker,
-                    start_date: datetime.date,
-                    end_date: datetime.date,
-                    ):
+def get_valid_dates(
+    ticker: Ticker,
+    start_date: datetime.date,
+    end_date: datetime.date,
+):
     all_valid_dates = []
     for n in range((end_date - start_date).days + 1):
         date = start_date + datetime.timedelta(n)
@@ -101,7 +102,7 @@ def process_diff_orderbook(df: pd.DataFrame):
         newdf.loc[idx, key_vals.keys()] = tuple(key_vals.values())
     # This will fill the missing values in each row with the last non-null
     # value in the same column.
-    return newdf.fillna(method='ffill')
+    return newdf.fillna(method="ffill")
 
 
 def common_process(df: pd.DataFrame, date: str):

@@ -24,7 +24,7 @@ def get_orderbook(
     base_path=None,
     ignore_date_validation=False,
     diff_orderbook=False,  # faster to process but only stores the difference
-    async_requests=True
+    async_requests=True,
 ):
     result = {}
     end_date = start_date if not end_date else end_date
@@ -38,17 +38,13 @@ def get_orderbook(
         date_df_list.extend(get_df_valid_dates(ticker, all_valid_dates))
     else:
         for valid_date in all_valid_dates:
-            df = _get_diff_orderbook(
-                ticker, valid_date
-            )
+            df = _get_diff_orderbook(ticker, valid_date)
             date_df_list.append([valid_date, df])
 
     result = {}
     for date_df in date_df_list:
         date, df = date_df
-        df = _get_orderbook(
-            df, date, to_csv, base_path, diff_orderbook
-        )
+        df = _get_orderbook(df, date, to_csv, base_path, diff_orderbook)
         result[date.strftime("%Y-%m-%d")] = df
 
     return result
