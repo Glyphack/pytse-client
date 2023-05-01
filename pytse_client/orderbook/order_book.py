@@ -5,6 +5,7 @@ import pandas as pd
 from pytse_client.ticker.ticker import Ticker
 from pytse_client.tse_settings import TICKER_ORDER_BOOK
 from pytse_client.utils.request_session import requests_retry_session
+from pytse_client.orderbook.order_book_async import get_df_valid_dates
 from pytse_client.orderbook.common import (
     ORDERBOOK_HEADER,
     process_diff_orderbook,
@@ -23,6 +24,7 @@ def get_orderbook(
     base_path=None,
     ignore_date_validation=False,
     diff_orderbook=False,  # faster to process but only stores the difference
+    async_requests=True
 ):
     result = {}
     end_date = start_date if not end_date else end_date
@@ -31,34 +33,40 @@ def get_orderbook(
     validate_dates(ticker, start_date, end_date, ignore_date_validation)
     all_valid_dates = get_valid_dates(ticker, start_date, end_date)
 
-    try:
+    date_df_list = []
+    if async_requests:
+        date_df_list.extend(get_df_valid_dates(ticker, all_valid_dates))
+    else:
         for valid_date in all_valid_dates:
-            df = _get_orderbook(
-                ticker, valid_date, to_csv, base_path, diff_orderbook
+            df = _get_diff_orderbook(
+                ticker, valid_date
             )
-            result[valid_date.strftime("%Y-%m-%d")] = df
-            logging.info(f"successfully construct orderbook on {valid_date}")
-    except Exception as e:
-        logging.error(e)
-        logging.info("returning the results until now ...")
-        return result
+            date_df_list.append([valid_date, df])
+
+    result = {}
+    for date_df in date_df_list:
+        date, df = date_df
+        df = _get_orderbook(
+            df, date, to_csv, base_path, diff_orderbook
+        )
+        result[date.strftime("%Y-%m-%d")] = df
 
     return result
 
 
 def _get_orderbook(
-    ticker: Ticker,
+    df: pd.DataFrame,
     date: datetime.date,
     to_csv=False,
     base_path=None,
     diff_orderbook=False,
 ):
-    df = _get_diff_orderbook(ticker, date)
     newdf = common_process(df, date.strftime("%Y%m%d"))
     if not diff_orderbook:
         newdf = process_diff_orderbook(newdf)
     if to_csv:
         write_to_csv(newdf, base_path, date)
+    logging.info(f"successfully construct orderbook on {date}")
     return newdf
 
 

@@ -53,4 +53,4 @@ async def _get_diff_orderbook(
     ) as response:
         logging.info(f"successfully download raw orderbook on {date} from tse")
         data = await response.json()
-        return {date_obj: pd.json_normalize(data["bestLimitsHistory"])}
+        return [date_obj, pd.json_normalize(data["bestLimitsHistory"])]
