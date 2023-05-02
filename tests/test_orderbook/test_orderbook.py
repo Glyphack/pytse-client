@@ -106,7 +106,9 @@ class TestOrderBook(unittest.TestCase):
         )
         ls = list(dict_df.values())
         self.assertEqual(len(ls), number_valid_dates)
-        self.assertEqual(len(ls), len(get_valid_dates(ticker, start_date, end_date)))
+        self.assertEqual(
+            len(ls), len(get_valid_dates(ticker, start_date, end_date))
+        )
 
     def test_length_processed(self):
         symbol = "زر"
@@ -119,7 +121,9 @@ class TestOrderBook(unittest.TestCase):
         symbol = "زر"
         start_date = datetime.date(2023, 3, 1)
 
-        dict_df = get_orderbook(symbol, start_date=start_date, diff_orderbook=True)
+        dict_df = get_orderbook(
+            symbol, start_date=start_date, diff_orderbook=True
+        )
         self.assertEqual(list(dict_df.values())[0].shape, tuple([9331, 7]))
 
 
