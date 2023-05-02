@@ -125,6 +125,14 @@ class Ticker:
                     symbols=self.symbol,
                     adjust=self.adjust,
                 )[self.symbol]
+        data_date = self._history.tail(1).loc[:, 'date'].iloc[0].date()
+        last_date = Ticker.get_last_trade_day()
+        if last_date != data_date:
+            self._history = download(
+                symbols=self.symbol,
+                adjust=self.adjust,
+                write_to_csv=True,
+            )[self.symbol]
 
     def from_file(self) -> pd.DataFrame:
         if self.adjust:
@@ -602,7 +610,7 @@ class Ticker:
     def get_last_trade_day(cls):
         session = utils.requests_retry_session()
         date_str = session.get(
-                TSE_GET_LAST_TRADE_DAY, timeout=5
+            TSE_GET_LAST_TRADE_DAY, timeout=5
         ).text.split(";")[0]
         session.close()
         _datetime = datetime.datetime.strptime(date_str, "%Y%m%d")
