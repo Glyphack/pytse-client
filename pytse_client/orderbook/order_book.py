@@ -1,7 +1,9 @@
 import json
 import datetime
 import logging
+import multiprocessing
 import pandas as pd
+from typing import Dict, List
 from pytse_client.ticker.ticker import Ticker
 from pytse_client.tse_settings import TICKER_ORDER_BOOK
 from pytse_client.utils.request_session import requests_retry_session
@@ -42,12 +44,40 @@ def get_orderbook(
             date_df_list.append([valid_date, df])
 
     result = {}
+
+    pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+    args_list: List[Dict] = []
     for date_df in date_df_list:
         date, df = date_df
-        df = _get_orderbook(df, date, to_csv, base_path, diff_orderbook)
+        args_list.append(
+            {
+                "df": df,
+                "date": date,
+                "to_csv": to_csv,
+                "base_path": base_path,
+                "diff_orderbook": diff_orderbook,
+            }
+        )
+
+    result = {}
+    with pool as p:
+        df_list = p.map(_get_orderbook_wrapper, args_list)
+    for idx, df in enumerate(df_list):
+        date = args_list[idx]["date"]
         result[date.strftime("%Y-%m-%d")] = df
 
     return result
+
+
+def _get_orderbook_wrapper(args: dict):
+    df, date, to_csv, base_path, diff_orderbook = (
+        args["df"],
+        args["date"],
+        args["to_csv"],
+        args["base_path"],
+        args["diff_orderbook"],
+    )
+    return _get_orderbook(df, date, to_csv, base_path, diff_orderbook)
 
 
 def _get_orderbook(
