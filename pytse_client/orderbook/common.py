@@ -8,7 +8,7 @@ from pytse_client.config import ORDER_BOOK_HIST_PATH
 
 # maximum available depth in tsetmc for historical orderbook
 MAX_DEPTH = 5
-ERROR_MSG = "{date} is not a valid date object. Make sure it was a trade day."
+ERROR_MSG = "{date} is not a valid trade day. Make sure it is a trade day."
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
