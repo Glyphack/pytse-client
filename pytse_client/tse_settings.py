@@ -1,3 +1,5 @@
+TSE_GET_LAST_TRADE_DAY = "http://service.tsetmc.com/tsev2/data/TseClient2.aspx?t=LastPossibleDeven"
+
 TSE_TICKER_EXPORT_DATA_ADDRESS = (
     "http://tsetmc.com/tsev2/data/Export-txt.aspx?t=i&a=1&b=0&i={}"
 )

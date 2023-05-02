@@ -31,7 +31,7 @@ from pytse_client.ticker.api_extractors import (
     get_individual_trade_summary,
     get_orders,
 )
-from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
+from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL, TSE_GET_LAST_TRADE_DAY
 from pytse_client.utils.decorators import catch
 from pytse_client.utils.persian import replace_arabic, replace_persian
 from tenacity import retry
@@ -597,6 +597,16 @@ class Ticker:
     @property
     def nav_date(self):
         return self.get_ticker_real_time_info_response().nav_date
+
+    @classmethod
+    def get_last_trade_day(cls):
+        session = utils.requests_retry_session()
+        date_str = session.get(
+                TSE_GET_LAST_TRADE_DAY, timeout=5
+        ).text.split(";")[0]
+        session.close()
+        _datetime = datetime.datetime.strptime(date_str, "%Y%m%d")
+        return _datetime.date()
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
         """
