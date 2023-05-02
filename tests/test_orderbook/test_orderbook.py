@@ -1,6 +1,5 @@
 import shutil
 import unittest
-import datetime
 from os.path import exists
 from pathlib import Path
 from datetime import date
@@ -95,8 +94,8 @@ class TestOrderBook(unittest.TestCase):
         number_valid_dates = 29
         symbol = "زر"
         ticker = Ticker(symbol)
-        start_date = datetime.date(2023, 3, 1)
-        end_date = datetime.date(2023, 4, 20)
+        start_date = date(2023, 3, 1)
+        end_date = date(2023, 4, 20)
         dict_df = get_orderbook(
             symbol_name=symbol,
             start_date=start_date,
@@ -112,14 +111,14 @@ class TestOrderBook(unittest.TestCase):
 
     def test_length_processed(self):
         symbol = "زر"
-        start_date = datetime.date(2023, 3, 1)
+        start_date = date(2023, 3, 1)
 
         dict_df = get_orderbook(symbol, start_date=start_date)
         self.assertEqual(list(dict_df.values())[0].shape, tuple([3524, 30]))
 
     def test_length_diff(self):
         symbol = "زر"
-        start_date = datetime.date(2023, 3, 1)
+        start_date = date(2023, 3, 1)
 
         dict_df = get_orderbook(
             symbol, start_date=start_date, diff_orderbook=True
