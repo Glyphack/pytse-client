@@ -9,11 +9,6 @@ from pytse_client.config import ORDER_BOOK_HIST_PATH
 # maximum available depth in tsetmc for historical orderbook
 MAX_DEPTH = 5
 ERROR_MSG = "{date} is not a valid trade day. Make sure it is a trade day."
-
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
-
 ORDERBOOK_HEADER = {
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "en-US,en;q=0.9,fa-IR;q=0.8,fa;q=0.7",
@@ -25,7 +20,7 @@ ORDERBOOK_HEADER = {
 }
 
 
-keys = {
+api_to_orderbook_mapping = {
     "datetime": "hEven",
     "refID": "refID",
     "depth": "number",
@@ -51,7 +46,7 @@ for i in range(1, MAX_DEPTH + 1):
     columns = [f"{key}_{i}" for key in base_keys]
     extended_columns.extend(columns)
 
-reversed_keys = {val: key for key, val in keys.items()}
+reversed_keys = {val: key for key, val in api_to_orderbook_mapping.items()}
 
 
 def _validate_trade_date(ticker: Ticker, date: datetime.date):
@@ -107,9 +102,9 @@ def process_diff_orderbook(df: pd.DataFrame):
 
 def common_process(df: pd.DataFrame, date: str):
     if len(df) == 0:
-        return pd.DataFrame(columns=list(keys.keys()))
+        return pd.DataFrame(columns=list(api_to_orderbook_mapping.keys()))
     df.rename(columns=reversed_keys, inplace=True)
-    df = df.loc[:, list(keys.keys())]
+    df = df.loc[:, list(api_to_orderbook_mapping.keys())]
     df["datetime"] = pd.to_datetime(
         date + " " + df["datetime"].astype(str), format="%Y%m%d %H%M%S"
     )
