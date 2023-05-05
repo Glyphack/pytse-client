@@ -3,9 +3,13 @@ import aiohttp
 import logging
 import datetime
 import pandas as pd
+from pytse_client.config import LOGGER_NAME
 from pytse_client.ticker import Ticker
 from pytse_client.tse_settings import TICKER_ORDER_BOOK
 from pytse_client.orderbook.common import ORDERBOOK_HEADER
+from pytse_client.utils.logging_generator import get_logger
+
+logger = get_logger(f"{LOGGER_NAME}_orderbook_async", logging.INFO)
 
 
 def get_df_valid_dates(
@@ -43,6 +47,8 @@ async def _get_diff_orderbook(
     async with session.get(
         url, headers=ORDERBOOK_HEADER, timeout=10
     ) as response:
-        logging.info(f"successfully download raw orderbook on {date} from tse")
+        logger.info(
+            f"successfully async download raw orderbook on {date} from tse"
+        )
         data = await response.json()
         return [date_obj, pd.json_normalize(data["bestLimitsHistory"])]

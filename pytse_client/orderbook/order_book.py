@@ -3,11 +3,13 @@ import datetime
 import logging
 import multiprocessing
 import pandas as pd
-from typing import Dict, List
+from typing import Dict, List, Optional
 from pytse_client.ticker.ticker import Ticker
 from pytse_client.tse_settings import TICKER_ORDER_BOOK
 from pytse_client.utils.request_session import requests_retry_session
+from pytse_client.config import LOGGER_NAME
 from pytse_client.orderbook.order_book_async import get_df_valid_dates
+from pytse_client.utils.logging_generator import get_logger
 from pytse_client.orderbook.common import (
     ORDERBOOK_HEADER,
     process_diff_orderbook,
@@ -17,18 +19,19 @@ from pytse_client.orderbook.common import (
     write_to_csv,
 )
 
+logger = get_logger(f"{LOGGER_NAME}_orderbook", logging.INFO)
+
 
 def get_orderbook(
-    symbol_name,
+    symbol_name: str,
     start_date: datetime.date,
-    end_date=None,
-    to_csv=False,
-    base_path=None,
-    ignore_date_validation=False,
-    diff_orderbook=False,  # faster to process but only stores the difference
-    async_requests=True,
-):
-    result = {}
+    end_date: Optional[datetime.date] = None,
+    to_csv: bool = False,
+    base_path: Optional[str] = None,
+    ignore_date_validation: bool = False,
+    diff_orderbook: bool = False,  # faster to process but only stores the difference
+    async_requests: bool = True,
+) -> Dict[str, pd.DataFrame]:
     end_date = start_date if not end_date else end_date
     ticker = Ticker(symbol_name)
 
@@ -42,8 +45,6 @@ def get_orderbook(
         for valid_date in all_valid_dates:
             df = _get_diff_orderbook(ticker, valid_date)
             date_df_list.append([valid_date, df])
-
-    result = {}
 
     pool = multiprocessing.Pool(processes=multiprocessing.cpu_count())
     args_list: List[Dict] = []
@@ -92,7 +93,7 @@ def _get_orderbook(
         newdf = process_diff_orderbook(newdf)
     if to_csv:
         write_to_csv(newdf, base_path, date)
-    logging.info(f"successfully construct orderbook on {date}")
+    logger.info(f"successfully construct orderbook on {date}")
     return newdf
 
 
@@ -103,7 +104,7 @@ def _get_diff_orderbook(ticker: Ticker, date_obj: datetime.date):
     url = TICKER_ORDER_BOOK.format(index=index, date=date)
 
     response = session.get(url, headers=ORDERBOOK_HEADER, timeout=10)
-    logging.info(f"successfully download raw orderbook on {date_obj} from tse")
+    logger.info(f"successfully download raw orderbook on {date_obj} from tse")
     data = json.loads(response.content)
     session.close()
 
