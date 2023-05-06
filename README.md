@@ -21,6 +21,7 @@
   - [نحوه استفاده](#نحوه-استفاده)
     - [دانلود سابقه سهم ها](#دانلود-سابقه-سهم-ها)
     - [دانلود سابقه شاخص های مالی](#دانلود-سابقه-شاخص-های-مالی)
+    - [دانلود تاریخچه orderbook](#دانلود-تاریخچه-orderbook)
     - [دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا](#دانلود-سابقه-معاملات-حقیقی-و-حقوقی-به-صورت-مجزا)
     - [ماژول Ticker](#ماژول-ticker)
         - [نکته ۱](#نکته-۱)
@@ -49,6 +50,7 @@
 - دریافت اطلاعات سهامداران عمده
 - دریافت آمارهای کلیدی مربوط به فیلترنویسی برای نمادها
 - دریافت ریزمعاملاتی آخرین روز معاملاتی نمادها
+- دریافت orderbook با پنج مظنه برتر
 
 ## نصب
 
@@ -172,6 +174,45 @@ download_financial_indexes(symbols=["شاخص قيمت 50 شركت", "فني م�
 شاخص در اختیار شما قرار نمی‌دهد.
 </i>
 </div>
+
+### دانلود تاریخچه orderbook
+```python
+tse.get_orderbook(
+    symbol_name,
+    start_date,
+    end_date=None,
+    to_csv=False,
+    base_path=None,
+    ignore_date_validation=False,
+    diff_orderbook=False,  # faster to process but only stores the difference
+    async_requests=True,
+)
+```
+در بالا مقادیر دیفالت تابع را مشاهده می‌کنید.
+
+ورودی `ignore_date_validation=True` برای وقتی است که از اینکه روز شروع و پایان حتما روز معاملاتی هستند اطمینان ندارید.
+
+ورودی `diff_orderbook=True` برای زمانی است که میخواهید خروجی تا حد امکان خام‌تری دریافت کنید. این خروجی سریع‌تر دریافت می‌شود. دیتافریم خروجی فقط شامل تغییرات `orderbook` است و در یک لحظه مشخص صراحتا وضعیت آن را مشخص نمیکند.
+
+برای متوالی گرفتن و حذف آپشن async میتوانید `async_requests=False` قرار دهید ولی توجه داشته باشید سرعت دریافت داده ها کاهش می‌یابد.
+
+```python
+symbol = "خساپا"
+start_date = datetime.date(2023, 3, 1)
+end_date = datetime.date(2023, 4, 4)
+
+df_dict = get_orderbook(
+        symbol,
+        start_date=start_date,
+        end_date=end_date,
+        diff_orderbook=False,
+        ignore_date_validation=True,
+        to_csv=True,
+        async_requests=True,
+    )
+```
+فرمت خروجی یک دیکشنری با key تاریخ روز و value دیتافریم آن روز است.
+
 
 ### دانلود سابقه معاملات حقیقی و حقوقی به صورت مجزا
 
@@ -662,69 +703,48 @@ print(trade_details)
 
 همچنین تمامی اطلاعات ارائه شده در مورد اطلاعات حقیقی حقوقی های سهام هم که در ادامه آمده است میتوانید دریافت کنید.
 
-```
+```sh
 "numof_individual_buy", "numof_corporate_buy",
 "vol_individual_buy", "vol_corporate_buy",
 "numof_individual_sell", "numof_corporate_sell",
 "vol_individual_sell", "vol_corporate_sell"
-
 ```
-نام کلیدهای ارائه شده در بالا به صورت کامل تر پایین آمده است:
-
-```
-        [
-            '5054819322815158', # id
-            '406', # num_of_individual_buyers (daily)
-            '5', # num_of_corporate_buyers (daily)
-            '4979247', # volume_of_individual_buyers (daily)
-            '528270', # volume_of_corporate_buyers (daily)
-            '554', # num_of_individual_sellers (daily)
-            '2', # num_of_corporate_sellers (daily)
-            '5302517', # volume_of_individual_sellers (daily)
-            '205000' # volume_of_corporate_sellers (daily)
-        ]
-    
-```
-
 
 همچنین همه اطلاعات ارائه شده توسط دیده بان بازار را هم می توانید برای تمامی سهام دریافت کنید. در ادامه مشاهده میکنید.
 
-```
+```sh
 "index", "code", "symbol", "name", "last_changed", "open_price",
 "adj_closing_price", "last_price", "number_of_trans",
 "volume_of_trans", "value_of_trans", "min_price", "max_year",
 "yesterday_price", "EPS", "base_volume", "group_number", "max_price_allowed", "min_price_allowed", "number_of_stocks"
 ```
 
-
 در واقع از دیده بان بازار دیتاهای زیر قابل دریافت بود که به عنوان نمونه قرار میدهم ولی برخی از دیتاها برای توسعه دهندگان پکیج قابل فهم نبود(آنهایی که با `?` در زیر مشخص شده اند) که در صورت علاقه مندی میتوانید با اطلاع رسانی کاربرد آن ها به ما در توسعه پکیج کمک کنید.
 
-```
-        [
-            '71957984642204570', # id
-            'IRO7APTP0001', # code
-            'شپترو', # symbol
-            'پتروشيمي آبادان', # name
-            '122931', # last changed (time 12:29:31)
-            '2470', # open price
-            '2438', # adj_closing price
-            '2436', # last price
-            '861', # number of trans (daily)
-            '29225934', # volume of trans (daily)
-            '71250969784', # value of trans (daily)
-            '2436', # min price (daily)
-            '2500', # max price (daily)
-            '2511', # yesterday price
-            '-43', # EPS
-            '4000000', # base voulume
-            '3423', # ?
-            '4', # ?
-            '44', # group number
-            '2586.00', # max allowed (daily)
-            '2436.00', # min allowed (daily)
-            '10000000000', # number of stocks
-            '309' # ?
-        ]
+```sh
+'71957984642204570', # id
+'IRO7APTP0001', # code
+'شپترو', # symbol
+'پتروشيمي آبادان', # name
+'122931', # last changed (time 12:29:31)
+'2470', # open price
+'2438', # adj_closing price
+'2436', # last price
+'861', # number of trans (daily)
+'29225934', # volume of trans (daily)
+'71250969784', # value of trans (daily)
+'2436', # min price (daily)
+'2500', # max price (daily)
+'2511', # yesterday price
+'-43', # EPS
+'4000000', # base voulume
+'3423', # ?
+'4', # ?
+'44', # group number
+'2586.00', # max allowed (daily)
+'2436.00', # min allowed (daily)
+'10000000000', # number of stocks
+'309' # ?
 ```
 
 

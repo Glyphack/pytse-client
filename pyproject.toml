@@ -24,6 +24,9 @@ pylint = "^2.15.0"
 isort = "^5.10.1"
 black = "^22.6.0"
 
+[tool.poetry.group.dev.dependencies]
+parameterized = "^0.9.0"
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

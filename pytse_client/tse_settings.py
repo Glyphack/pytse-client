@@ -62,6 +62,7 @@ MARKET_WATCH_URL = (
     "http://www.tsetmc.com/tsev2/data/MarketWatchInit.aspx?h=0&r=0"
 )
 
+TICKER_ORDER_BOOK = "http://cdn.tsetmc.com/api/BestLimits/{index}/{date}"
 
 CLIENT_TYPES_URL = "http://www.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
 
