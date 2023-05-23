@@ -3,7 +3,7 @@ TSE_GET_LAST_TRADE_DAY = (
 )
 
 TSE_TICKER_EXPORT_DATA_ADDRESS = (
-    "http://tsetmc.com/tsev2/data/Export-txt.aspx?t=i&a=1&b=0&i={}"
+    "http://old.tsetmc.com/tsev2/data/Export-txt.aspx?t=i&a=1&b=0&i={}"
 )
 
 TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS = (
@@ -15,7 +15,7 @@ FINANCIAL_INDEX_EXPORT_INTRADAY_URL = (
 )
 
 
-TSE_TICKER_ADDRESS = "http://tsetmc.com/Loader.aspx?ParTree=151311&i={}"
+TSE_TICKER_ADDRESS = "http://old.tsetmc.com/Loader.aspx?ParTree=151311&i={}"
 
 # FIXME: c should be cSecVal (group code of instrument)
 # remove e parameter when instrument has not NAV value
