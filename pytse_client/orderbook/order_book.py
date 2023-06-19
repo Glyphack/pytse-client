@@ -100,7 +100,7 @@ def _get_orderbook(
 def _get_diff_orderbook(ticker: Ticker, date_obj: datetime.date):
     index = ticker.index
     date = date_obj.strftime("%Y%m%d")
-    session = requests_retry_session(retries=10, backoff_factor=0.2)
+    session = requests_retry_session(retries=5, backoff_factor=0.2)
     url = TICKER_ORDER_BOOK.format(index=index, date=date)
 
     response = session.get(url, headers=ORDERBOOK_HEADER, timeout=10)
