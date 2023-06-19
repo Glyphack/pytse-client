@@ -40,12 +40,10 @@ def _extract_ticker_client_types_data(ticker_index: str) -> List:
 
 
 def _create_financial_index_from_text_response(data):
-    data = re.split(r"\;|\,", data)
-    dates = data[::2]
-    values = data[1::2]
-    values = list(map(float, values))
-    df = pd.DataFrame(tuple(zip(dates, values)), columns=["jdate", "value"])
-    return df
+    data = pd.DataFrame(re.split(r"\;", data))
+    columns = ["date", "high", "low", "open", "close", "volume", "__"]
+    data[columns] = data[0].str.split(",", expand=True)
+    return data.drop(columns=["__", 0])
 
 
 def _adjust_data_frame(df, include_jdate):
@@ -58,11 +56,6 @@ def _adjust_data_frame(df, include_jdate):
 
 
 def _adjust_data_frame_for_fIndex(df, include_jdate):
-    df["date"] = df["jdate"].apply(
-        lambda x: jdatetime.datetime.togregorian(
-            jdatetime.datetime.strptime(x, "%Y/%m/%d")
-        )
-    )
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     if include_jdate:
         df["jdate"] = ""
