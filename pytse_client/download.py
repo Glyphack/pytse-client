@@ -1,5 +1,4 @@
 import logging
-import re
 from concurrent import futures
 from io import StringIO
 from pathlib import Path
@@ -39,15 +38,6 @@ def _extract_ticker_client_types_data(ticker_index: str) -> List:
     return data
 
 
-def _create_financial_index_from_text_response(data):
-    data = re.split(r"\;|\,", data)
-    dates = data[::2]
-    values = data[1::2]
-    values = list(map(float, values))
-    df = pd.DataFrame(tuple(zip(dates, values)), columns=["jdate", "value"])
-    return df
-
-
 def _adjust_data_frame(df, include_jdate):
     df.date = pd.to_datetime(df.date, format="%Y%m%d")
     if include_jdate:
@@ -58,19 +48,11 @@ def _adjust_data_frame(df, include_jdate):
 
 
 def _adjust_data_frame_for_fIndex(df, include_jdate):
-    df["date"] = df["jdate"].apply(
-        lambda x: jdatetime.datetime.togregorian(
-            jdatetime.datetime.strptime(x, "%Y/%m/%d")
-        )
-    )
-    df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     if include_jdate:
         df["jdate"] = ""
         df.jdate = df.date.apply(
             lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
         )
-    else:
-        df.drop(columns=["jdate"], inplace=True)
 
 
 def download(
@@ -274,7 +256,14 @@ def download_ticker_daily_record(ticker_index: str, session: Session):
 )
 def download_fIndex_record(fIndex: str, session: Session):
     url = tse_settings.TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS.format(fIndex)
-    response = session.get(url, timeout=10)
+    response = session.get(
+        url,
+        timeout=10,
+        headers={
+            "User-Agent": "Mozila",
+            "Content-Type": "application/json; charset=utf-8",
+        },
+    )
     if 400 <= response.status_code < 500:
         logger.error(
             f"Cannot read daily trade records from the url: {url}",
@@ -282,13 +271,19 @@ def download_fIndex_record(fIndex: str, session: Session):
         )
 
     response.raise_for_status()
-    data = response.text
-    if not data or ";" not in data or "," not in data:
-        raise ValueError(
-            f"""Invalid response from the url: {url}.
-                         \nExpected valid financial index data."""
-        )
-    df = _create_financial_index_from_text_response(data)
+    data = response.json()
+    for item in data["indexB2"]:
+        item["dEven"] = pd.to_datetime(str(item["dEven"]), format="%Y%m%d")
+    df = pd.DataFrame(data["indexB2"])
+    df = df.rename(
+        columns={
+            "dEven": "date",
+            "xNivInuClMresIbs": "close",
+            "xNivInuPhMresIbs": "high",
+            "xNivInuPbMresIbs": "low",
+        }
+    )
+    df = df.drop(columns=["insCode"])
     return df
 
 
