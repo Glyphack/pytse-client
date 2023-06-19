@@ -5,6 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from pytse_client import config, symbols_data, tse_settings, utils
 from pytse_client.download import download_financial_indexes
+from pytse_client.utils import persian
 
 
 class FinancialIndex:
@@ -16,7 +17,9 @@ class FinancialIndex:
         write_history: Optional[bool] = False,
     ):
         self._index: str = index or symbols_data.get_financial_index(symbol)
-        self.symbol: str = symbol if index is None else self._index
+        self.symbol: str = (
+            persian.replace_persian(symbol) if index is None else self._index
+        )
         self._intraday_url = (
             tse_settings.FINANCIAL_INDEX_EXPORT_INTRADAY_URL.format(
                 self._index
