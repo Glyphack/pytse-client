@@ -140,10 +140,8 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 ### دانلود سابقه شاخص های مالی
 
 <div style="line-height:80px;">
-برای دانلود سابقه شاخص های منتخب بازار که از طریق این <a href="http://www.tsetmc.com/Loader.aspx?Partree=151315&Flow=1">  لینک </a>
-می توانید لیست نام آن ها را ملاحظه کنید کافی است اسم شاخص یا شاخص های مورد نظر خود را به صورت
-<strong> دقیقا مشابه با لینک ارائه شده در بالا </strong>
-
+برای دانلود سابقه شاخص های بازار که از طریق این <a href="http://www.tsetmc.com/Loader.aspx?Partree=151315&Flow=1">  لینک </a>
+می توانید لیست نام آن ها را ملاحظه کنید کافی است اسم شاخص
 در بخش ‍‍
 `symbols`
 وارد کنید.
@@ -167,11 +165,24 @@ download_financial_indexes(symbols="all", write_to_csv=True, base_path="hello")
 download_financial_indexes(symbols=["شاخص قيمت 50 شركت", "فني مهندسي"], write_to_csv=True, include_jdate=True)
 ```
 
+همینطور کلاسی به نام `FinancialIndex` وجود دارد که می‌توانید با استفاده از آن نه تنها به تاریخچه شاخص های مدنظر بلکه تغییرات درون روزانه و اطلاعات دیگری دسترسی پیدا کنید.
+
+این کلاس مشابه با کلاس `Ticker` طراحی شده است.
+
+```python
+tse.FinancialIndex(symbol="شاخص کل").history
+tse.FinancialIndex(symbol="شاخص کل").intraday_price
+tse.FinancialIndex(symbol="شاخص کل").low
+tse.FinancialIndex(symbol="شاخص کل").high
+tse.FinancialIndex(symbol="شاخص کل").last_value
+tse.FinancialIndex(symbol="شاخص کل").last_update
+```
+
 </div>
 <div>
 <i>
-به این موضوع توجه داشته باشید که دیتای دریافتی تنها حاوی مقدار شاخص مورد نظر در پایان روز معاملاتی است و اطلاعاتی از `OHLCV`
-شاخص در اختیار شما قرار نمی‌دهد.
+به این موضوع توجه داشته باشید که دیتای دریافتی حاوی مقدار   `OHLCV`
+است به همراه `date` و `jdate` در صورت نیاز شما می‌باشد.
 </i>
 </div>
 

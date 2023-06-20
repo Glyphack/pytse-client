@@ -27,6 +27,23 @@ class TestFinancialIndex(unittest.TestCase):
             exists(Path(f"{self.write_csv_path}/{self.valid_f_index}.csv"))
         )
         self.assertFalse(f_index_record.empty)
+        expected_columns = [
+            "jdate",
+            "date",
+            "close",
+            "high",
+            "low",
+            "open",
+            "volume",
+        ]
+        missing_columns = [
+            col
+            for col in expected_columns
+            if col not in f_index_record.columns
+        ]
+        self.assertEqual(
+            len(missing_columns), 0, f"Missing columns: {missing_columns}"
+        )
 
     def test_fields(self):
         f_index_record = FinancialIndex(
