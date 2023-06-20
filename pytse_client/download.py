@@ -58,12 +58,9 @@ def _adjust_data_frame(df, include_jdate):
 def _adjust_data_frame_for_fIndex(df, include_jdate):
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     if include_jdate:
-        df["jdate"] = ""
-        df.jdate = df.date.apply(
+        df["jdate"] = df.date.apply(
             lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
         )
-    else:
-        df.drop(columns=["jdate"], inplace=True)
 
 
 def download(
