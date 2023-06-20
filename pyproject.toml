@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pytse-client"
-version = "0.15.1a1"
+version = "0.16"
 
 description = "tehran stock exchange(TSE) client in python"
 authors = ["glyphack <sh.hooshyari@gmail.com>"]
