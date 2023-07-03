@@ -67,6 +67,9 @@ MARKET_WATCH_URL = (
 )
 
 TICKER_ORDER_BOOK = "http://cdn.tsetmc.com/api/BestLimits/{index}/{date}"
+TICKER_TRADE_DETAILS = (
+    "http://cdn.tsetmc.com/api/Trade/GetTradeHistory/{index}/{date}/true"
+)
 
 CLIENT_TYPES_URL = "http://old.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
 
