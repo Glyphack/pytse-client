@@ -1,5 +1,6 @@
 import datetime
 import os
+import json
 import logging
 import pandas as pd
 import asyncio
@@ -8,6 +9,7 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 from pytse_client.tse_settings import TICKER_TRADE_DETAILS
 from pytse_client.utils.trade_dates import get_valid_dates
+from pytse_client.utils.request_session import requests_retry_session
 from pytse_client.ticker.ticker import Ticker
 from pytse_client.config import LOGGER_NAME, TRADE_DETAILS_HIST_PATH
 from pytse_client.utils.logging_generator import get_logger
@@ -129,29 +131,47 @@ def get_df_valid_dates(
     )
 
 
-async def get_df_valid_dates_async(
-    ticker: Ticker,
-    valid_dates: list,
-):
+async def get_df_valid_dates_async(ticker, valid_dates):
     conn = aiohttp.TCPConnector(limit=25)
-    session = aiohttp.ClientSession(connector=conn)
-    tasks = []
-    for date in valid_dates:
-        tasks.append(_get_trade_details(ticker, date, session))
-    _dates = await asyncio.gather(*tasks)
-    await session.close()
-    return _dates
+    async with aiohttp.ClientSession(connector=conn) as session:
+        tasks = []
+        for date in valid_dates:
+            tasks.append(_get_trade_details(ticker, date, session))
+        results = await asyncio.gather(*tasks)
+
+    return results
 
 
 async def _get_trade_details(ticker: Ticker, date_obj: datetime.date, session):
     index = ticker.index
     date = date_obj.strftime("%Y%m%d")
     url = TICKER_TRADE_DETAILS.format(index=index, date=date)
-    async with session.get(
-        url, headers=TRADE_DETAILS_HEADER, timeout=10
-    ) as response:
-        logger.info(
-            f"successfully async download trade-details on {date} from tse"
-        )
-        data = await response.json()
-        return [date_obj, pd.json_normalize(data["tradeHistory"])]
+    max_retries = 9
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            async with session.get(
+                url, headers=TRADE_DETAILS_HEADER, timeout=100
+            ) as response:
+                if response.status == 503:
+                    logger.info(
+                        f"Received 503 Service Unavailable on {date_obj}. Retrying..."
+                    )
+                    retry_count += 1
+                    await asyncio.sleep(1)
+                else:
+                    response.raise_for_status()
+                    data = await response.json()
+                    logger.info(
+                        f"Successfully fetched trade details on {date_obj} from tse"
+                    )
+                    return [date_obj, pd.json_normalize(data["tradeHistory"])]
+        except (aiohttp.ClientError, asyncio.TimeoutError):
+            logger.error(f"Request failed for {date_obj}. Retrying...")
+            retry_count += 1
+            await asyncio.sleep(1)
+
+    raise Exception(
+        f"Failed to fetch trade details for {ticker} on {date_obj} after {max_retries} retries"
+    )
