@@ -25,6 +25,15 @@ TRADE_DETAILS_HEADER = {
     "Accept-Encoding": "gzip, deflate",
 }
 mapping_api_col = {"pTran": "price", "qTitTran": "volume", "hEven": "datetime"}
+valid_time_frames_mapping = {
+    "30s": "30S",
+    "1m": "1T",
+    "5m": "5T",
+    "10m": "10T",
+    "15m": "15T",
+    "30m": "30T",
+    "1h": "1H",
+}
 reversed_keys = {val: key for key, val in mapping_api_col.items()}
 
 
@@ -34,7 +43,16 @@ def get_trade_details(
     end_date: Optional[datetime.date] = None,
     to_csv: bool = False,
     base_path: Optional[str] = None,
+    timeframe: Optional[str] = None,
 ) -> Dict[str, pd.DataFrame]:
+    if (
+        timeframe is not None
+        and timeframe not in valid_time_frames_mapping.keys()
+    ):
+        raise ValueError(
+            f"The provided timeframe is not valid. It should be among {valid_time_frames_mapping.keys()}"
+        )
+
     result = {}
     end_date = start_date if not end_date else end_date
     ticker = Ticker(symbol_name)
@@ -46,7 +64,15 @@ def get_trade_details(
     for date_df in date_df_list:
         date, df = date_df
         df = common_process(df, date.strftime("%Y%m%d"))
-        result[date] = df
+        if timeframe:
+            ohlcv_df = df.resample(valid_time_frames_mapping[timeframe]).agg(
+                {"price": "ohlc", "volume": "sum"}
+            )
+            ohlcv_df.columns = ["open", "high", "low", "close", "volume"]
+            ohlcv_df = ohlcv_df.dropna()
+            result[date] = ohlcv_df
+        else:
+            result[date] = df
 
     if to_csv:
         for date in result:
