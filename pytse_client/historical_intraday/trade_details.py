@@ -44,6 +44,7 @@ def get_trade_details(
     to_csv: bool = False,
     base_path: Optional[str] = None,
     timeframe: Optional[str] = None,
+    aggregate: bool = False,
 ) -> Dict[str, pd.DataFrame]:
     if (
         timeframe is not None
@@ -74,6 +75,12 @@ def get_trade_details(
         else:
             result[date] = df
 
+    if aggregate:
+        result = {"aggregate": pd.concat(result.values())}
+        result["aggregate"] = result["aggregate"].sort_values(
+            ["datetime"], ascending=[True]
+        )
+
     if to_csv:
         for date in result:
             write_to_csv(result[date], base_path, date)
@@ -81,11 +88,16 @@ def get_trade_details(
 
 
 def write_to_csv(
-    df: pd.DataFrame, base_path: Union[str, None], date: datetime.date
+    df: pd.DataFrame,
+    base_path: Union[str, None],
+    date: Union[datetime.date, str],
 ):
     base_path = base_path or TRADE_DETAILS_HIST_PATH
     Path(base_path).mkdir(parents=True, exist_ok=True)
-    file_name = f'trade_details_{date.strftime("%Y-%m-%d")}.csv'
+    extension = (
+        date.strftime("%Y-%m-%d") if type(date) == datetime.date else date
+    )
+    file_name = f"trade_details_{extension}.csv"
     path = os.path.join(base_path, file_name)
     df.to_csv(path)
 
