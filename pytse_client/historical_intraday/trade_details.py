@@ -65,6 +65,8 @@ def get_trade_details(
     for date_df in date_df_list:
         date, df = date_df
         df = common_process(df, date.strftime("%Y%m%d"))
+        if df.empty:
+            continue
         if timeframe:
             ohlcv_df = df.resample(valid_time_frames_mapping[timeframe]).agg(
                 {"price": "ohlc", "volume": "sum"}

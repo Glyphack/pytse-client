@@ -5,7 +5,9 @@ from pathlib import Path
 from datetime import date
 from parameterized import parameterized
 from pytse_client import get_trade_details
-from pytse_client.historical_intraday.trade_details import valid_time_frames_mapping
+from pytse_client.historical_intraday.trade_details import (
+    valid_time_frames_mapping,
+)
 
 
 class TestTradeDetails(unittest.TestCase):
@@ -14,8 +16,9 @@ class TestTradeDetails(unittest.TestCase):
         ("وغدیر", (1915, 2)),
     ]
     single_ticker = "اهرم"
-    valid_timeframes = [(timeframe,)
-                        for timeframe in valid_time_frames_mapping.keys()]
+    valid_timeframes = [
+        (timeframe,) for timeframe in valid_time_frames_mapping.keys()
+    ]
 
     def setUp(self) -> None:
         self.write_csv_path = "test_dir"
@@ -49,7 +52,7 @@ class TestTradeDetails(unittest.TestCase):
             to_csv=True,
             base_path=self.write_csv_path,
             timeframe=timeframe,
-            aggregate=True
+            aggregate=True,
         )
         self.assertTrue(exists(Path(f"{self.write_csv_path}")))
         self.assertFalse(dict_df["aggregate"].empty)
