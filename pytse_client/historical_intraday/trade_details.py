@@ -1,6 +1,5 @@
 import datetime
 import os
-import json
 import logging
 import pandas as pd
 import asyncio
@@ -9,7 +8,6 @@ from pathlib import Path
 from typing import Dict, Optional, Union
 from pytse_client.tse_settings import TICKER_TRADE_DETAILS
 from pytse_client.utils.trade_dates import get_valid_dates
-from pytse_client.utils.request_session import requests_retry_session
 from pytse_client.ticker.ticker import Ticker
 from pytse_client.config import LOGGER_NAME, TRADE_DETAILS_HIST_PATH
 from pytse_client.utils.logging_generator import get_logger
