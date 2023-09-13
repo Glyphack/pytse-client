@@ -3,6 +3,10 @@
 from dataclasses import dataclass
 from typing import List, Optional, Tuple
 
+from pytse_client import tse_settings, utils
+
+from pytse_client.ticker.dto import InstrumentInfo
+
 
 @dataclass
 class Order:
@@ -75,4 +79,51 @@ def get_corporate_trade_summary(corporate_trade_summary_section):
         buy_count=corporate_buy_count,
         sell_vol=corporate_sell_vol,
         sell_count=corporate_sell_count,
+    )
+
+
+def get_instrument_info(ticket_id: str) -> InstrumentInfo:
+    resp = utils.requests_retry_session().get(
+        tse_settings.TSE_INSTRUMENT_INFO.format(ticket_id),
+        timeout=10,
+        headers=tse_settings.HEADERS,
+    )
+    resp.raise_for_status()
+    data = resp.json()["instrumentInfo"]
+    return InstrumentInfo(
+        eps=data["eps"],
+        sector=data["sector"],
+        static_threshold=data["staticThreshold"],
+        min_week=data["minWeek"],
+        max_week=data["maxWeek"],
+        min_year=data["minYear"],
+        max_year=data["maxYear"],
+        q_tot_tran5_j_avg=data["qTotTran5JAvg"],
+        k_aj_cap_val_cps_idx=data["kAjCapValCpsIdx"],
+        d_even=data["dEven"],
+        top_inst=data["topInst"],
+        fara_desc=data["faraDesc"],
+        contract_size=data["contractSize"],
+        nav=data["nav"],
+        under_supervision=data["underSupervision"],
+        c_val_mne=data["cValMne"],
+        l_val18=data["lVal18"],
+        c_soc_csac=data["cSocCSAC"],
+        l_soc30=data["lSoc30"],
+        y_mar_nsc=data["yMarNSC"],
+        y_val=data["yVal"],
+        ins_code=data["insCode"],
+        l_val30=data["lVal30"],
+        l_val18_afc=data["lVal18AFC"],
+        flow=data["flow"],
+        c_isin=data["cIsin"],
+        z_titad=data["zTitad"],
+        base_vol=data["baseVol"],
+        instrument_id=data["instrumentID"],
+        cgr_val_cot=data["cgrValCot"],
+        c_com_val=data["cComVal"],
+        last_date=data["lastDate"],
+        source_id=data["sourceID"],
+        flow_title=data["flowTitle"],
+        cgr_val_cot_title=data["cgrValCotTitle"],
     )

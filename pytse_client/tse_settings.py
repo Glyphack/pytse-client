@@ -16,6 +16,9 @@ FINANCIAL_INDEX_EXPORT_INTRADAY_URL = (
 
 
 TSE_TICKER_ADDRESS = "http://old.tsetmc.com/Loader.aspx?ParTree=151311&i={}"
+TSE_INSTRUMENT_INFO = (
+    "http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{}"
+)
 
 # FIXME: c should be cSecVal (group code of instrument)
 # remove e parameter when instrument has not NAV value
@@ -75,3 +78,15 @@ CLIENT_TYPES_URL = "http://old.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
 
 DATE_FORMAT = "%Y%m%d"
 MIN_DATE = 20010321
+
+HEADERS = {
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+    "Accept-Language": "en-GB,en;q=0.9",
+    "Cache-Control": "max-age=0",
+    "Connection": "keep-alive",
+    "Cookie": "ASP.NET_SessionId=tieamwajlx5h0zdnwzbodf0a",
+    "DNT": "1",
+    "Sec-GPC": "1",
+    "Upgrade-Insecure-Requests": "1",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/169.0.0.0 Safari/552.36",
+}
