@@ -29,6 +29,7 @@ from pytse_client.ticker.api_extractors import (
     TradeSummary,
     get_corporate_trade_summary,
     get_individual_trade_summary,
+    get_instrument_info,
     get_orders,
 )
 from pytse_client.tse_settings import (
@@ -101,6 +102,8 @@ class Ticker:
             f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         )
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
+        # this URL sholud be used from now on for features because old one is deprecated
+        self._url_new = tse_settings.TSE_INSTRUMENT_INFO.format(self._index)
         self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
         self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
         # TODO: if symbol equals instrument id, it cannot fetch introduction
@@ -183,9 +186,7 @@ class Ticker:
         Symbol title in persian
         """
         return replace_arabic(
-            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[
-                0
-            ].split("-")[0]
+            get_instrument_info(self._index).l_val30.split("-")[0]
         )
 
     @property
@@ -193,9 +194,7 @@ class Ticker:
         """
         Symbol title with it's market in persian
         """
-        return replace_arabic(
-            re.findall(r"Title='(.*?)',", self._ticker_page_response.text)[0]
-        )
+        return replace_arabic(get_instrument_info(self._index).l_val30)
 
     @property
     def group_name(self) -> str:

@@ -5,18 +5,22 @@ from pytse_client import Ticker
 
 class TestTicker(unittest.TestCase):
     def setUp(self) -> None:
-        # This can break the test if symbol changes state
-        self.deactivated_symbol = "رتکو"
         self.activate_symbol = "ذوب"
         return super().setUp()
 
     def tearDown(self) -> None:
         return super().tearDown()
 
+    def test_option_trading(self):
+        ticker = Ticker("", "816070469779688")
+        ticker.title
+        ticker.fulltitle
+
     def test_real_time_info_will_not_fail_with_deactivated_symbol(self):
+        ticker = Ticker("", index="3823243780502959")
         self.assertRaises(
             RuntimeError,
-            Ticker(self.deactivated_symbol).get_ticker_real_time_info_response,
+            ticker.get_ticker_real_time_info_response,
         )
 
     def test_get_total_shares_history_on_activate_symbol(self):
