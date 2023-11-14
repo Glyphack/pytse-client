@@ -11,6 +11,8 @@ from pytse_client.scraper.symbol_scraper import (
     get_market_symbols_from_symbols_list_page,
 )
 
+locale.setlocale(locale.LC_COLLATE, "fa_IR.UTF-8")
+
 
 def write_symbols_to_json(
     market_symbols: List[MarketSymbol], filename: str, path: str
@@ -42,7 +44,6 @@ if __name__ == "__main__":
         deduplicated_market_symbols
     )
     # sort by sybmol
-    locale.setlocale(locale.LC_COLLATE, "fa_IR.UTF-8")
     sorted_market_symbols = sorted(deduplicated_market_symbols)
     write_symbols_to_json(
         sorted_market_symbols, "symbols_name.json", f"{config.pytse_dir}/data"
