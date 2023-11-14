@@ -4,12 +4,13 @@ import re
 from dataclasses import dataclass
 from typing import List
 
+import aiohttp
 import requests
 from bs4 import BeautifulSoup
-from pytse_client import config, tse_settings
-from pytse_client.utils import requests_retry_session
-from pytse_client.utils.persian import replace_arabic
 from requests import HTTPError
+
+from pytse_client import config, tse_settings
+from pytse_client.utils.persian import replace_arabic
 
 logger = logging.getLogger(config.LOGGER_NAME)
 
@@ -105,7 +106,7 @@ def get_market_symbols_from_market_watch_page() -> List[MarketSymbol]:
     return market_symbols
 
 
-def add_old_indexes_to_market_symbols(
+async def add_old_indexes_to_market_symbols(
     symbols: List[MarketSymbol],
 ) -> List[MarketSymbol]:
     """
@@ -123,9 +124,11 @@ def add_old_indexes_to_market_symbols(
 
     """
     market_symbols = []
+    conn = aiohttp.TCPConnector(limit=5)
+    session = aiohttp.ClientSession(connector=conn)
 
     for symbol in symbols:
-        index, old_ids = get_symbol_ids(symbol.symbol)
+        index, old_ids = await get_symbol_ids(symbol.symbol, session)
         if index is None:
             index = symbol.index
         market_symbols.append(
@@ -138,28 +141,34 @@ def add_old_indexes_to_market_symbols(
             )
         )
 
+    await session.close()
+
     return market_symbols
 
 
-def get_symbol_ids(symbol_name: str):
+async def get_symbol_ids(symbol_name: str, session: aiohttp.ClientSession):
     url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
-    response = requests_retry_session().get(url, timeout=10)
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        raise Exception(f"{symbol_name}: Sorry, tse server did not respond")
+    print(f"get_symbol_ids url: {url}")
 
-    symbols = response.text.split(";")
-    index = None
-    old_ids = []
-    for symbol_full_info in symbols:
-        if symbol_full_info.strip() == "":
-            continue
-        symbol_full_info = symbol_full_info.split(",")
-        if replace_arabic(symbol_full_info[0]) == symbol_name:
-            if symbol_full_info[7] == "1":
-                index = symbol_full_info[2]  # active symbol id
-            else:
-                old_ids.append(symbol_full_info[2])  # old symbol id
+    timeout = aiohttp.ClientTimeout(total=20)
+    async with session.get(url, timeout=timeout) as response:
+        if response.status != 200:
+            raise HTTPError(
+                f"get_symbol_ids failed with status code: {response.status}"
+            )
 
-    return index, old_ids
+        response_text = await response.text()
+        symbols = response_text.split(";")
+        index = None
+        old_ids = []
+        for symbol_full_info in symbols:
+            if symbol_full_info.strip() == "":
+                continue
+            symbol_full_info = symbol_full_info.split(",")
+            if replace_arabic(symbol_full_info[0]) == symbol_name:
+                if symbol_full_info[7] == "1":
+                    index = symbol_full_info[2]  # active symbol id
+                else:
+                    old_ids.append(symbol_full_info[2])  # old symbol id
+
+        return index, old_ids
