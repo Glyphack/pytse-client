@@ -526,7 +526,7 @@ ticker.get_shareholders_history(
 # در صورتی که میخواهید تابع
 # async
 # رو استفاده کنید
-await ticker.get_shareholders_history(
+await ticker.get_shareholders_history_async(
     from_when=datetime.timedelta(days=90),  # تعداد روز‌های گذشته که مقدار پیشفرض ۹۰ روز است
     to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
     only_trade_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
