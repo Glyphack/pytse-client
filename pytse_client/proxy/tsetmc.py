@@ -43,7 +43,7 @@ async def get_day_shareholders_history(
                 continue
             result.append(
                 ShareholderData(
-                    id=shareholders_raw_data["shareHolderID"],
+                    id=shareholders_raw_data["shareHolderShareID"],
                     name=shareholders_raw_data["shareHolderName"],
                     instrument_id=shareholders_raw_data["cIsin"],
                     shares=shareholders_raw_data["numberOfShares"],
