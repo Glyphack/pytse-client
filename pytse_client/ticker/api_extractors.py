@@ -35,9 +35,9 @@ def get_orders(orders_raw_text: str) -> Tuple[List[Order], List[Order]]:
         buy_count = int(order_numbers[0])
         buy_vol = int(order_numbers[1])
         buy_price = int(order_numbers[2])
-        sell_count = int(order_numbers[3])
+        sell_count = int(order_numbers[5])
         sell_vol = int(order_numbers[4])
-        sell_price = int(order_numbers[5])
+        sell_price = int(order_numbers[3])
 
         buy_orders_set.append(Order(buy_count, buy_vol, buy_price))
         sell_orders_set.append(Order(sell_count, sell_vol, sell_price))
