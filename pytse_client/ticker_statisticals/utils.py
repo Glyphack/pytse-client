@@ -64,13 +64,13 @@ def get_keys_of_market_watch():
         "yesterday_price",
         "EPS",
         "base_volume",
-        "NOT_VALID_KEY",
-        "NOT_VALID_KEY",
+        "visit_count",
+        "flow",
         "group_number",
         "max_price_allowed",
         "min_price_allowed",
         "number_of_stocks",
-        "NOT_VALID_KEY",
+        "yval",
     ]
     return keys
 

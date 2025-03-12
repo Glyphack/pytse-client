@@ -776,14 +776,14 @@ print(trade_details)
 '2500', # max price (daily)
 '2511', # yesterday price
 '-43', # EPS
-'4000000', # base voulume
-'3423', # ?
-'4', # ?
+'4000000', # base volume
+'3423', # visit count
+'4', # flow - بازار
 '44', # group number
 '2586.00', # max allowed (daily)
 '2436.00', # min allowed (daily)
 '10000000000', # number of stocks
-'309' # ?
+'309' # yval - نوع نماد
 ```
 
 
