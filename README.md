@@ -865,6 +865,7 @@ https://discord.gg/ampPDKHpVv
 ## الهام گرفته از:
 
 - [tehran_stocks](https://github.com/ghodsizadeh/tehran-stocks)
+- [tse-index](https://github.com/alised/tse-index)
 - [yfinance](https://github.com/ranaroussi/yfinance)
 
 </div>
