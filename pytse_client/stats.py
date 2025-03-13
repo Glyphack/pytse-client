@@ -70,7 +70,6 @@ def _get_dict_of_market_watch(raw_market_watch: str):
     for each_market_watch in _market_watch.split(";"):
         key_val = list(zip(market_watch_keys, each_market_watch.split(",")))
         key_val_dict = dict(key_val)
-        del key_val_dict["NOT_VALID_KEY"]
         final_market_watch[key_val_dict["index"]] = key_val_dict
     return final_market_watch
 
