@@ -76,6 +76,8 @@ TICKER_TRADE_DETAILS = (
 
 CLIENT_TYPES_URL = "http://old.tsetmc.com/tsev2/data/ClientTypeAll.aspx"
 
+GROUPS_URL = "http://old.tsetmc.com/tsev2/res/loader.aspx?t=g&_555"
+
 DATE_FORMAT = "%Y%m%d"
 MIN_DATE = 20010321
 
