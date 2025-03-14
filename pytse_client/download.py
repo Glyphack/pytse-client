@@ -1,5 +1,6 @@
 import logging
 import re
+import json
 from concurrent import futures
 from io import StringIO
 from pathlib import Path
@@ -17,6 +18,14 @@ from tenacity import retry, retry_if_exception_type, wait_random
 from tenacity.before_sleep import before_sleep_log
 
 logger = logging.getLogger(config.LOGGER_NAME)
+
+api_to_finacial_mapping = {
+    "insCode": "__",
+    "dEven": "date",
+    "xNivInuClMresIbs": "close",
+    "xNivInuPbMresIbs": "low",
+    "xNivInuPhMresIbs": "high",
+}
 
 
 def _handle_ticker_index(symbol):
@@ -40,10 +49,13 @@ def _extract_ticker_client_types_data(ticker_index: str) -> List:
 
 
 def _create_financial_index_from_text_response(data):
-    data = pd.DataFrame(re.split(r"\;", data))
-    columns = ["date", "high", "low", "open", "close", "volume", "__"]
-    data[columns] = data[0].str.split(",", expand=True)
-    return data.drop(columns=["__", 0])
+    data = json.loads(data)
+    data = pd.DataFrame(data.get('indexB2'))
+    data.rename(columns=api_to_finacial_mapping, inplace=True)
+    data.drop(columns=["__"], inplace=True)
+    data['open'] = data['close']
+    data['volume'] = 0
+    return data
 
 
 def _adjust_data_frame(df, include_jdate):
@@ -273,7 +285,7 @@ def download_fIndex_record(fIndex: str, session: Session):
 
     response.raise_for_status()
     data = response.text
-    if not data or ";" not in data or "," not in data:
+    if not data or "," not in data:
         raise ValueError(
             f"""Invalid response from the url: {url}.
                          \nExpected valid financial index data."""

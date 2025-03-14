@@ -7,7 +7,7 @@ TSE_TICKER_EXPORT_DATA_ADDRESS = (
 )
 
 TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS = (
-    "http://old.tsetmc.com/tsev2/chart/data/IndexFinancial.aspx?i={}&t=ph"
+    "https://cdn.tsetmc.com/api/Index/GetIndexB2History/{}"
 )
 
 FINANCIAL_INDEX_EXPORT_INTRADAY_URL = (
