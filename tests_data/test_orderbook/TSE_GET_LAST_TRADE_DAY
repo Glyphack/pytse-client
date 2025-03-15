@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE items [
+<!ELEMENT items (item*)>
+<!ATTLIST items burpVersion CDATA "">
+<!ATTLIST items exportTime CDATA "">
+<!ELEMENT item (time, url, host, port, protocol, method, path, extension, request, status, responselength, mimetype, response, comment)>
+<!ELEMENT time (#PCDATA)>
+<!ELEMENT url (#PCDATA)>
+<!ELEMENT host (#PCDATA)>
+<!ATTLIST host ip CDATA "">
+<!ELEMENT port (#PCDATA)>
+<!ELEMENT protocol (#PCDATA)>
+<!ELEMENT method (#PCDATA)>
+<!ELEMENT path (#PCDATA)>
+<!ELEMENT extension (#PCDATA)>
+<!ELEMENT request (#PCDATA)>
+<!ATTLIST request base64 (true|false) "false">
+<!ELEMENT status (#PCDATA)>
+<!ELEMENT responselength (#PCDATA)>
+<!ELEMENT mimetype (#PCDATA)>
+<!ELEMENT response (#PCDATA)>
+<!ATTLIST response base64 (true|false) "false">
+<!ELEMENT comment (#PCDATA)>
+]>
+<items burpVersion="2022.12.5" exportTime="Sat Mar 15 16:25:22 IRST 2025">
+  <item>
+    <time>Sat Mar 15 16:18:28 IRST 2025</time>
+    <url><![CDATA[http://service.tsetmc.com/tsev2/data/TseClient2.aspx?t=LastPossibleDeven]]></url>
+    <host ip="94.182.113.112">service.tsetmc.com</host>
+    <port>80</port>
+    <protocol>http</protocol>
+    <method><![CDATA[GET]]></method>
+    <path><![CDATA[/tsev2/data/TseClient2.aspx?t=LastPossibleDeven]]></path>
+    <extension>aspx</extension>
+    <request base64="true"><![CDATA[R0VUIC90c2V2Mi9kYXRhL1RzZUNsaWVudDIuYXNweD90PUxhc3RQb3NzaWJsZURldmVuIEhUVFAvMS4xDQpIb3N0OiBzZXJ2aWNlLnRzZXRtYy5jb20NClVzZXItQWdlbnQ6IHB5dGhvbi1yZXF1ZXN0cy8yLjMxLjANCkFjY2VwdC1FbmNvZGluZzogZ3ppcCwgZGVmbGF0ZQ0KQWNjZXB0OiAqLyoNCkNvbm5lY3Rpb246IGNsb3NlDQoNCg==]]></request>
+    <status>200</status>
+    <responselength>600</responselength>
+    <mimetype>text</mimetype>
+    <response base64="true"><![CDATA[SFRUUC8xLjEgMjAwIE9LDQpDYWNoZS1Db250cm9sOiBwdWJsaWMsIG5vLWNhY2hlPSJTZXQtQ29va2llIiwgbWF4LWFnZT05MDANCkNvbnRlbnQtVHlwZTogdGV4dC9odG1sOyBjaGFyc2V0PXV0Zi04DQpFeHBpcmVzOiBTYXQsIDE1IE1hciAyMDI1IDEzOjAzOjI4IEdNVA0KTGFzdC1Nb2RpZmllZDogU2F0LCAxNSBNYXIgMjAyNSAxMjo0ODoyOCBHTVQNClZhcnk6ICoNClNlcnZlcjogTWljcm9zb2Z0LUlJUy8xMC4wDQpTZXQtQ29va2llOiBBU1AuTkVUX1Nlc3Npb25JZD1ndXByM2ppZTVkcnpjeW1pYzR3cDI1dGY7IGRvbWFpbj0udHNldG1jLmNvbTsgcGF0aD0vOyBIdHRwT25seTsgU2FtZVNpdGU9TGF4DQpYLVBvd2VyZWQtQnk6IEFTUC5ORVQNCkNvbnRlbnQtU2VjdXJpdHktcG9saWN5OiBkZWZ1bHQtU3JjICdzZWxmJw0KWC1Db250ZW50LVR5cGUtT3B0aW9uczogbm9zbmlmZg0KWC1GYXJhbXMtT3B0aW9uczogREVOWQ0KWC1YU1MtUHJvdGVjdGlvbjogIDE7IG1vZGU9YmxvY2sNCkRhdGU6IFNhdCwgMTUgTWFyIDIwMjUgMTI6NDg6MjggR01UDQpDb25uZWN0aW9uOiBjbG9zZQ0KQ29udGVudC1MZW5ndGg6IDE3DQoNCjIwMjUwMzEyOzIwMjUwMzEy]]></response>
+    <comment></comment>
+  </item>
+</items>
