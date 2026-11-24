@@ -1,6 +1,6 @@
 [project]
 name = "pytse-client"
-version = "0.19.1"
+version = "1.0.0b1"
 description = "tehran stock exchange(TSE) client in python"
 authors = [{ name = "glyphack", email = "sh.hooshyari@gmail.com" }]
 license = "GPL-3.0-only"

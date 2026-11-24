@@ -1667,7 +1667,7 @@ wheels = [
 
 [[package]]
 name = "pytse-client"
-version = "0.19.1"
+version = "1.0.0b1"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
