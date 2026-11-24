@@ -20,6 +20,7 @@
   - [نصب آخرین نسخه در حال توسعه](#نصب-آخرین-نسخه-در-حال-توسعه)
   - [نحوه استفاده](#نحوه-استفاده)
     - [دانلود سابقه سهم ها](#دانلود-سابقه-سهم-ها)
+    - [لیست نمادها](#لیست-نمادها)
     - [دانلود سابقه شاخص های مالی](#دانلود-سابقه-شاخص-های-مالی)
     - [دانلود تاریخچه orderbook](#دانلود-تاریخچه-orderbook)
     - [دانلود تاریخچه جزئیات معاملات](#دانلود-تاریخچه-جزئیات-معاملات)
@@ -36,6 +37,7 @@
       - [اطلاعات لحظه‌ای سهام](#اطلاعات-لحظهای-سهام)
       - [ریز معاملات سهام](#ریز-معاملات-سهام)
     - [تمامی اطلاعات موجود برای فیلترنویسی](#تمامی-اطلاعات-موجود-برای-فیلترنویسی)
+    - [مظنه‌های خرید و فروش تمام نمادها](#مظنههای-خرید-و-فروش-تمام-نمادها)
     - [گرفتن تمام اطلاعات تاریخی یا لحظه‌ای نماد به صورت CSV](#گرفتن-تمام-اطلاعات-تاریخی-یا-لحظهای-نماد-به-صورت-csv)
   - [کامیونیتی](#کامیونیتی)
   - [منابع آموزشی](#منابع-آموزشی)
@@ -52,13 +54,27 @@
 - دریافت آمارهای کلیدی مربوط به فیلترنویسی برای نمادها
 - دریافت ریزمعاملاتی آخرین روز معاملاتی نمادها
 - دریافت orderbook با پنج مظنه برتر
+- دریافت مظنه‌های خرید و فروش لحظه‌ای تمام نمادها
+- دریافت لیست نمادها
 
 ## نصب
+
+این پکیج به پایتون ۳.۱۱.۵ یا بالاتر نیاز دارد و روی نسخه‌های ۳.۱۱ تا ۳.۱۵ پایتون تست شده است.
 
 <div dir="ltr">
 
 ```bash
 pip install pytse-client
+```
+
+</div>
+
+یا اگر پروژه‌ی شما با [uv](https://docs.astral.sh/uv/) مدیریت می‌شود:
+
+<div dir="ltr">
+
+```bash
+uv add pytse-client
 ```
 
 </div>
@@ -71,9 +87,13 @@ pip install pytse-client
 
 ```bash
 pip install git+https://github.com/Glyphack/pytse-client.git
+# or, with uv:
+uv add git+https://github.com/Glyphack/pytse-client.git
 ```
 
 </div>
+
+برای راه‌اندازی محیط توسعه (با mise و uv) [راهنمای مشارکت](https://github.com/Glyphack/pytse-client/blob/master/CONTRIBUTING.md#نصب-محیط-توسعه) را ببینید.
 
 ## نحوه استفاده
 
@@ -138,11 +158,29 @@ tse.download(symbols=["وبملت", "ولملت"], write_to_csv=True)
 
 </div>
 
+### لیست نمادها
+
+تابع `all_symbols` مجموعه‌ای (set) از نام تمام نمادهایی که پکیج می‌شناسد را برمی‌گرداند. این‌ها همان نام‌هایی هستند که می‌توان به `download` و `Ticker` داد.
+
+<div dir="ltr">
+
+```python
+import pytse_client as tse
+
+symbols = tse.all_symbols()
+print("فولاد" in symbols)
+
+# Output
+True
+```
+
+</div>
+
 ### دانلود سابقه شاخص های مالی
 
 <div style="line-height:80px;">
-برای دانلود سابقه شاخص های بازار که از طریق این <a href="http://www.tsetmc.com/Loader.aspx?Partree=151315&Flow=1">  لینک </a>
-می توانید لیست نام آن ها را ملاحظه کنید کافی است اسم شاخص
+برای دانلود سابقه شاخص های بازار که لیست نام آن ها را می توانید در <a href="https://www.tsetmc.com/">صفحه اول سایت بورس</a>
+(کلیک روی عنوان «شاخص های منتخب» در کادر «بورس اوراق بهادار تهران» یا «فرابورس ایران») ملاحظه کنید کافی است اسم شاخص
 در بخش ‍‍
 `symbols`
 وارد کنید.
@@ -177,7 +215,12 @@ tse.FinancialIndex(symbol="شاخص کل").low
 tse.FinancialIndex(symbol="شاخص کل").high
 tse.FinancialIndex(symbol="شاخص کل").last_value
 tse.FinancialIndex(symbol="شاخص کل").last_update
+tse.FinancialIndex(symbol="شاخص کل").contributing_symbols
 ```
+
+ویژگی `contributing_symbols` لیست نمادهای موجود در شاخص را می‌دهد. هر عضو این لیست یک دیکشنری با کلیدهای `symbol` (نام نماد) و `index` (کد نماد در سایت بورس) است.
+
+سایت جدید بورس برای سابقه شاخص ها فقط مقدار پایانی، کمترین و بیشترین مقدار هر روز را می‌دهد، برای همین ستون های `open` و `volume` دیگر در خروجی `history` نیستند و ستون ها `date, high, low, close` (و `jdate`) هستند.
 
 </div>
 <div>
@@ -310,6 +353,8 @@ if __name__ == '__main__':
 <div dir="ltr">
 
 ```python
+import datetime
+
 import pytse_client as tse
 
 tse.download(symbols="نوری", write_to_csv=True)  # optional
@@ -319,8 +364,15 @@ print(ticker.history)  # سابقه قیمت سهم
 print(ticker.client_types)  # حقیقی حقوقی
 print(ticker.title)  # نام شرکت
 پتروشيمي نوري (نوري)
+print(ticker.fulltitle)  # نام کامل نماد
 print(ticker.url)  # آدرس صفحه سهم
-http://tsetmc.com/Loader.aspx?ParTree=151311&i=19040514831923530
+https://www.tsetmc.com/instInfo/19040514831923530
+print(ticker.index)  # کد نماد در سایت بورس
+19040514831923530
+print(ticker.instrument_id)  # کد ۱۲ رقمی نماد
+IRO1NORI0001
+print(ticker.ci_sin)  # کد ۱۲ رقمی شرکت
+IRO1NORI0008
 print(ticker.group_name)  # نام گروه
 محصولات شيميايي
 print(ticker.fiscal_year)  # سال مالی
@@ -381,20 +433,25 @@ print(ticker.month_average_volume)  # میانگین حجم ماه
 3865804
 print(ticker.float_shares)  # درصد سهام شناور
 10.0
-print(ticker.best_supply_price)  # قیمت بهترین تقاضا
+print(ticker.best_supply_price)  # قیمت بهترین عرضه
 109960
-print(ticker.best_supply_vol)  # حجم بهترین تقاضا
+print(ticker.best_supply_vol)  # حجم بهترین عرضه
 8296
-print(ticker.best_demand_price)  # قیمت بهترین عرضه
+print(ticker.best_demand_price)  # قیمت بهترین تقاضا
 109920
-print(ticker.best_demand_vol)  # حجم بهترین عرضه
+print(ticker.best_demand_vol)  # حجم بهترین تقاضا
 3620
 print(ticker.total_shares)  # تعداد سهام
 print(ticker.market_cap) # ارزش بازار شرکت
 print(ticker.shareholders)  # اطلاعات سهام‌داران عمده
-print(ticker.get_shareholders_history())) # تاریخچه‌ی سهام‌داران عمده
+print(ticker.get_shareholders_history())  # تاریخچه‌ی سهام‌داران عمده
 print(ticker.get_trade_details())  # ریز معاملات روز جاری
 print(ticker.get_ticker_real_time_info_response()) # اطلاعات لحظه‌ای مانند قیمت و پیشنهادات خرید و فروش
+print(ticker.from_file())  # سابقه قیمت سهم از روی فایلی که قبلا ذخیره شده
+print(ticker.trade_dates)  # لیست روزهایی که نماد معامله شده است
+print(ticker.get_valid_dates(datetime.date(2023, 3, 18), datetime.date(2023, 3, 25)))  # روزهای معاملاتی نماد بین دو تاریخ
+[datetime.date(2023, 3, 18), datetime.date(2023, 3, 19), datetime.date(2023, 3, 25)]
+print(ticker.get_last_trade_day())  # آخرین روز معاملاتی بازار
 ```
 
 </div>
@@ -429,7 +486,7 @@ ticker = tse.Ticker(symbol="بركت", adjust=True)
 
 تعدادی از نماد‌ها توی سایت به شکل حذف شده هستند. برای گرفتن دیتای این نماد‌ها از ماژول تیکر استفاده کنید.
 برای مثال جهت دسترسی به دیتای نماد حذف شده خصدرا، اندیس آن را از آدرس نماد در سایت بورس بگیرید
-http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=25165947991415904
+https://www.tsetmc.com/instInfo/25165947991415904
 
 <div dir="ltr">
 
@@ -441,11 +498,11 @@ ticker = tse.Ticker("", index="25165947991415904")
 
 </div>
 
-مقدار ‍`index` را با مقدار جلوی `i=` جایگزین میکنیم.
+مقدار ‍`index` را با عدد انتهای آدرس صفحه نماد (بعد از `instInfo/`) جایگزین میکنیم.
 
 #### اطلاعات حقیقی و حقوقی
 
-اطلاعات خرید و فروش حقیقی و حقوقی سهام رو میشه از طریق `ticker.client_types` گرفت این اطلاعات یه DataFrame شامل اطلاعات موجود در تب حقیقی حقوقی(تب بنفشی که در این [صفحه](http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=778253364357513) هست) سهم هست:
+اطلاعات خرید و فروش حقیقی و حقوقی سهام رو میشه از طریق `ticker.client_types` گرفت این اطلاعات یه DataFrame شامل اطلاعات موجود در تب حقیقی حقوقی(تب «حقیقی-حقوقی» در این [صفحه](https://www.tsetmc.com/instInfo/778253364357513)) سهم هست:
 
 <div dir="ltr">
 
@@ -470,8 +527,8 @@ individual_ownership_change : تغییر مالکیت حقوقی به حقیقی
 
 #### سهامداران عمده
 
-سهام‌داران عمده اطلاعات داخل این [صفحه](http://tsetmc.com/Loader.aspx?Partree=15131T&c=IRO1BMLT0007) هست.
-این اطلاعات رو میشه با `shareholders` گرفت که یک DataFrame هست.
+سهام‌داران عمده اطلاعات داخل تب «سهامداران» این [صفحه](https://www.tsetmc.com/instInfo/778253364357513) هست.
+این اطلاعات رو میشه با `shareholders` گرفت که یک DataFrame با ستون‌های `id, shareholder, shares, percentage, change` هست.
 
 <div dir="ltr">
 
@@ -566,7 +623,7 @@ await ticker.get_shareholders_history_async(
 <div dir="ltr">
 
 ```
-Retrying pytse_client.ticker.ticker.Ticker._get_ticker_daily_info_page_response in 1.3127419515957892 seconds as it raised ClientResponseError: 500, message='Internal Server Error', url=URL('http://cdn.tsetmc.com/Loader.aspx?ParTree=15131P&i=56574323121551263&d=20210220').
+Retrying pytse_client.tsetmc_api.client.HttpTsetmcApi.call_day_shareholders_async in 3.4 seconds as it raised ClientResponseError: 500, message='Internal Server Error', url=URL('https://cdn.tsetmc.com/api/Shareholder/56574323121551263/20210220').
 ```
 
 </div>
@@ -594,8 +651,8 @@ ticker = tse.Ticker("وبملت")
 result = asyncio.run(ticker.get_total_shares_history_async(
     from_when=datetime.timedelta(days=90),  # تعداد روز‌های گذشته که مقدار پیشفرض ۶۰ روز است
     to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
-    only_trade_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
-)
+    only_open_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
+))
 ```
 
 </div>
@@ -611,7 +668,7 @@ ticker = tse.Ticker("وبملت")
 result = await ticker.get_total_shares_history_async(
     from_when=datetime.timedelta(days=90),  # تعداد روز‌های گذشته که مقدار پیشفرض ۶۰ روز است
     to_when=datetime.datetime.now(),  # تا چه تاریخی اطلاعات گرفته شود که پیشفرض امروز است
-    only_trade_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
+    only_open_days=True,  # فقط روز‌های معاملاتی که پیشفرض بله است
 )
 ```
 
@@ -666,10 +723,10 @@ except RuntimeError: # هندل کردن ارور در صورت وجود ندا�
 
 print(real_time_data.buy_orders) # پیشنهادات خرید
 print(real_time_data.sell_orders) # پیشنهادات فروش
-print(real_time_data.best_supply_price)  # قیمت بهترین تقاضا
-print(real_time_data.best_supply_vol)  # حجم بهترین تقاضا
-print(real_time_data.best_demand_price)  # قیمت بهترین عرضه
-print(real_time_data.best_demand_vol)  # حجم بهترین عرضه
+print(real_time_data.best_supply_price)  # قیمت بهترین عرضه
+print(real_time_data.best_supply_vol)  # حجم بهترین عرضه
+print(real_time_data.best_demand_price)  # قیمت بهترین تقاضا
+print(real_time_data.best_demand_vol)  # حجم بهترین تقاضا
 print(real_time_data.state)  # وضعیت نماد
 print(real_time_data.last_price)  # قیمت آخرین معامله
 print(real_time_data.adj_close)  # قیمت پایانی
@@ -733,11 +790,26 @@ print(trade_details)
 
 </div>
 
+با دادن تاریخ، همین تابع ریز معاملات روزهای گذشته را برمی‌گرداند. ورودی‌ها و خروجی آن مثل تابع `tse.get_trade_details` در بخش [دانلود تاریخچه جزئیات معاملات](#دانلود-تاریخچه-جزئیات-معاملات) است:
+
+<div dir="ltr">
+
+```python
+from datetime import date
+
+trade_details = ticker.get_trade_details(
+    date(2023, 3, 19), date(2023, 4, 22), timeframe="1m"
+)
+print(trade_details[date(2023, 3, 19)])
+```
+
+</div>
+
 
 ### تمامی اطلاعات موجود برای فیلترنویسی
 
 در بخش دیده‌بان بازار امکان فیلترنویسی به زبان جاوااسکریپت وجود دارد. یکی از اطلاعات مهمی که معامله‌گران معمولا با اسفاده از آن فیلترنویسی می‌کنند آمارهای کلیدی سهام است که شامل تمامی موارد ذکر شده در 
-[آمارهای کلیدی](./pytse_client/ticker_statisticals/README.md)
+[آمارهای کلیدی](./pytse_client/key_stats.md)
 است.
 
 همچنین تمامی اطلاعات ارائه شده در مورد اطلاعات حقیقی حقوقی های سهام هم که در ادامه آمده است میتوانید دریافت کنید.
@@ -754,8 +826,10 @@ print(trade_details)
 ```sh
 "index", "code", "symbol", "name", "last_changed", "open_price",
 "adj_closing_price", "last_price", "number_of_trans",
-"volume_of_trans", "value_of_trans", "min_price", "max_year",
-"yesterday_price", "EPS", "base_volume", "group_number", "max_price_allowed", "min_price_allowed", "number_of_stocks"
+"volume_of_trans", "value_of_trans", "min_price", "max_price",
+"yesterday_price", "EPS", "base_volume", "visit_count", "flow",
+"group_number", "max_price_allowed", "min_price_allowed",
+"number_of_stocks", "yval"
 ```
 
 در واقع از دیده بان بازار دیتاهای زیر قابل دریافت بود که به عنوان نمونه قرار میدهم ولی برخی از دیتاها برای توسعه دهندگان پکیج قابل فهم نبود(آنهایی که با `?` در زیر مشخص شده اند) که در صورت علاقه مندی میتوانید با اطلاع رسانی کاربرد آن ها به ما در توسعه پکیج کمک کنید.
@@ -827,10 +901,43 @@ key_stats = get_stats(base_path="hello", to_csv=True)
 
 به صورت همزمان اطلاعات در ‍‍`hello/key_stats.csv` ذخیره می‌شود.
 در صورتی که نمی‌خواهید خروجی csv ساخته شود کافی است که `to_csv=False` قرار دهید.
-همینطور در صورت خالی گذاشتن `base_path` به جای آن `stats_data/stats.csv` استفاده می‌شود.
+همینطور در صورت خالی گذاشتن `base_path` به جای آن `stats_data/key_stats.csv` استفاده می‌شود.
 
 
 </div>
+
+### مظنه‌های خرید و فروش تمام نمادها
+
+تابع `get_asks_and_bids` پنج مظنه‌ی برتر خرید و فروش تمام نمادهای دیده‌بان بازار را در یک pandas dataframe برمی‌گرداند. هر سطر یک ردیف از مظنه‌های یک نماد است و فقط نمادهایی که در پکیج معتبر هستند در خروجی می‌آیند.
+
+<div dir="ltr">
+
+```python
+from pytse_client import get_asks_and_bids
+
+asks_bids = get_asks_and_bids(base_path="hello", to_csv=True)
+print(asks_bids.columns)
+```
+
+ستون‌های خروجی:
+
+```
+id: کد نماد در سایت tsetmc
+row_number: شماره‌ی ردیف مظنه، از ۱ تا ۵
+num_of_sellers: تعداد فروشنده
+number_of_buyers: تعداد خریدار
+buy_price: قیمت خرید
+sell_price: قیمت فروش
+buy_volume: حجم خرید
+sell_volume: حجم فروش
+symbol: نام نماد
+```
+
+</div>
+
+به صورت همزمان اطلاعات در `hello/bids_asks.csv` ذخیره می‌شود.
+در صورتی که نمی‌خواهید خروجی csv ساخته شود کافی است که `to_csv=False` قرار دهید که مقدار پیشفرض است.
+همینطور در صورت خالی گذاشتن `base_path` به جای آن `asks_bids_data/bids_asks.csv` استفاده می‌شود.
 
 ### گرفتن تمام اطلاعات تاریخی یا لحظه‌ای نماد به صورت CSV
 
