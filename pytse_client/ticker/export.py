@@ -1,6 +1,7 @@
 import dataclasses
 
 import pandas
+
 from pytse_client.ticker.ticker import Ticker
 
 
@@ -39,7 +40,6 @@ def export_ticker_history_as_csv(ticker: Ticker):
     trade_day_history = ticker.history
     client_types_history = ticker.client_types
 
-    # TODO move to original function if okay
     trade_day_history["date"] = pandas.to_datetime(trade_day_history["date"])
     client_types_history["date"] = pandas.to_datetime(
         client_types_history["date"]

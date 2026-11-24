@@ -4,6 +4,7 @@ use this example if you want to get data for one ticker
 """
 
 import pandas as pd
+
 from pytse_client import Ticker, download
 
 # to be able to see whole DataFrame columns
@@ -52,6 +53,8 @@ print(ticker.shareholders.percentage.sum())  # جمع سهام داران
 print(ticker.get_trade_details())  # ریز معاملات روز جاری
 
 real_time_data = ticker.get_ticker_real_time_info_response()
+assert real_time_data.individual_trade_summary is not None
+assert real_time_data.corporate_trade_summary is not None
 print(real_time_data.individual_trade_summary.buy_count)
 print(real_time_data.individual_trade_summary.buy_vol)
 print(real_time_data.individual_trade_summary.sell_count)
