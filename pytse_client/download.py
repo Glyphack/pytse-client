@@ -1,20 +1,18 @@
 import logging
-import re
 from concurrent import futures
-from io import StringIO
 from pathlib import Path
-from typing import Dict, List, Optional, Union
 
 import jdatetime
 import pandas as pd
-from pytse_client import config, symbols_data, translations, tse_settings
-from pytse_client.scraper.symbol_scraper import MarketSymbol
-from pytse_client.tse_settings import TSE_CLIENT_TYPE_DATA_URL
-from pytse_client.utils import persian, requests_retry_session
-from requests import HTTPError
-from requests.sessions import Session
-from tenacity import retry, retry_if_exception_type, wait_random
-from tenacity.before_sleep import before_sleep_log
+
+from pytse_client import config, symbols_data, tse_settings
+from pytse_client.tsetmc_api import client
+from pytse_client.tsetmc_api.client_type import parse_client_type_history
+from pytse_client.tsetmc_api.closing_price import (
+    parse_closing_price_daily_list,
+)
+from pytse_client.tsetmc_api.index import parse_index_history
+from pytse_client.utils import persian
 
 logger = logging.getLogger(config.LOGGER_NAME)
 
@@ -23,39 +21,14 @@ def _handle_ticker_index(symbol):
     ticker_index = symbols_data.get_ticker_index(symbol)
 
     if ticker_index is None:
-        market_symbol = get_symbol_info(symbol)
+        market_symbol = symbols_data.get_symbol_info(symbol)
         if market_symbol is not None:
             symbols_data.append_symbol_to_file(market_symbol)
             ticker_index = market_symbol.index
     return ticker_index
 
 
-def _extract_ticker_client_types_data(ticker_index: str) -> List:
-    url = TSE_CLIENT_TYPE_DATA_URL.format(ticker_index)
-    with requests_retry_session() as session:
-        response = session.get(url, timeout=5)
-    data = response.text.split(";")
-    data = [row.split(",") for row in data]
-    return data
-
-
-def _create_financial_index_from_text_response(data):
-    data = pd.DataFrame(re.split(r"\;", data))
-    columns = ["date", "high", "low", "open", "close", "volume", "__"]
-    data[columns] = data[0].str.split(",", expand=True)
-    return data.drop(columns=["__", 0])
-
-
 def _adjust_data_frame(df, include_jdate):
-    df.date = pd.to_datetime(df.date, format="%Y%m%d")
-    if include_jdate:
-        df["jdate"] = ""
-        df.jdate = df.date.apply(
-            lambda gregorian: jdatetime.date.fromgregorian(date=gregorian)
-        )
-
-
-def _adjust_data_frame_for_fIndex(df, include_jdate):
     df["date"] = pd.to_datetime(df["date"], format="%Y%m%d")
     if include_jdate:
         df["jdate"] = df.date.apply(
@@ -64,21 +37,22 @@ def _adjust_data_frame_for_fIndex(df, include_jdate):
 
 
 def download(
-    symbols: Union[List, str],
+    symbols: list | set | str,
     write_to_csv: bool = False,
     include_jdate: bool = False,
     base_path: str = config.DATA_BASE_PATH,
     adjust: bool = False,
-) -> Dict[str, pd.DataFrame]:
+) -> dict[str, pd.DataFrame]:
     if symbols == "all":
         symbols = symbols_data.all_symbols()
     elif isinstance(symbols, str):
         symbols = [symbols]
+    # the symbols json uses Persian letters (ی, ک), accept Arabic ones
+    symbols = [persian.replace_arabic(symbol.strip()) for symbol in symbols]
 
     df_list = {}
     future_to_symbol = {}
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
-        session = requests_retry_session()
         for symbol in symbols:
             if (
                 symbol.isnumeric()
@@ -88,14 +62,19 @@ def download(
             else:
                 ticker_index = _handle_ticker_index(symbol)
                 if ticker_index is None:
-                    raise Exception(f"Cannot find symbol: {symbol}")
-                ticker_indexes = symbols_data.get_ticker_old_index(symbol)
-                ticker_indexes.insert(0, ticker_index)
+                    raise Exception(  # noqa: TRY002
+                        f"Cannot find symbol: {symbol}"
+                    )
+                # deleted symbols have their index in the old list too
+                ticker_indexes = list(
+                    dict.fromkeys(
+                        [ticker_index]
+                        + symbols_data.get_ticker_old_index(symbol)
+                    )
+                )
 
             for index in ticker_indexes:
-                future = executor.submit(
-                    download_ticker_daily_record, index, session
-                )
+                future = executor.submit(download_ticker_daily_record, index)
 
                 future_to_symbol[future] = symbol
 
@@ -109,9 +88,6 @@ def download(
                     extra={"Error": ex},
                 )
                 continue
-            df = df.iloc[::-1].reset_index(drop=True)
-            df = df.rename(columns=translations.HISTORY_FIELD_MAPPINGS)
-            df = df.drop(columns=["<PER>", "<TICKER>"])
             _adjust_data_frame(df, include_jdate)
 
             if symbol in df_list:
@@ -141,58 +117,18 @@ def download(
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
-    session.close()
     return df_list
 
 
 def adjust_price(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Adjust historical records of stock
-
-    There is a capital increase/profit sharing,
-    if today "Final Close Price" is not equal to next day
-    "Yesterday Final Close Price" by using this ratio,
-    performance adjustment of stocks is achieved
-
-    Parameters
-    ----------
-    df : pd.DataFrame
-        DataFrame with historical records.
-
-    Returns
-    -------
-    pd.DataFrame
-        DataFrame with adjusted historical records.
-
-    Notes
-    -----
-    DataFrame can not be empty or else it makes runtime error
-    Type of DataFrame must be RangeIndex to make proper range of records
-    that need to be modified
-
-    diff: list
-        list of indexs of the day after capital increase/profit sharing
-    ratio_list: List
-        List of ratios to adjust historical data of stock
-    ratio: Float
-        ratio = df.loc[i].adjClose / df.loc[i+1].yesterday
-
-    Description
-    -----------
-    # Note: adjustment does not include Tenth and twentieth days
-    df.index = range(0,101,1)
-    # step is 1
-    step = df.index.step
-    diff = [10,20]
-    ratio_list = [0.5, 0.8]
-    df.loc[0:10-step, [open,...]] * ratio[0]
-    df.loc[10:20-step, [open,...]] * ratio[1]
-    """
-    if df.empty or not isinstance(df.index, pd.core.indexes.range.RangeIndex):
+    """Scale the prices before every day whose yesterday price differs
+    from the close of the day before, so the history has no jumps."""
+    if df.empty or not isinstance(df.index, pd.RangeIndex):
         return df
 
+    index = df.index
     new_df = df.copy()
-    step = new_df.index.step
+    step = index.step
     diff = list(new_df.index[new_df.shift(1).adjClose != new_df.yesterday])
     if len(diff) > 0:
         diff.pop(0)
@@ -205,10 +141,10 @@ def adjust_price(df: pd.DataFrame) -> pd.DataFrame:
         ratio_list.insert(0, ratio)
     for i, k in enumerate(diff):
         if i == 0:
-            start = new_df.index.start
+            start = index.start
         else:
             start = diff[i - 1]
-        end = diff[i] - step
+        end = k - step
         new_df.loc[
             start:end,
             [
@@ -237,57 +173,55 @@ def adjust_price(df: pd.DataFrame) -> pd.DataFrame:
     return new_df
 
 
-@retry(
-    retry=retry_if_exception_type(HTTPError),
-    wait=wait_random(min=1, max=4),
-    before_sleep=before_sleep_log(logger, logging.DEBUG),
-)
-def download_ticker_daily_record(ticker_index: str, session: Session):
-    url = tse_settings.TSE_TICKER_EXPORT_DATA_ADDRESS.format(ticker_index)
-    response = session.get(url, timeout=10)
-    if 400 <= response.status_code < 500:
-        logger.error(
-            f"Cannot read daily trade records from the url: {url}",
-            extra={"response": response.text, "code": response.status_code},
+def download_ticker_daily_record(ticker_index: str):
+    rows = parse_closing_price_daily_list(
+        client.api.call_closing_price_daily_list(ticker_index)
+    )
+    rows = [row for row in rows if row.trade_count > 0]
+    if not rows:
+        raise pd.errors.EmptyDataError(
+            f"No daily trade records for instrument {ticker_index}"
         )
+    df = pd.DataFrame(
+        {
+            "date": [f"{row.date:%Y%m%d}" for row in rows],
+            "open": [float(row.first_price) for row in rows],
+            "high": [float(row.high_price) for row in rows],
+            "low": [float(row.low_price) for row in rows],
+            "adjClose": [float(row.closing_price) for row in rows],
+            "value": [row.value for row in rows],
+            "volume": [row.volume for row in rows],
+            "count": [row.trade_count for row in rows],
+            "yesterday": [float(row.yesterday_price) for row in rows],
+            "close": [float(row.last_price) for row in rows],
+        }
+    )
+    return df.sort_values("date").reset_index(drop=True)
 
-    response.raise_for_status()
 
-    data = StringIO(response.text)
-    return pd.read_csv(data)
-
-
-@retry(
-    retry=retry_if_exception_type(HTTPError),
-    wait=wait_random(min=1, max=4),
-    before_sleep=before_sleep_log(logger, logging.DEBUG),
-)
-def download_fIndex_record(fIndex: str, session: Session):
+def download_fIndex_record(fIndex: str):
     url = tse_settings.TSE_FINANCIAL_INDEX_EXPORT_DATA_ADDRESS.format(fIndex)
-    response = session.get(url, timeout=10)
-    if 400 <= response.status_code < 500:
-        logger.error(
-            f"Cannot read daily trade records from the url: {url}",
-            extra={"response": response.text, "code": response.status_code},
-        )
-
-    response.raise_for_status()
-    data = response.text
-    if not data or ";" not in data or "," not in data:
-        raise ValueError(
-            f"""Invalid response from the url: {url}.
-                         \nExpected valid financial index data."""
-        )
-    df = _create_financial_index_from_text_response(data)
-    return df
+    rows = parse_index_history(client.api.call_index_history(fIndex))
+    if not rows:
+        raise ValueError(f"""Invalid response from the url: {url}.
+                         \nExpected valid financial index data.""")
+    df = pd.DataFrame(
+        {
+            "date": [f"{row.date:%Y%m%d}" for row in rows],
+            "high": [row.high for row in rows],
+            "low": [row.low for row in rows],
+            "close": [row.close for row in rows],
+        }
+    )
+    return df.sort_values("date").reset_index(drop=True)
 
 
 def download_financial_indexes(
-    symbols: Union[List, str],
+    symbols: list | set | str,
     write_to_csv: bool = False,
     include_jdate: bool = False,
     base_path: str = config.FINANCIAL_INDEX_BASE_PATH,
-) -> Dict[str, pd.DataFrame]:
+) -> dict[str, pd.DataFrame]:
     if symbols == "all":
         symbols = symbols_data.all_financial_index()
     elif isinstance(symbols, str):
@@ -296,7 +230,6 @@ def download_financial_indexes(
     df_list = {}
     future_to_symbol = {}
     with futures.ThreadPoolExecutor(max_workers=10) as executor:
-        session = requests_retry_session()
         for symbol in symbols:
             symbol = persian.replace_persian(symbol)
             if (
@@ -307,11 +240,11 @@ def download_financial_indexes(
             else:
                 financial_index = symbols_data.get_financial_index(symbol)
             if financial_index is None:
-                raise Exception(f"Cannot find financial index: {symbol}")
+                raise Exception(  # noqa: TRY002
+                    f"Cannot find financial index: {symbol}"
+                )
 
-            future = executor.submit(
-                download_fIndex_record, financial_index, session
-            )
+            future = executor.submit(download_fIndex_record, financial_index)
 
             future_to_symbol[future] = symbol
 
@@ -325,7 +258,7 @@ def download_financial_indexes(
                     extra={"Error": ex},
                 )
                 continue
-            _adjust_data_frame_for_fIndex(df, include_jdate)
+            _adjust_data_frame(df, include_jdate)
             df_list[symbol] = df
 
             if write_to_csv:
@@ -336,12 +269,11 @@ def download_financial_indexes(
 
     if len(df_list) != len(symbols):
         print("Warning, download did not complete, re-run the code")
-    session.close()
     return df_list
 
 
 def download_client_types_records(
-    symbols: Union[List, str],
+    symbols: list | set | str,
     write_to_csv: bool = False,
     include_jdate: bool = False,
     base_path: str = config.CLIENT_TYPES_DATA_BASE_PATH,
@@ -350,6 +282,8 @@ def download_client_types_records(
         symbols = symbols_data.all_symbols()
     elif isinstance(symbols, str):
         symbols = [symbols]
+    # the symbols json uses Persian letters (ی, ک), accept Arabic ones
+    symbols = [persian.replace_arabic(symbol.strip()) for symbol in symbols]
 
     df_list = {}
     future_to_symbol = {}
@@ -357,7 +291,9 @@ def download_client_types_records(
         for symbol in symbols:
             ticker_index = _handle_ticker_index(symbol)
             if ticker_index is None:
-                raise Exception(f"Cannot find symbol: {symbol}")
+                raise Exception(  # noqa: TRY002
+                    f"Cannot find symbol: {symbol}"
+                )
             future = executor.submit(
                 download_ticker_client_types_record, ticker_index
             )
@@ -365,7 +301,6 @@ def download_client_types_records(
         for future in futures.as_completed(future_to_symbol):
             symbol = future_to_symbol[future]
             df: pd.DataFrame = future.result()
-            # ignore failures
             if df is None:
                 continue
             _adjust_data_frame(df, include_jdate)
@@ -375,21 +310,16 @@ def download_client_types_records(
                 df.to_csv(f"{base_path}/{symbol}.csv")
 
     if len(df_list) != len(symbols):
-        print(
-            """could not download client types for all the symbols make
-        sure you have what you need or re-run the function"""
-        )
+        print("""could not download client types for all the symbols make
+        sure you have what you need or re-run the function""")
     return df_list
 
 
-@retry(
-    retry=retry_if_exception_type(HTTPError),
-    wait=wait_random(min=1, max=4),
-    before_sleep=before_sleep_log(logger, logging.DEBUG),
-)
-def download_ticker_client_types_record(ticker_index: Optional[str]):
-    data = _extract_ticker_client_types_data(ticker_index)
-    if len(data) == 1:
+def download_ticker_client_types_record(ticker_index: str):
+    data = parse_client_type_history(
+        client.api.call_client_type_history(ticker_index)
+    )
+    if not data:
         logger.warning(
             f"""Cannot create client types data for ticker{ticker_index}
              from data: {data}""",
@@ -397,22 +327,27 @@ def download_ticker_client_types_record(ticker_index: Optional[str]):
         )
         return None
     client_types_data_frame = pd.DataFrame(
-        data,
-        columns=[
-            "date",
-            "individual_buy_count",
-            "corporate_buy_count",
-            "individual_sell_count",
-            "corporate_sell_count",
-            "individual_buy_vol",
-            "corporate_buy_vol",
-            "individual_sell_vol",
-            "corporate_sell_vol",
-            "individual_buy_value",
-            "corporate_buy_value",
-            "individual_sell_value",
-            "corporate_sell_value",
-        ],
+        {
+            "date": [f"{row.date:%Y%m%d}" for row in data],
+            "individual_buy_count": [row.individual_buy_count for row in data],
+            "corporate_buy_count": [row.corporate_buy_count for row in data],
+            "individual_sell_count": [
+                row.individual_sell_count for row in data
+            ],
+            "corporate_sell_count": [row.corporate_sell_count for row in data],
+            "individual_buy_vol": [row.individual_buy_volume for row in data],
+            "corporate_buy_vol": [row.corporate_buy_volume for row in data],
+            "individual_sell_vol": [
+                row.individual_sell_volume for row in data
+            ],
+            "corporate_sell_vol": [row.corporate_sell_volume for row in data],
+            "individual_buy_value": [row.individual_buy_value for row in data],
+            "corporate_buy_value": [row.corporate_buy_value for row in data],
+            "individual_sell_value": [
+                row.individual_sell_value for row in data
+            ],
+            "corporate_sell_value": [row.corporate_sell_value for row in data],
+        }
     )
     for i in [
         "individual_buy_",
@@ -433,55 +368,3 @@ def download_ticker_client_types_record(ticker_index: Optional[str]):
         float
     )
     return client_types_data_frame
-
-
-def get_symbol_id(symbol_name: str):
-    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
-    response = requests_retry_session().get(url, timeout=10)
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        raise Exception("Sorry, tse server did not respond")
-
-    symbol_full_info = response.text.split(";")[0].split(",")
-    if persian.replace_arabic(symbol_name) == symbol_full_info[0].strip():
-        return symbol_full_info[2]  # symbol id
-    return None
-
-
-def get_symbol_info(symbol_name: str):
-    url = tse_settings.TSE_SYMBOL_ID_URL.format(symbol_name.strip())
-    response = requests_retry_session().get(url, timeout=10)
-    try:
-        response.raise_for_status()
-    except HTTPError:
-        raise Exception(f"{symbol_name}: Sorry, tse server did not respond")
-
-    symbols = response.text.split(";")
-    market_symbol = MarketSymbol(
-        code=None,
-        symbol=None,
-        index=None,
-        name=None,
-        old=[],
-    )
-    for symbol_full_info in symbols:
-        if symbol_full_info.strip() == "":
-            continue
-        symbol_full_info = symbol_full_info.split(",")
-        if persian.replace_arabic(symbol_full_info[0]) == symbol_name:
-            # if symbol id is active
-            if symbol_full_info[7] == "1":
-                market_symbol.symbol = persian.replace_arabic(
-                    symbol_full_info[0]
-                )
-                market_symbol.name = persian.replace_arabic(
-                    symbol_full_info[1]
-                )
-                market_symbol.index = symbol_full_info[2]  # active symbol id
-            else:
-                market_symbol.old.append(symbol_full_info[2])  # old symbol id
-
-    if market_symbol.index is None:
-        return None
-    return market_symbol

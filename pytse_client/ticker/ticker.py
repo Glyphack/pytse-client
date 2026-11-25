@@ -1,86 +1,148 @@
 import asyncio
+import contextlib
 import datetime
 import functools
 import logging
 import os
-import re
+from collections.abc import Generator
 from dataclasses import dataclass
-from typing import List, Optional
+from pathlib import Path
+from typing import Any, overload
 
-import aiohttp
-import bs4
+import jdatetime
 import pandas as pd
 import requests
-from pytse_client import (
-    config,
-    symbols_data,
-    translations,
-    tse_settings,
-    utils,
-)
+
+from pytse_client import config, symbols_data, tse_settings
 from pytse_client.download import download, download_ticker_client_types_record
-from pytse_client.proxy.dto import InstrumentHistoryResponse, ShareholderData
-from pytse_client.proxy.tsetmc import (
-    get_day_shareholders_history,
-    get_day_ticker_info_history,
-)
-from pytse_client.ticker.api_extractors import (
-    Order,
+from pytse_client.tsetmc_api import client
+from pytse_client.tsetmc_api._convert import to_optional_float
+from pytse_client.tsetmc_api.best_limits import Order, parse_best_limits
+from pytse_client.tsetmc_api.client_type import (
     TradeSummary,
-    get_corporate_trade_summary,
-    get_individual_trade_summary,
-    get_instrument_info,
-    get_orders,
+    corporate_trade_summary,
+    individual_trade_summary,
+    parse_client_type,
 )
-from pytse_client.tse_settings import (
-    TSE_CLIENT_TYPE_DATA_URL,
-    TSE_GET_LAST_TRADE_DAY,
+from pytse_client.tsetmc_api.closing_price import (
+    parse_closing_price_daily_list,
+    parse_closing_price_info,
 )
-from pytse_client.utils.decorators import catch
-from pytse_client.utils.persian import replace_arabic, replace_persian
-from tenacity import retry
-from tenacity.before_sleep import before_sleep_log
-from tenacity.wait import wait_random
+from pytse_client.tsetmc_api.codal import CodalPublisher, parse_codal_publisher
+from pytse_client.tsetmc_api.fund import parse_etf
+from pytse_client.tsetmc_api.instrument import (
+    InstrumentInfo,
+    parse_instrument_history,
+    parse_instrument_info,
+)
+from pytse_client.tsetmc_api.market import parse_market_overview
+from pytse_client.tsetmc_api.shareholder import (
+    parse_day_shareholders,
+    parse_shareholders,
+)
+from pytse_client.tsetmc_api.trade import (
+    parse_trade_history,
+    parse_trades,
+    unique_trades,
+)
+from pytse_client.utils.logging_generator import get_logger
+from pytse_client.utils.persian import replace_arabic
 
 logger = logging.getLogger(config.LOGGER_NAME)
 logger.addHandler(logging.NullHandler())
+trade_details_logger = get_logger(
+    f"{config.LOGGER_NAME}_trade_details", logging.INFO
+)
+
+_CANDLE_LENGTHS = {
+    "30s": "30s",
+    "1m": "1min",
+    "5m": "5min",
+    "10m": "10min",
+    "15m": "15min",
+    "30m": "30min",
+    "1h": "1h",
+}
+
+_STATE_NAMES = {
+    "I ": "ممنوع",
+    "A ": "مجاز",
+    "AG": "مجاز-مسدود",
+    "AS": "مجاز-متوقف",
+    "AR": "مجاز-محفوظ",
+    "IG": "ممنوع-مسدود",
+    "IS": "ممنوع-متوقف",
+    "IR": "ممنوع-محفوظ",
+}
+
+_FLOW_NAMES = {
+    "0": "عمومی - مشترک بین بورس و فرابورس",
+    "1": "بورس",
+    "2": "فرابورس",
+    "3": "آتی",
+    "4": "پایه فرابورس",
+    "5": "پایه فرابورس (منتشر نمی شود)",
+}
+
+
+def _datetime_range(
+    start: datetime.datetime, end: datetime.datetime
+) -> Generator[datetime.datetime, None, None]:
+    span = end - start
+    for i in range(span.days + 1):
+        yield start + datetime.timedelta(days=i)
+
+
+def _catch(*exception_args):
+    def wrapper(func):
+        @functools.wraps(func)
+        def inner(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+
+            except exception_args:
+                return None
+
+        return inner
+
+    return wrapper
 
 
 @dataclass
 class RealtimeTickerInfo:
     date_time: datetime.datetime
-    state: Optional[str]
-    last_price: Optional[float]
-    adj_close: Optional[float]
-    yesterday_price: Optional[float]
-    open_price: Optional[float]
-    high_price: Optional[float]
-    low_price: Optional[float]
-    count: Optional[int]
-    volume: Optional[int]
-    value: Optional[int]
-    last_date: Optional[datetime.datetime]
-    best_demand_vol: Optional[int]
-    best_demand_price: Optional[float]
-    best_supply_vol: Optional[int]
-    best_supply_price: Optional[float]
-    sell_orders: Optional[List[Order]]
-    buy_orders: Optional[List[Order]]
-    individual_trade_summary: Optional[TradeSummary]
-    corporate_trade_summary: Optional[TradeSummary]
-    nav: Optional[int]
-    nav_date: Optional[str]
-    # ارزش بازار
-    market_cap: Optional[int]
+    state: str | None
+    last_price: float | None
+    adj_close: float | None
+    yesterday_price: float | None
+    open_price: float | None
+    high_price: float | None
+    low_price: float | None
+    count: int | None
+    volume: int | None
+    value: int | None
+    last_date: datetime.datetime | None
+    best_demand_vol: int | None
+    best_demand_price: float | None
+    best_supply_vol: int | None
+    best_supply_price: float | None
+    sell_orders: list[Order] | None
+    buy_orders: list[Order] | None
+    individual_trade_summary: TradeSummary | None
+    corporate_trade_summary: TradeSummary | None
+    nav: int | None
+    nav_date: str | None
+    market_cap: int | None
 
 
 class Ticker:
     def __init__(
         self,
         symbol: str,
-        index: Optional[str] = None,
+        index: str | None = None,
         adjust: bool = False,
     ):
+        symbol = replace_arabic(symbol.strip())
         determined_symbol_index = index or symbols_data.get_ticker_index(
             symbol
         )
@@ -102,43 +164,41 @@ class Ticker:
             f"{config.DATA_BASE_PATH}/{self.symbol}-ت.csv"
         )
         self._url = tse_settings.TSE_TICKER_ADDRESS.format(self._index)
-        # this URL sholud be used from now on for features because old one is deprecated
-        self._url_new = tse_settings.TSE_INSTRUMENT_INFO.format(self._index)
-        self._info_url = tse_settings.TSE_ISNT_INFO_URL.format(self._index)
-        self._client_types_url = TSE_CLIENT_TYPE_DATA_URL.format(self._index)
-        # TODO: if symbol equals instrument id, it cannot fetch introduction
-        # page. it occurs when Ticker called with index id not symbol
-        self._introduction_url = (
-            tse_settings.TSE_TICKER_INTRODUCTION_URL.format(
-                replace_persian(self.symbol)
-            )
-        )
-        self._history: pd.DataFrame = pd.DataFrame()
 
-        if self.adjust:
-            if os.path.exists(self.adjusted_daily_records_csv_path):
-                self._history = self.from_file()
-            else:
-                self._history = download(
-                    symbols=self.symbol,
-                    adjust=self.adjust,
-                )[self.symbol]
-        else:
-            if os.path.exists(self.daily_records_csv_path):
-                self._history = self.from_file()
-            else:
-                self._history = download(
-                    symbols=self.symbol,
-                    adjust=self.adjust,
-                )[self.symbol]
-        data_date = self._history.tail(1).loc[:, "date"].iloc[0].date()
-        last_date = Ticker.get_last_trade_day()
-        if last_date != data_date:
-            self._history = download(
-                symbols=self.symbol,
-                adjust=self.adjust,
-                write_to_csv=True,
-            )[self.symbol]
+    @functools.cached_property
+    def history(self) -> pd.DataFrame:
+        """Read from the ticker's csv file when it is up to date, otherwise
+        downloaded and written to that file."""
+        csv_path = (
+            self.adjusted_daily_records_csv_path
+            if self.adjust
+            else self.daily_records_csv_path
+        )
+        if os.path.exists(csv_path):
+            history = self.from_file()
+            if not history.empty:
+                last_saved = history["date"].iloc[-1].date()
+                recent_days = parse_closing_price_daily_list(
+                    client.api.call_recent_closing_price_daily_list(
+                        self._index
+                    )
+                )
+                # Days without a trade are not saved.
+                missing_day = any(
+                    day.date > last_saved and day.trade_count > 0
+                    for day in recent_days
+                )
+                # A saved history older than the recent days has a gap.
+                has_gap = bool(recent_days) and (
+                    min(day.date for day in recent_days) > last_saved
+                )
+                if not missing_day and not has_gap:
+                    return history
+        return download(
+            symbols=self.symbol,
+            adjust=self.adjust,
+            write_to_csv=True,
+        )[self.symbol]
 
     def from_file(self) -> pd.DataFrame:
         if self.adjust:
@@ -147,10 +207,6 @@ class Ticker:
             history = pd.read_csv(self.daily_records_csv_path)
         history["date"] = pd.to_datetime(history["date"])
         return history
-
-    @property
-    def history(self):
-        return self._history
 
     @property
     def url(self):
@@ -162,223 +218,119 @@ class Ticker:
 
     @property
     def instrument_id(self):
-        """
-        instrument id of a ticker is unique and used for calling
-        some apis from tsetmc
-        """
-        return re.findall(
-            r"InstrumentID='([\w\d]*)|',$", self._ticker_page_response.text
-        )[0]
+        """ISIN of the instrument."""
+        return self._instrument_info.isin
 
     @property
     def ci_sin(self):
-        """
-        instrument id of a ticker is like instrument_id and used for calling
-        some apis from tsetmc
-        """
-        return re.findall(
-            r"CIsin='([\w\d]*)|',$", self._ticker_page_response.text
-        )[0]
+        """ISIN of the company."""
+        return self._instrument_info.company_isin
 
     @property
     def title(self) -> str:
-        """
-        Symbol title in persian
-        """
-        return replace_arabic(
-            get_instrument_info(self._index).l_val30.split("-")[0]
-        )
+        return replace_arabic(self._instrument_info.name.split("-")[0])
 
     @property
     def fulltitle(self) -> str:
-        """
-        Symbol title with it's market in persian
-        """
-        return replace_arabic(get_instrument_info(self._index).l_val30)
+        return replace_arabic(self._instrument_info.name)
 
     @property
-    def group_name(self) -> str:
-        return re.findall(
-            r"LSecVal='([\D]*)',", self._ticker_page_response.text
-        )[0]
+    def group_name(self) -> str | None:
+        return self._instrument_info.sector.name
 
     @property
-    def p_e_ratio(self) -> Optional[float]:
-        """
-        Notes on usage: tickers like آسام does not have p/e
-        """
-        adj_close = self.get_ticker_real_time_info_response().adj_close
+    def p_e_ratio(self) -> float | None:
+        adj_close = self._realtime_info(prices=True).adj_close
         eps = self.eps
         if adj_close is None or eps is None or eps == 0:
             return None
         return adj_close / eps
 
     @property
-    def group_p_e_ratio(self) -> Optional[float]:
-        """
-        Notes on usage: tickers like وملت does not have group P/E (gpe)
-        """
-        gpe = re.findall(
-            r"SectorPE='([\d.]*)',", self._ticker_page_response.text
-        )
-        if not gpe or not gpe[0]:
-            return None
-        return float(gpe[0])
+    def group_p_e_ratio(self) -> float | None:
+        # The API sends 0 when there is no value.
+        return self._instrument_info.eps.sector_pe or None
 
     @property
-    def eps(self) -> Optional[float]:
-        """
-        Notes on usage: tickers like آسام does not have eps
-        """
-        eps = re.findall(
-            r"EstimatedEPS='([-,\d]*)',", self._ticker_page_response.text
-        )[0]
-        if eps == "":
-            return None
-        return float(eps)
+    def eps(self) -> float | None:
+        return self._instrument_info.eps.estimated_eps
 
     @property
-    def p_s_ratio(self) -> Optional[float]:
-        """
-        Notes on usage: tickers like آسام does not have p/s
-        """
-        adj_close = self.get_ticker_real_time_info_response().adj_close
+    def p_s_ratio(self) -> float | None:
+        adj_close = self._realtime_info(prices=True).adj_close
         psr = self.psr
         if adj_close is None or psr is None or psr == 0:
             return None
         return adj_close / psr
 
     @property
-    def psr(self) -> Optional[float]:
-        """
-        Notes on usage: tickers like آسام does not have psr
-        """
-        psr = re.findall(
-            r"PSR='([+-]?[\.\d]*)'", self._ticker_page_response.text
-        )
-        if not psr or psr[0] == "":
-            return None
-        return float(psr[0])
+    def psr(self) -> float | None:
+        # The API sends 0 when there is no value.
+        return self._instrument_info.eps.psr or None
 
     @property
     def total_shares(self) -> float:
-        return float(
-            re.findall(r"ZTitad=([-,\d]*),", self._ticker_page_response.text)[
-                0
-            ]
-        )
+        total_shares = self._instrument_info.total_shares
+        return float(total_shares)  # ty: ignore[invalid-argument-type]
 
     @property
     def base_volume(self) -> float:
-        return float(
-            re.findall(r"BaseVol=([-,\d]*),", self._ticker_page_response.text)[
-                0
-            ]
-        )
+        base_volume = self._instrument_info.base_volume
+        return float(base_volume)  # ty: ignore[invalid-argument-type]
 
     @property
-    def fiscal_year(self) -> Optional[str]:
-        fiscal_year = re.findall(
-            r"سال مالی :<\/td>.*?>(.*?)<",
-            self._ticker_introduction_page_response.text,
-            re.DOTALL,
-        )
-        return fiscal_year[0] if fiscal_year else None
+    def fiscal_year(self) -> str | None:
+        """End of the fiscal year as month/day, e.g. "12/29"."""
+        publisher = self._codal_publisher
+        if publisher is None:
+            return None
+        return publisher.financial_year or None
 
     @property
     def flow(self) -> str:
-        """
-        عنوان بازار
-        """
-        flow_code = re.findall(
-            r"Flow='(.*?)'", self._ticker_page_response.text
-        )[0]
-        return self._flow_name(flow_code)
+        return _FLOW_NAMES.get(str(self._instrument_info.flow), "")
 
     @property
-    @catch(IndexError, ValueError)
-    def sta_max(self) -> float:
-        """
-        حداکثر قیمت مجاز
-        """
-        return float(
-            re.findall(
-                r"PSGelStaMax='(.*?)'", self._ticker_page_response.text
-            )[0]
-        )
+    @_catch(TypeError, ValueError)
+    def sta_max(self) -> float | None:
+        threshold = self._instrument_info.static_threshold
+        return to_optional_float(threshold.max_price) if threshold else None
 
     @property
-    @catch(IndexError, ValueError)
-    def sta_min(self) -> float:
-        """
-        حداقل قیمت مجاز
-        """
-        return float(
-            re.findall(
-                r"PSGelStaMin='(.*?)'", self._ticker_page_response.text
-            )[0]
-        )
+    @_catch(TypeError, ValueError)
+    def sta_min(self) -> float | None:
+        threshold = self._instrument_info.static_threshold
+        return to_optional_float(threshold.min_price) if threshold else None
 
     @property
-    @catch(IndexError, ValueError)
-    def min_week(self) -> float:
-        """
-        حداقل قیمت هفته اخیر
-        """
-        return float(
-            re.findall(r"MinWeek='(.*?)'", self._ticker_page_response.text)[0]
-        )
+    @_catch(TypeError, ValueError)
+    def min_week(self) -> float | None:
+        return to_optional_float(self._instrument_info.min_week)
 
     @property
-    @catch(IndexError, ValueError)
-    def max_week(self) -> float:
-        """
-        حداکثر قیمت هفته اخیر
-        """
-        return float(
-            re.findall(r"MaxWeek='(.*?)'", self._ticker_page_response.text)[0]
-        )
+    @_catch(TypeError, ValueError)
+    def max_week(self) -> float | None:
+        return to_optional_float(self._instrument_info.max_week)
 
     @property
-    @catch(IndexError, ValueError)
-    def min_year(self) -> float:
-        """
-        حداقل قیمت بازه سال
-        """
-        return float(
-            re.findall(r"MinYear='(.*?)'", self._ticker_page_response.text)[0]
-        )
+    @_catch(TypeError, ValueError)
+    def min_year(self) -> float | None:
+        return to_optional_float(self._instrument_info.min_year)
 
     @property
-    @catch(IndexError, ValueError)
-    def max_year(self) -> float:
-        """
-        حداکثر قیمت بازه سال
-        """
-        return float(
-            re.findall(r"MaxYear='(.*?)'", self._ticker_page_response.text)[0]
-        )
+    @_catch(TypeError, ValueError)
+    def max_year(self) -> float | None:
+        return to_optional_float(self._instrument_info.max_year)
 
     @property
     def month_average_volume(self) -> str:
-        """
-        میانگین حجم ماه
-        """
-        return re.findall(
-            r"QTotTran5JAvg='(.*?)'", self._ticker_page_response.text
-        )[0]
+        volume = self._instrument_info.month_average_volume
+        return str(int(volume))  # ty: ignore[invalid-argument-type]
 
     @property
-    @catch(IndexError, ValueError)
-    def float_shares(self) -> float:
-        """
-        درصد سهام شناور
-        """
-        return float(
-            re.findall(
-                r"KAjCapValCpsIdx='(.*?)'", self._ticker_page_response.text
-            )[0]
-        )
+    @_catch(TypeError, ValueError)
+    def float_shares(self) -> float | None:
+        return to_optional_float(self._instrument_info.free_float)
 
     @property
     def client_types(self):
@@ -388,36 +340,49 @@ class Ticker:
         return client_types
 
     @property
-    def trade_dates(self) -> List[datetime.date]:
-        trade_dates = map(
-            lambda datetime_val: datetime_val.date(),
-            pd.to_datetime(self._history["date"]),
+    def trade_dates(self) -> list[datetime.date]:
+        trade_dates = (
+            datetime_val.date()
+            for datetime_val in pd.to_datetime(self.history["date"])
         )
         return list(trade_dates)
 
+    def get_valid_dates(
+        self, start_date: datetime.date, end_date: datetime.date
+    ) -> list[datetime.date]:
+        """Trading days from start_date to end_date, both included."""
+        trade_dates = set(self.trade_dates)
+        days = (
+            start_date + datetime.timedelta(n)
+            for n in range((end_date - start_date).days + 1)
+        )
+        return [day for day in days if day in trade_dates]
+
     @property
     def shareholders(self) -> pd.DataFrame:
-        session = utils.requests_retry_session()
-        page = session.get(self._shareholders_url, timeout=5)
-        session.close()
-        soup = bs4.BeautifulSoup(page.content, "html.parser")
-        table: bs4.PageElement = soup.find_all("table")[0]
-        shareholders_df = utils.get_shareholders_html_table_as_csv(table)
-        shareholders_df = shareholders_df.rename(
-            columns=translations.SHAREHOLDERS_FIELD_MAPPINGS
+        """Columns: id, shareholder, shares, percentage, change."""
+        rows = parse_shareholders(client.api.call_shareholders(self._index))
+        return pd.DataFrame(
+            [
+                [
+                    row.share_id,
+                    row.name,
+                    float(row.shares),
+                    row.percentage,
+                    float(row.change_amount),
+                ]
+                for row in rows
+            ],
+            columns=["id", "shareholder", "shares", "percentage", "change"],
         )
-        return shareholders_df
 
     def get_shareholders_history(
         self,
         from_when=datetime.timedelta(days=90),
-        to_when=datetime.datetime.now(),
+        to_when: datetime.datetime | None = None,
         only_trade_days=True,
         session=None,
     ) -> pd.DataFrame:
-        """
-        a helper function to use shareholders_history_async
-        """
         return asyncio.run(
             self.get_shareholders_history_async(
                 from_when,
@@ -430,17 +395,13 @@ class Ticker:
     async def get_shareholders_history_async(
         self,
         from_when=datetime.timedelta(days=90),
-        to_when=datetime.datetime.now(),
+        to_when: datetime.datetime | None = None,
         only_trade_days=True,
         session=None,
     ) -> pd.DataFrame:
-        requested_dates = utils.datetime_range(to_when - from_when, to_when)
-        session_created = False
-        if not session:
-            session_created = True
-            conn = aiohttp.TCPConnector(limit=25)
-            session = aiohttp.ClientSession(connector=conn)
-        tasks = []
+        if to_when is None:
+            to_when = datetime.datetime.now()
+        requested_dates = _datetime_range(to_when - from_when, to_when)
         filtered_dates = list(
             filter(
                 lambda date: not only_trade_days
@@ -448,30 +409,30 @@ class Ticker:
                 requested_dates,
             )
         )
-        for date in filtered_dates:
-            tasks.append(
-                get_day_shareholders_history(self._index, date, session)
-            )
-        all_tickers_shareholders: List[
-            List[ShareholderData]
-        ] = await asyncio.gather(*tasks)
-        if session_created is True:
-            await session.close()
+        days_shareholders = await self._call_for_days(
+            client.api.call_day_shareholders_async, filtered_dates, session
+        )
 
         rows = []
-        for ticker_shareholders, info_date in zip(
-            all_tickers_shareholders, filtered_dates
+        for day_shareholders, info_date in zip(
+            days_shareholders, filtered_dates
         ):
-            for shareholder_data in ticker_shareholders:
+            for shareholder in parse_day_shareholders(day_shareholders):
+                # The API also sends rows of the next trading day.
+                if (
+                    shareholder.date is not None
+                    and shareholder.date > info_date.date()
+                ):
+                    continue
                 rows.append(
                     [
                         info_date,
-                        shareholder_data.id,
-                        shareholder_data.shares,
-                        shareholder_data.percentage,
-                        shareholder_data.instrument_id,
-                        shareholder_data.name,
-                        shareholder_data.change,
+                        shareholder.share_id,
+                        float(shareholder.shares),
+                        shareholder.percentage,
+                        shareholder.company_isin,
+                        shareholder.name,
+                        shareholder.change,
                     ]
                 )
         return pd.DataFrame(
@@ -490,20 +451,16 @@ class Ticker:
     async def get_total_shares_history_async(
         self,
         from_when=datetime.timedelta(days=60),
-        to_when=datetime.datetime.now(),
+        to_when: datetime.datetime | None = None,
         only_open_days=True,
         session=None,
     ) -> pd.DataFrame:
-        requested_dates = map(
-            lambda datetime_val: datetime_val.date(),
-            utils.datetime_range(to_when - from_when, to_when),
+        if to_when is None:
+            to_when = datetime.datetime.now()
+        requested_dates = (
+            datetime_val.date()
+            for datetime_val in _datetime_range(to_when - from_when, to_when)
         )
-        session_created = False
-        if not session:
-            session_created = True
-            conn = aiohttp.TCPConnector(limit=25)
-            session = aiohttp.ClientSession(connector=conn)
-        tasks = []
         filtered_dates = list(
             filter(
                 lambda date: not only_open_days
@@ -511,24 +468,21 @@ class Ticker:
                 requested_dates,
             )
         )
-        for date in filtered_dates:
-            tasks.append(
-                get_day_ticker_info_history(self._index, date, session)
-            )
-        instrument_history: List[
-            InstrumentHistoryResponse
-        ] = await asyncio.gather(*tasks)
-        if session_created is True:
-            await session.close()
+        days_instrument_history = await self._call_for_days(
+            client.api.call_instrument_history_async, filtered_dates, session
+        )
 
         rows = []
-        for instrument_day_data, date in zip(
-            instrument_history, filtered_dates
+        for day_instrument_history, date in zip(
+            days_instrument_history, filtered_dates
         ):
+            instrument_day_data = parse_instrument_history(
+                day_instrument_history
+            )
             rows.append(
                 [
                     date,
-                    instrument_day_data.total_shares,
+                    float(instrument_day_data.total_shares),
                 ]
             )
         return pd.DataFrame(
@@ -536,307 +490,375 @@ class Ticker:
             columns=["date", "total_shares"],
         )
 
+    async def _call_for_days(self, call, dates, session) -> list:
+        if session is None:
+            async with client.open_session(limit=25) as own_session:
+                return await self._call_for_days(call, dates, own_session)
+        return await asyncio.gather(
+            *(call(self._index, date, session) for date in dates)
+        )
+
     @property
     def state(self):
-        return self.get_ticker_real_time_info_response().state
+        return self._realtime_info(prices=True).state
 
     @property
     def last_price(self):
-        return self.get_ticker_real_time_info_response().last_price
+        return self._realtime_info(prices=True).last_price
 
     @property
     def adj_close(self):
-        return self.get_ticker_real_time_info_response().adj_close
+        return self._realtime_info(prices=True).adj_close
 
     @property
     def yesterday_price(self):
-        return self.get_ticker_real_time_info_response().yesterday_price
+        return self._realtime_info(prices=True).yesterday_price
 
     @property
     def open_price(self):
-        return self.get_ticker_real_time_info_response().open_price
+        return self._realtime_info(prices=True).open_price
 
     @property
     def high_price(self):
-        return self.get_ticker_real_time_info_response().high_price
+        return self._realtime_info(prices=True).high_price
 
     @property
     def low_price(self):
-        return self.get_ticker_real_time_info_response().low_price
+        return self._realtime_info(prices=True).low_price
 
     @property
     def count(self):
-        return self.get_ticker_real_time_info_response().count
+        return self._realtime_info(prices=True).count
 
     @property
     def volume(self):
-        return self.get_ticker_real_time_info_response().volume
+        return self._realtime_info(prices=True).volume
 
     @property
     def value(self):
-        return self.get_ticker_real_time_info_response().value
+        return self._realtime_info(prices=True).value
 
     @property
     def last_date(self):
-        return self.get_ticker_real_time_info_response().last_date
+        return self._realtime_info(prices=True).last_date
 
     @property
     def best_demand_vol(self):
-        return self.get_ticker_real_time_info_response().best_demand_vol
+        return self._realtime_info(orders=True).best_demand_vol
 
     @property
     def best_demand_price(self):
-        return self.get_ticker_real_time_info_response().best_demand_price
+        return self._realtime_info(orders=True).best_demand_price
 
     @property
     def best_supply_vol(self):
-        return self.get_ticker_real_time_info_response().best_supply_vol
+        return self._realtime_info(orders=True).best_supply_vol
 
     @property
     def best_supply_price(self):
-        return self.get_ticker_real_time_info_response().best_supply_price
+        return self._realtime_info(orders=True).best_supply_price
 
     @property
     def nav(self):
-        return self.get_ticker_real_time_info_response().nav
+        return self._realtime_info(nav=True).nav
 
     @property
     def market_cap(self):
-        return self.get_ticker_real_time_info_response().market_cap
+        return self._realtime_info(prices=True).market_cap
 
     @property
     def nav_date(self):
-        return self.get_ticker_real_time_info_response().nav_date
+        return self._realtime_info(nav=True).nav_date
 
     @classmethod
-    def get_last_trade_day(cls):
-        session = utils.requests_retry_session()
-        date_str = session.get(TSE_GET_LAST_TRADE_DAY, timeout=5).text.split(
-            ";"
-        )[0]
-        session.close()
-        _datetime = datetime.datetime.strptime(date_str, "%Y%m%d")
-        return _datetime.date()
+    def get_last_trade_day(cls) -> datetime.date:
+        return parse_market_overview(
+            client.api.call_market_overview()
+        ).last_trade_date
 
     def get_ticker_real_time_info_response(self) -> RealtimeTickerInfo:
-        """
-        notes on usage:
-        - Real time data might not be always available
-        check for None values before usage
-        """
+        """Fields are None when real time data is not available."""
+        return self._realtime_info(
+            prices=True, orders=True, client_types=True, nav=True
+        )
+
+    def _realtime_info(
+        self,
+        prices: bool = False,
+        orders: bool = False,
+        client_types: bool = False,
+        nav: bool = False,
+    ) -> RealtimeTickerInfo:
         if not self.__is_active():
             raise RuntimeError(
                 f"Cannot get realtime data from inactive ticker {self.symbol}"
             )
-        session = utils.requests_retry_session()
-        response = session.get(self._info_url, timeout=5)
-        session.close()
-
-        response_sections_list = response.text.split(";")
-
-        if len(response_sections_list) >= 1:
-            price_section = response_sections_list[0].split(",")
-            try:
-                state = self._instrument_state(price_section[1])
-                yesterday_price = int(price_section[5])
-                open_price = int(price_section[4])
-                high_price = int(price_section[6])
-                low_price = int(price_section[7])
-                count = int(price_section[8])
-                volume = int(price_section[9])
-                value = int(price_section[10])
-                last_date = datetime.datetime.strptime(
-                    price_section[12] + price_section[13], "%Y%m%d%H%M%S"
+        closing_price = best_limits = client_type = None
+        if prices:
+            closing_price = parse_closing_price_info(
+                client.api.call_closing_price_info(self._index)
+            )
+        if orders:
+            best_limits = parse_best_limits(
+                client.api.call_best_limits(self._index)
+            )
+        if client_types:
+            client_type = parse_client_type(
+                client.api.call_client_type(self._index)
+            )
+        etf = None
+        # The API answers 500 for instruments that are not funds.
+        if nav and (self._instrument_info.isin or "").startswith("IRT"):
+            with contextlib.suppress(requests.RequestException, ValueError):
+                etf = parse_etf(client.api.call_etf(self._index))
+        nav_value = nav_date = None
+        if etf is not None and etf.redemption_nav is not None:
+            nav_value = etf.redemption_nav
+            if etf.date and etf.time:
+                jalali = jdatetime.date.fromgregorian(date=etf.date)
+                nav_date = (
+                    f"{jalali.year}/{jalali.month}/{jalali.day} "
+                    f"{etf.time:%H:%M:%S}"
                 )
-            except (ValueError, IndexError):
-                state = None
-                yesterday_price = None
-                open_price = None
-                high_price = None
-                low_price = None
-                count = None
-                volume = None
-                value = None
-                last_date = None
 
-            # in some cases last price or adj price is undefined
-            try:
-                last_price = int(price_section[2])
-            # when instead of number value is `F`
-            except (ValueError, IndexError):
-                last_price = None
-            try:
-                adj_close = int(price_section[3])
-            except (ValueError, IndexError):
-                adj_close = None
-            try:
-                market_cap = adj_close * self.total_shares
-            except ValueError:
-                market_cap = None
+        price_fields: dict[str, Any] = dict.fromkeys(
+            (
+                "state",
+                "last_price",
+                "adj_close",
+                "yesterday_price",
+                "open_price",
+                "high_price",
+                "low_price",
+                "count",
+                "volume",
+                "value",
+                "last_date",
+                "market_cap",
+            )
+        )
+        if closing_price is not None:
+            instrument_state = closing_price.instrument_state
+            state = None
+            if instrument_state and instrument_state.code:
+                state = (
+                    _STATE_NAMES.get(instrument_state.code)
+                    or instrument_state.title
+                )
+            last_date = None
+            if closing_price.date and closing_price.time:
+                last_date = datetime.datetime.combine(
+                    closing_price.date, closing_price.time
+                )
+            adj_close = closing_price.closing_price
+            price_fields = {
+                "state": state,
+                "last_price": closing_price.last_price,
+                "adj_close": adj_close,
+                "yesterday_price": closing_price.yesterday_price,
+                "open_price": closing_price.first_price,
+                "high_price": closing_price.high_price,
+                "low_price": closing_price.low_price,
+                "count": closing_price.trade_count,
+                "volume": closing_price.volume,
+                "value": closing_price.value,
+                "last_date": last_date,
+                "market_cap": (
+                    adj_close * self.total_shares
+                    if adj_close is not None
+                    else None
+                ),
+            }
 
-        try:
-            info_section = response_sections_list[0].split(",")
-            nav = int(info_section[15])
-            nav_date = str(info_section[14])
-        except (ValueError, IndexError):
-            nav = None
-            nav_date = None
-
-        try:
-            orders_section = response_sections_list[2]
-            buy_orders, sell_orders = get_orders(orders_section)
-            best_demand_vol = (
-                buy_orders[0].volume if 0 < len(buy_orders) else None
-            )
-            best_demand_price = (
-                buy_orders[0].price if 0 < len(buy_orders) else None
-            )
-            best_supply_vol = (
-                sell_orders[0].volume if 0 < len(sell_orders) else None
-            )
-            best_supply_price = (
-                sell_orders[0].price if 0 < len(sell_orders) else None
-            )
-        except IndexError:
-            buy_orders = []
-            sell_orders = []
-            logger.warning(
-                f"""not enough sections in response to demand
-                and supply information resp: {response_sections_list}"""
-            )
-            best_demand_vol = None
-            best_demand_price = None
-            best_supply_vol = None
-            best_supply_price = None
-            buy_orders = None
-            sell_orders = None
-
-        if len(response_sections_list) >= 4:
-            trade_summary_section = response_sections_list[4]
-            individual_trade_summary = get_individual_trade_summary(
-                trade_summary_section
-            )
-            corporate_trade_summary = get_corporate_trade_summary(
-                trade_summary_section
-            )
-        else:
-            logger.warning(
-                f"""not enough sections in response to extract trade summaries
-                resp: {response_sections_list}"""
-            )
-            individual_trade_summary = None
-            corporate_trade_summary = None
-
+        buy_orders = sell_orders = None
+        if best_limits is not None:
+            levels = sorted(best_limits, key=lambda row: row.level)
+            buy_orders = [
+                Order(
+                    count=row.buy_count,
+                    volume=row.buy_volume,
+                    price=row.buy_price,
+                )
+                for row in levels
+            ]
+            sell_orders = [
+                Order(
+                    count=row.sell_count,
+                    volume=row.sell_volume,
+                    price=row.sell_price,
+                )
+                for row in levels
+            ]
         return RealtimeTickerInfo(
             datetime.datetime.now(),
-            state,
-            last_price,
-            adj_close,
-            yesterday_price,
-            open_price,
-            high_price,
-            low_price,
-            count,
-            volume,
-            value,
-            last_date,
-            best_demand_vol=best_demand_vol,
-            best_demand_price=best_demand_price,
-            best_supply_vol=best_supply_vol,
-            best_supply_price=best_supply_price,
+            **price_fields,
+            best_demand_vol=buy_orders[0].volume if buy_orders else None,
+            best_demand_price=buy_orders[0].price if buy_orders else None,
+            best_supply_vol=sell_orders[0].volume if sell_orders else None,
+            best_supply_price=sell_orders[0].price if sell_orders else None,
             buy_orders=buy_orders,
             sell_orders=sell_orders,
-            individual_trade_summary=individual_trade_summary,
-            corporate_trade_summary=corporate_trade_summary,
-            nav=nav,
-            market_cap=market_cap,
+            individual_trade_summary=(
+                individual_trade_summary(client_type) if client_types else None
+            ),
+            corporate_trade_summary=(
+                corporate_trade_summary(client_type) if client_types else None
+            ),
+            nav=nav_value,
             nav_date=nav_date,
         )
 
-    @property
-    @functools.lru_cache()
-    def _ticker_page_response(self):
-        return utils.requests_retry_session().get(self._url, timeout=10)
+    @functools.cached_property
+    def _instrument_info(self) -> InstrumentInfo:
+        return parse_instrument_info(
+            client.api.call_instrument_info(self._index)
+        )
 
     @functools.cached_property
-    def _ticker_introduction_page_response(self):
-        return utils.requests_retry_session().get(
-            self._introduction_url, timeout=10
-        )
+    def _codal_publisher(self) -> CodalPublisher | None:
+        try:
+            return parse_codal_publisher(
+                client.api.call_codal_publisher(self._instrument_info.symbol)
+            )
+        except (requests.RequestException, ValueError):
+            return None
 
-    @functools.lru_cache()
-    @retry(
-        wait=wait_random(min=3, max=5),
-        before_sleep=before_sleep_log(logger, logging.ERROR),
-    )
-    async def _get_ticker_daily_info_page_response(
-        self, session, date
-    ) -> requests.Response:
-        async with session.get(
-            tse_settings.INSTRUMENT_DAY_INFO_URL.format(
-                index=self.index, date=date
-            ),
-        ) as response:
-            response.raise_for_status()
-            page = await response.text()
-            logger.info(f"fetched date {date}")
-            return page
+    @overload
+    def get_trade_details(
+        self,
+        start_date: None = None,
+        end_date: datetime.date | None = None,
+        to_csv: bool = False,
+        base_path: str | None = None,
+        timeframe: str | None = None,
+        aggregate: bool = False,
+    ) -> pd.DataFrame: ...
 
-    @property
-    def _shareholders_url(self) -> str:
-        return tse_settings.TSE_SHAREHOLDERS_URL.format(self.ci_sin)
+    @overload
+    def get_trade_details(
+        self,
+        start_date: datetime.date,
+        end_date: datetime.date | None = None,
+        to_csv: bool = False,
+        base_path: str | None = None,
+        timeframe: str | None = None,
+        aggregate: bool = False,
+    ) -> dict[datetime.date | str, pd.DataFrame]: ...
 
-    def _instrument_state(self, state_code) -> str:
-        states = {
-            "I ": "ممنوع",
-            "A ": "مجاز",
-            "AG": "مجاز-مسدود",
-            "AS": "مجاز-متوقف",
-            "AR": "مجاز-محفوظ",
-            "IG": "ممنوع-مسدود",
-            "IS": "ممنوع-متوقف",
-            "IR": "ممنوع-محفوظ",
-        }
-        return states.get(state_code, "")
+    def get_trade_details(
+        self,
+        start_date: datetime.date | None = None,
+        end_date: datetime.date | None = None,
+        to_csv: bool = False,
+        base_path: str | None = None,
+        timeframe: str | None = None,
+        aggregate: bool = False,
+    ) -> pd.DataFrame | dict[datetime.date | str, pd.DataFrame]:
+        """Trades of the ticker, canceled trades left out.
 
-    def _flow_name(self, flow_code) -> str:
-        flows = {
-            "0": "عمومی - مشترک بین بورس و فرابورس",
-            "1": "بورس",
-            "2": "فرابورس",
-            "3": "آتی",
-            "4": "پایه فرابورس",
-            "5": "پایه فرابورس (منتشر نمی شود)",
-        }
-        return flows.get(flow_code, "")
+        Without start_date: the trades of the current day with the columns
+        date (time of the trade), volume and price. The other arguments
+        are not used.
 
-    def get_trade_details(self):
-        session = utils.requests_retry_session()
-        page = session.get(
-            tse_settings.TSE_TRADE_DETAIL_URL.format(self.index), timeout=5
-        )
-        session.close()
-        soup = bs4.BeautifulSoup(page.content, "lxml")
-        xml_rows = soup.find_all("row")
-        rows = []
-        for xml_row in xml_rows:
-            cells = xml_row.find_all("cell")
-            row = [
-                datetime.time.fromisoformat(cells[1].text),
-                int(cells[2].text),
-                float(cells[3].text),
+        With start_date: a dict of day -> DataFrame of the trades of every
+        traded day from start_date to end_date (start_date only when
+        end_date is None), indexed by datetime, with the columns price and
+        volume. timeframe ("30s", "1m", "5m", "10m", "15m", "30m" or "1h")
+        gives candles with the columns open, high, low, close and volume
+        instead. aggregate puts all days under the key "aggregate".
+        """
+        if start_date is None:
+            trades = sorted(
+                unique_trades(
+                    parse_trades(client.api.call_trades(self.index))
+                ),
+                key=lambda trade: trade.number,
+            )
+            rows = [
+                [trade.time, trade.volume, float(trade.price)]
+                for trade in trades
             ]
-            rows.append(row)
-        return pd.DataFrame(rows, columns=["date", "volume", "price"])
+            return pd.DataFrame(rows, columns=["date", "volume", "price"])
+
+        if timeframe is not None and timeframe not in _CANDLE_LENGTHS:
+            raise ValueError(
+                "The provided timeframe is not valid. It should be among "
+                f"{_CANDLE_LENGTHS.keys()}"
+            )
+        days = self.get_valid_dates(start_date, end_date or start_date)
+        days_trades = asyncio.run(
+            self._call_for_days(
+                client.api.call_trade_history_async, days, session=None
+            )
+        )
+
+        result: dict[datetime.date | str, pd.DataFrame] = {}
+        for day, day_trades in zip(days, days_trades):
+            trade_details_logger.info(
+                f"Successfully fetched trade details on {day} from tse"
+            )
+            trades = unique_trades(parse_trade_history(day_trades))
+            if not trades:
+                continue
+            frame = pd.DataFrame(
+                {
+                    "price": [float(trade.price) for trade in trades],
+                    "volume": [trade.volume for trade in trades],
+                    "datetime": [trade.time for trade in trades],
+                }
+            )
+            frame["datetime"] = pd.to_datetime(
+                f"{day:%Y%m%d} " + frame["datetime"].astype(str),
+                format="%Y%m%d %H:%M:%S",
+            )
+            frame = frame.sort_values(
+                ["datetime"], ascending=[True]
+            ).set_index("datetime")
+            if timeframe:
+                frame = frame.resample(_CANDLE_LENGTHS[timeframe]).agg(
+                    {"price": "ohlc", "volume": "sum"}
+                )
+                frame.columns = ["open", "high", "low", "close", "volume"]
+                frame = frame.dropna()
+            result[day] = frame
+
+        if aggregate:
+            result = {
+                "aggregate": pd.concat(result.values()).sort_values(
+                    ["datetime"], ascending=[True]
+                )
+            }
+        if to_csv:
+            base_path = base_path or config.TRADE_DETAILS_HIST_PATH
+            Path(base_path).mkdir(parents=True, exist_ok=True)
+            for name, frame in result.items():
+                if isinstance(name, datetime.date):
+                    name = name.strftime("%Y-%m-%d")
+                frame.to_csv(
+                    os.path.join(base_path, f"trade_details_{name}.csv")
+                )
+        return result
 
     def __is_active(self):
-        """
-        Check if ticker is in active state so new data comes in.
-        Deactivated symbols have message
-        نماد قدیمی حذف شده
-        in their name.
-        Returns: True if the symbol is in active state
-        """
         most_recent_index = symbols_data.get_ticker_index(self.symbol)
+        if most_recent_index is None:
+            return not any(
+                self._index in symbol_info.get("old", [])
+                for symbol_info in symbols_data.symbols_information().values()
+            )
         old_indexes = symbols_data.get_ticker_old_index(self.symbol)
         return most_recent_index not in old_indexes
+
+
+def get_trade_details(
+    symbol_name: str,
+    start_date: datetime.date,
+    end_date: datetime.date | None = None,
+    to_csv: bool = False,
+    base_path: str | None = None,
+    timeframe: str | None = None,
+    aggregate: bool = False,
+) -> dict[datetime.date | str, pd.DataFrame]:
+    return Ticker(symbol_name).get_trade_details(
+        start_date, end_date, to_csv, base_path, timeframe, aggregate
+    )

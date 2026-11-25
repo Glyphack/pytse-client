@@ -1,35 +1,58 @@
-[tool.poetry]
+[project]
 name = "pytse-client"
-version = "0.19.1"
-
+version = "1.0.0b1"
 description = "tehran stock exchange(TSE) client in python"
-authors = ["glyphack <sh.hooshyari@gmail.com>"]
-license = "GPLv3"
+authors = [{ name = "glyphack", email = "sh.hooshyari@gmail.com" }]
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 readme = "README.md"
+# Python 3.10 and older are end of life. uv.lock pins the newest
+# versions that pass uv audit, the lower bounds below are only what the
+# code needs.
+requires-python = ">=3.11.5"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+]
+dependencies = [
+    "aiohttp>=3.9",
+    "certifi>=2017.4.17",
+    "jdatetime>=4.0",
+    "pandas>=2.2.2",
+    "requests>=2.28",
+    "tenacity>=8.0",
+    "urllib3>=1.26",
+]
 
-[tool.poetry.dependencies]
-python = "^3.7.2"
-pandas = "*"
-requests = "^2.23.0"
-jdatetime = "^3.6.2"
-beautifulsoup4 = "^4.9.3"
-tenacity = "^7.0.0"
-aiohttp = "^3.7.4"
-lxml = "^4.6.3"
-black = "^22.6.0"
-
-[tool.poetry.dev-dependencies]
-pynvim = "^0.4.3"
-pylint = "^2.15.0"
-isort = "^5.10.1"
-black = "^22.6.0"
-
-[tool.poetry.group.dev.dependencies]
-parameterized = "^0.9.0"
+[dependency-groups]
+dev = [
+    "black>=26.10.1",
+    "ipykernel>=7.4.0",
+    "isort>=9.0.2",
+    "parameterized>=0.9.0",
+    "pylint>=4.1.4",
+    "pytest>=9.2.0",
+    "ruff>=0.17.6",
+    "ty>=0.0.108",
+]
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["uv_build>=0.13.8,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+# Flat layout: the package lives in ./pytse_client, not ./src/pytse_client.
+module-root = ""
+
+[tool.pytest.ini_options]
+markers = ["e2e: calls the live TSETMC servers"]
+# show WARNING and higher log records while the tests run
+log_cli = true
+log_cli_level = "WARNING"
 
 [tool.black]
 line-length = 79
@@ -38,3 +61,14 @@ line-length = 79
 profile = "black"
 src_paths = ["isort", "test"]
 line_length = 79
+combine_as_imports = true
+known_first_party = ["pytse_client"]
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
+[tool.ruff.lint.per-file-ignores]
+"pytse_client/data/update_symbols_json.py" = ["BLE001"]

@@ -1,0 +1,21 @@
+name: E2E Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+    - name: Set up Python and uv (versions from mise.toml)
+      uses: jdx/mise-action@v5
+    - name: Install dependencies
+      run: uv sync --locked
+    - name: Run e2e tests
+      run: mise run e2e

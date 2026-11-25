@@ -1,23 +1,38 @@
 name: Upload Python Package
 on:
-  release:
-    types: [created]
+  push:
+    branches: [master]
+    paths: [pyproject.toml]
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
         with:
-          python-version: '3.x'
-      - name: Install dependencies
+          persist-credentials: false
+      - name: Set up Python and uv (versions from mise.toml)
+        uses: jdx/mise-action@v5
+        with:
+          # Do not reuse caches in the release job.
+          cache: false
+      - name: Release the version of pyproject.toml when it has no tag yet
+        env:
+          GH_TOKEN: ${{ github.token }}
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
         run: |
-          python -m pip install --upgrade pip
-          pip install poetry twine
-      - name: Build and publish
-        run: |
-          poetry build
-          poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
-          poetry publish
+          version=$(uv version --short)
+          tag="v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag"; then
+            echo "$tag is already released"
+            exit 0
+          fi
+          uv build
+          uv publish
+          prerelease=false
+          if [[ $version == *[a-z]* ]]; then
+            prerelease=true
+          fi
+          gh release create "$tag" --target "$GITHUB_SHA" --generate-notes --prerelease="$prerelease"

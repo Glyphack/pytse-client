@@ -9,7 +9,7 @@ __pycache__/
 # Environments
 /.idea/
 */.vscode/
-*/.venv/
+.venv/
 /.spyproject/
 
 # mypy
