@@ -1,0 +1,56 @@
+{
+ "instrumentInfo": {
+  "eps": {
+   "epsValue": null,
+   "estimatedEPS": "3064",
+   "sectorPE": 11.85,
+   "psr": 12734.175
+  },
+  "sector": {
+   "dEven": 0,
+   "cSecVal": "43 ",
+   "lSecVal": "مواد و محصولات دارويي"
+  },
+  "staticThreshold": {
+   "insCode": null,
+   "dEven": 0,
+   "hEven": 0,
+   "psGelStaMax": 24020.0,
+   "psGelStaMin": 22640.0
+  },
+  "minWeek": 22000.0,
+  "maxWeek": 24020.0,
+  "minYear": 3633.0,
+  "maxYear": 24790.0,
+  "qTotTran5JAvg": 18051688.0,
+  "kAjCapValCpsIdx": "49",
+  "dEven": 0,
+  "topInst": 0,
+  "faraDesc": "",
+  "contractSize": 0,
+  "nav": 0.0,
+  "underSupervision": 0,
+  "etfIssuedUnit": 0.0,
+  "etfUnitDeven": 0,
+  "cValMne": null,
+  "lVal18": "Iran Darou",
+  "cSocCSAC": null,
+  "lSoc30": null,
+  "yMarNSC": null,
+  "yVal": "300",
+  "insCode": "69090868458637360",
+  "lVal30": "ايران‌دارو",
+  "lVal18AFC": "ديران",
+  "flow": 1,
+  "cIsin": "IRO1IRDR0007",
+  "zTitad": 1780000000.0,
+  "baseVol": 1,
+  "instrumentID": "IRO1IRDR0001",
+  "cgrValCot": "N2",
+  "cComVal": "1",
+  "lastDate": 0,
+  "sourceID": 1,
+  "flowTitle": "بازار بورس",
+  "cgrValCotTitle": "بازار دوم (تابلوی اصلی) بورس"
+ }
+}

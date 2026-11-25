@@ -1,0 +1,18 @@
+{
+ "instrumentHistory": {
+  "insCode": "0",
+  "lVal30": "ايران‌دارو",
+  "lVal18AFC": "ديران",
+  "flow": 1,
+  "cIsin": "IRO1IRDR0007",
+  "zTitad": 1780000000.0,
+  "baseVol": 1,
+  "instrumentID": "IRO1IRDR0001",
+  "cgrValCot": "N2",
+  "cComVal": "1",
+  "lastDate": 0,
+  "sourceID": 0,
+  "flowTitle": "بازار بورس",
+  "cgrValCotTitle": "بازار دوم (تابلوی اصلی) بورس"
+ }
+}
