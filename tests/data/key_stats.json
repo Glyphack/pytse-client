@@ -1,0 +1,3160 @@
+{
+ "instValueAllInstAllParam": [
+  {
+   "insCode": "2400322364771558",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "4767321647133"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "2944814483391"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "48"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "48"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "1377047598"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "1183400941"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "9"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "9"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "14338"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "9556"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "31"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "36"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "3493.14"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "3490.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "3837667924420.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "1098630226"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "16582"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "72"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "39.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "29.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "12"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "52"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 26,
+   "dEven": 20261123,
+   "dataValue": "37"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 27,
+   "dEven": 20261123,
+   "dataValue": "115"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "47.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "40"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "189"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "3"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "12"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "5709686961440000.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "6"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "191"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "96.97"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "79.25"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "3"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "47"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "2.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "50.00"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "3.03"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "20.75"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "47"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "75"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "687285402.187500"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "780066136.289473"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "14"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "11"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "732794933.375000"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "720984532.215789"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "43"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "65"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "3069"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "2349"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "56"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "83"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "31"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "28"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "3105"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "2380"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "55"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "82"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "806766099.546875"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "869734983.036842"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "12"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "11"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "613314236.015625"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "631315685.468421"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "45"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "70"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "2608"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "2278"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "50"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "63"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "27"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "2637"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "2305"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "50"
+  },
+  {
+   "insCode": "2400322364771558",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "63"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "335697828237"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "232296133761"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "361"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "265"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "2086415"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "1599009"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "937"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "874"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "1206"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "842"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "309"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "244"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "171700.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "171700.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "128531014300.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "748579"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "328"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "28"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "81"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "42.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "33.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "10"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "0"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "63"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 26,
+   "dEven": 20261123,
+   "dataValue": "37"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 27,
+   "dEven": 20261123,
+   "dataValue": "96"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "39.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "178"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "412080000000000.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "137"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "180"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "100.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "74.69"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "58"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "61.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "25.31"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "1548321.303030"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "1703414.782122"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "1185"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "1329"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "538093.772727"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "440508.737430"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "2257"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "3052"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "367"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "370"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "288"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "253"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "56"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "369"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "372"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "287"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "248"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "1395302.424242"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "1583971.536312"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "1147"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "1265"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "691112.651515"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "559951.983240"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "2250"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "3060"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "299"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "276"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "321"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "303"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "56"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "51"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "301"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "278"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "315"
+  },
+  {
+   "insCode": "13235547361447092",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "306"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "11457252618220"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "4529184518551"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "17"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "3069240976"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "1303022616"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "6"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "8"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "27693"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "12350"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "20"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "14"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "5118.66"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "5120.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "14535400168410.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "2839687355"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "26766"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "21"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "57"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "31.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "23.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "17"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "50"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "0"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "103"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 26,
+   "dEven": 20261123,
+   "dataValue": "45"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 27,
+   "dEven": 20261123,
+   "dataValue": "81"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "33.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "18"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "74"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "138"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "9907200000000000.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "3"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "139"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "100.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "57.68"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "95"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "102.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "42.32"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "27"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "1839532215.333333"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "1422403359.223021"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "7"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "7"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "1229708761.651515"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "836794127.625899"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "57"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "5208"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "4716"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "36"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "42"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "16"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "20"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "5258"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "4759"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "36"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "2031604089.469696"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "1424989756.784172"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "9"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "7"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "1037636887.515151"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "834207730.064748"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "28"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "53"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "4542"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "3804"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "27"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "37"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "34"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "19"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "4579"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "3839"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "27"
+  },
+  {
+   "insCode": "46348559193224090",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "5312548227041"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "2977206931503"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "38"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "46"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "7490090108"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "4751980484"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "16581"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "16664"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "8"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "780.95"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "781.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "10278479018522.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "13161564193"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "32271"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "26"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "74"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "39.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "30.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "12"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "33"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 26,
+   "dEven": 20261123,
+   "dataValue": "39"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 27,
+   "dEven": 20261123,
+   "dataValue": "100"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "41.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "24"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "55"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "65"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "177"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "24"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "2002285679108000.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "173"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "96.97"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "71.78"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "59"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "2.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "68.00"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "3.03"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "28.22"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "63"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "5650762731.892307"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "4733190107.134831"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "1954559532.338461"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "1700671110.971910"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "21"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "29"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "4152"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "3654"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "41"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "22"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "39"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "4175"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "3677"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "41"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "6137158277.846153"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "4921747663.207865"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "1468163986.384615"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "1512113554.898876"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "3464"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "3087"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "55"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "22"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "31"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "3488"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "3110"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "65883838195688438",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "55"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "349907685607"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "257803223243"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "348"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "244"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "4109004"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "4206704"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "838"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "722"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "562"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "388"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "565"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "516"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "94136.37"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "94136.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "91828994184.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "975489"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "299"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "28"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "71"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "42.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "29.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "10"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "36"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "0"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "50"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "49.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "25"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "35"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "191"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "10"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "301235200000000.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "171"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "66"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "241"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "100.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "100.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "0.00"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "49"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "121"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "1342852.969696"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "1736236.166666"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "1227"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "1323"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "2766151.348484"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "3522144.526041"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "1707"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "2119"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "149"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "135"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "467"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "460"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "5"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "4"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "56"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "54"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "154"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "140"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "466"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "447"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "1397279.984848"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "1669735.781250"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "1146"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "1245"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "2711724.333333"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "3588644.911458"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "1757"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "2175"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "123"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "110"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "477"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "465"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "6"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "5"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "52"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "48"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "129"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "115"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "471"
+  },
+  {
+   "insCode": "69067576215760005",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "459"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 1,
+   "dEven": 20261123,
+   "dataValue": "383392645316"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 2,
+   "dEven": 20261123,
+   "dataValue": "138024605322"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 3,
+   "dEven": 20261123,
+   "dataValue": "326"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 4,
+   "dEven": 20261123,
+   "dataValue": "391"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 5,
+   "dEven": 20261123,
+   "dataValue": "20054215"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 6,
+   "dEven": 20261123,
+   "dataValue": "11209992"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 7,
+   "dEven": 20261123,
+   "dataValue": "494"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 8,
+   "dEven": 20261123,
+   "dataValue": "492"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 9,
+   "dEven": 20261123,
+   "dataValue": "874"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 10,
+   "dEven": 20261123,
+   "dataValue": "379"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 11,
+   "dEven": 20261123,
+   "dataValue": "428"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 12,
+   "dEven": 20261123,
+   "dataValue": "524"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 13,
+   "dEven": 20261123,
+   "dataValue": "24020.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 14,
+   "dEven": 20261123,
+   "dataValue": "24020.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 15,
+   "dEven": 20261123,
+   "dataValue": "20679754780.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 16,
+   "dEven": 20261123,
+   "dataValue": "860939"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 17,
+   "dEven": 20261123,
+   "dataValue": "99"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 18,
+   "dEven": 20261123,
+   "dataValue": "23"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 19,
+   "dEven": 20261123,
+   "dataValue": "60"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 20,
+   "dEven": 20261123,
+   "dataValue": "34.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 21,
+   "dEven": 20261123,
+   "dataValue": "24.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 22,
+   "dEven": 20261123,
+   "dataValue": "15"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 23,
+   "dEven": 20261123,
+   "dataValue": "47"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 24,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 25,
+   "dEven": 20261123,
+   "dataValue": "56"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 26,
+   "dEven": 20261123,
+   "dataValue": "42"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 27,
+   "dEven": 20261123,
+   "dataValue": "125"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 29,
+   "dEven": 20261123,
+   "dataValue": "51.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 30,
+   "dEven": 20261123,
+   "dataValue": "21"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 31,
+   "dEven": 20261123,
+   "dataValue": "30"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 32,
+   "dEven": 20261123,
+   "dataValue": "65"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 33,
+   "dEven": 20261123,
+   "dataValue": "185"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 34,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 35,
+   "dEven": 20261123,
+   "dataValue": "16"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 36,
+   "dEven": 20261123,
+   "dataValue": "42755600000000.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 37,
+   "dEven": 20261123,
+   "dataValue": "688"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 38,
+   "dEven": 20261123,
+   "dataValue": "64"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 39,
+   "dEven": 20261123,
+   "dataValue": "182"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 40,
+   "dEven": 20261123,
+   "dataValue": "96.97"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 41,
+   "dEven": 20261123,
+   "dataValue": "75.52"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 42,
+   "dEven": 20261123,
+   "dataValue": "2"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 43,
+   "dEven": 20261123,
+   "dataValue": "53"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 44,
+   "dEven": 20261123,
+   "dataValue": "2.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 45,
+   "dEven": 20261123,
+   "dataValue": "59.00"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 46,
+   "dEven": 20261123,
+   "dataValue": "3.03"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 47,
+   "dEven": 20261123,
+   "dataValue": "24.48"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 48,
+   "dEven": 20261123,
+   "dataValue": "48"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 49,
+   "dEven": 20261123,
+   "dataValue": "69"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 50,
+   "dEven": 20261123,
+   "dataValue": "18055472.030769"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 51,
+   "dEven": 20261123,
+   "dataValue": "12520964.413978"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 52,
+   "dEven": 20261123,
+   "dataValue": "503"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 53,
+   "dEven": 20261123,
+   "dataValue": "626"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 54,
+   "dEven": 20261123,
+   "dataValue": "2307269.892307"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 55,
+   "dEven": 20261123,
+   "dataValue": "2003811.354838"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 56,
+   "dEven": 20261123,
+   "dataValue": "1791"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 57,
+   "dEven": 20261123,
+   "dataValue": "2417"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 58,
+   "dEven": 20261123,
+   "dataValue": "238"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 59,
+   "dEven": 20261123,
+   "dataValue": "130"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 60,
+   "dEven": 20261123,
+   "dataValue": "384"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 61,
+   "dEven": 20261123,
+   "dataValue": "465"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 62,
+   "dEven": 20261123,
+   "dataValue": "3"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 63,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 64,
+   "dEven": 20261123,
+   "dataValue": "58"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 65,
+   "dEven": 20261123,
+   "dataValue": "57"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 66,
+   "dEven": 20261123,
+   "dataValue": "241"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 67,
+   "dEven": 20261123,
+   "dataValue": "132"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 68,
+   "dEven": 20261123,
+   "dataValue": "385"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 69,
+   "dEven": 20261123,
+   "dataValue": "455"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 70,
+   "dEven": 20261123,
+   "dataValue": "17880097.461538"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 71,
+   "dEven": 20261123,
+   "dataValue": "12275845.564516"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 72,
+   "dEven": 20261123,
+   "dataValue": "481"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 73,
+   "dEven": 20261123,
+   "dataValue": "582"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 74,
+   "dEven": 20261123,
+   "dataValue": "2482644.461538"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 75,
+   "dEven": 20261123,
+   "dataValue": "2248930.204301"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 76,
+   "dEven": 20261123,
+   "dataValue": "1810"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 77,
+   "dEven": 20261123,
+   "dataValue": "2430"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 78,
+   "dEven": 20261123,
+   "dataValue": "220"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 79,
+   "dEven": 20261123,
+   "dataValue": "140"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 80,
+   "dEven": 20261123,
+   "dataValue": "386"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 81,
+   "dEven": 20261123,
+   "dataValue": "435"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 82,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 83,
+   "dEven": 20261123,
+   "dataValue": "1"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 84,
+   "dEven": 20261123,
+   "dataValue": "57"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 85,
+   "dEven": 20261123,
+   "dataValue": "52"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 86,
+   "dEven": 20261123,
+   "dataValue": "221"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 87,
+   "dEven": 20261123,
+   "dataValue": "141"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 88,
+   "dEven": 20261123,
+   "dataValue": "384"
+  },
+  {
+   "insCode": "69090868458637360",
+   "dataType": 89,
+   "dEven": 20261123,
+   "dataValue": "433"
+  }
+ ]
+}

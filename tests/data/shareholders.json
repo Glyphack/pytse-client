@@ -1,0 +1,59 @@
+{
+ "shareHolder": [
+  {
+   "shareHolderID": 0,
+   "shareHolderName": "شركت گروه داروئي سبحان -سهامي عام -",
+   "cIsin": "IRO1IRDR0007",
+   "dEven": 0,
+   "numberOfShares": 851537355.0,
+   "perOfShares": 47.839,
+   "change": 1,
+   "changeAmount": 0.0,
+   "shareHolderShareID": 1429364
+  },
+  {
+   "shareHolderID": 0,
+   "shareHolderName": "شركت سرمايه گذاري اعتلاءالبرز-سهامي عام -",
+   "cIsin": "IRO1IRDR0007",
+   "dEven": 0,
+   "numberOfShares": 41909509.0,
+   "perOfShares": 2.354,
+   "change": 1,
+   "changeAmount": 0.0,
+   "shareHolderShareID": 1432293
+  },
+  {
+   "shareHolderID": 0,
+   "shareHolderName": "شخص حقيقي",
+   "cIsin": "IRO1IRDR0007",
+   "dEven": 0,
+   "numberOfShares": 40329158.0,
+   "perOfShares": 2.265,
+   "change": 1,
+   "changeAmount": 0.0,
+   "shareHolderShareID": 1428398
+  },
+  {
+   "shareHolderID": 0,
+   "shareHolderName": "شخص حقيقي",
+   "cIsin": "IRO1IRDR0007",
+   "dEven": 0,
+   "numberOfShares": 36754390.0,
+   "perOfShares": 2.064,
+   "change": 1,
+   "changeAmount": 0.0,
+   "shareHolderShareID": 1433048
+  },
+  {
+   "shareHolderID": 0,
+   "shareHolderName": "شخص حقيقي",
+   "cIsin": "IRO1IRDR0007",
+   "dEven": 0,
+   "numberOfShares": 24481108.0,
+   "perOfShares": 1.375,
+   "change": 1,
+   "changeAmount": 0.0,
+   "shareHolderShareID": 1432292
+  }
+ ]
+}
